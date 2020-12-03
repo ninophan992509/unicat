@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{> head}}
+    
+    {{#if home_page}}
+    <link rel="stylesheet" type="text/css" href="assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles/responsive.css">
+    {{/if}}
+    {{#if courses_page}}
+    <link rel="stylesheet" type="text/css" href="assets/styles/courses.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles/courses_responsive.css">
+    {{/if}}
+    {{#if course_page}}
+    <link rel="stylesheet" type="text/css" href="assets/styles/course.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles/course_responsive.css">
+    {{/if}}
+
+   
+</head>
+
+<body>
+
+    <div class="super_container">
+
+        <!-- Header -->
+        <header class="header">
+            {{> top_bar}}
+        </header>
+
+            {{{body}}}
+
+        <!-- Newsletter -->
+        {{> newletter}}
+        
+         <!-- Footer -->
+        <footer class="footer">
+            {{> footer}}
+        </footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:300,400,500,700,900');
+
+
+body{
+    background-color: #111231;
+}
+
+
+
+h1, h2, h3, h4, h5, h6
+{
+	font-family: 'Roboto Slab', serif;
+	font-weight: 700;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-shadow: rgba(0,0,0,.01) 0 0 1px;
+	text-shadow: rgba(0,0,0,.01) 0 0 1px;
+	color: #384158;
+	margin-bottom: 0;
+}
+
+.error-content
+{
+    
+    width: 100%;
+    height: 100vh;
+    padding: 150px 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-img{
+    width: 220px;
+    height: 300px;
+   
+}
+
+.error-img img{
+    width: 100%;
+    height: 100%;
+}
+
+.error-notify{
+    color: #E4E4E5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 50px;
+
+      
+}
+
+.error-notify p{
+    font-family: 'Roboto Slab', serif;
+    font-size: 200px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.error-notify p span{
+   
+    color:#14bdee;
+}
+
+.error-notify .error{
+    font-family: 'Roboto Slab', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.error-notify .error-btn{
+    padding: 50px;
+    
+}
+
+.error-notify .btn{
+    
+    background-color:  #14bdee ;
+    color: #E4E4E5;
+    font-family: 'Roboto Slab', serif;
+    font-size: 25px;
+    
+}
+
+.error-notify .btn:focus , .error-notify .btn:hover{
+    
+    background-color:  #E4E4E5 ;
+    color: #14bdee;
+    border: 3px solid #14bdee;
+    
+    
+}
