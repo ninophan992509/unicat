@@ -10,10 +10,11 @@ const pool = mysql.createPool({
     connectionLimit: 50,
 });
 
-//const pool_query = util.promisify(pool.query).bind(pool);
+const pool_query = util.promisify(pool.query).bind(pool);
 
 module.exports = {
-    load(sql){
+    load: sql => pool_query(sql)
+   /* load(sql){
         return new Promise(
             function (done,fail) {
                 pool.query(sql, function(error, results, fields)
@@ -26,5 +27,5 @@ module.exports = {
                 })
             }
         )
-    }
+    }*/
 };

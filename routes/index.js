@@ -3,16 +3,13 @@ const router = express.Router();
 const courseModel = require('../models/course.model');
 
 /* GET home page. */
-router.get(['/','/home'], async function(req, res, next) {
+router.get(['/','/home'], function(req, res, next) {
   
   try { 
-    const category = 'Ngoại Ngữ';
-    const listCourse = await courseModel.getThreeFirstCourse(category);   
-    console.log(listCourse);
+   
     res.render('index',{ 
       title: 'Trang chủ', 
       home_page:true,
-      listCourse
     });
   }
   catch(err) {

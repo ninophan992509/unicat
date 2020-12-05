@@ -16,10 +16,10 @@
                             </li>
                         </ul>
                         <div class="top_bar_login ml-auto">
-                            <div class="login_button"><a href="#"> Đăng nhập</a></div>
+                            <div class="login_button"><a href="#">Đăng nhập</a></div>
                         </div>
                         <div class="top_bar_login ml-2">
-                            <div class="login_button"><a href="#"> Đăng ký</a></div>
+                            <div class="login_button"><a href="#">Đăng ký</a></div>
                         </div>
 
                     </div>
@@ -34,20 +34,39 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="header_content d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo_container">
+                <div class="header_content d-flex flex-row align-items-center justify-content-between">
+                    <div class="logo_container ">
                         <a href="#">
                             <div class="logo_text">Unic<span>at</span></div>
                         </a>
                     </div>
-                    <nav class="main_nav_contaner ml-auto">
-                        <ul class="main_nav">
+                    <nav class="main_nav_contaner w-50 d-flex">
+                        <ul class="main_nav mr-auto">
                             <li class="active"><a href="#">Trang chủ</a></li>
-                            <li><a href="/courses">Các khóa học</a></li>
-                            <li><a href="/courses">Khóa học của tôi</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown_link" href="/courses">Các khóa học</a>
+                                <ul class="dropdown_content">
+                                    {{#each lcCategories}}
+                                    <li class="dropdown_submenu" id="{{CatID}}">
+                                        <a class="cat_name" href="/courses/byCat/{{CatID}}">{{CatName}}</a>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                                {{#each lcCategories}}
+                                <ul class="dropdown_menu" id="ul{{CatID}}">
+                                    <div class="list_title">{{CatName}}</div>
+                                    {{#each Fields}}
+                                    <li><a href="/courses/byFld/{{FldID}}">{{FldName}}</a></li>
+                                    {{/each}}
+                                </ul>
+                                {{/each}}
+
+                            </li>
+                            <!-- <li><a href="/courses">Khóa học của tôi</a></li>
                             <li><a href="/course">Kích hoạt khóa học</a></li>
-                            <li><a href="/courses">Dành cho giảng viên</a></li>
+                            <li><a href="/courses">Dành cho giảng viên</a></li>-->
                         </ul>
+
                         <div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>
 
                         <!-- Hamburger -->
@@ -56,6 +75,7 @@
                         <div class="hamburger menu_mm">
                             <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
                         </div>
+
                     </nav>
 
                 </div>
@@ -85,24 +105,29 @@
 
 <!-- Menu -->
 
-	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
-		<div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
-		<div class="search">
-			<form action="#" class="header_search_form menu_mm">
-				<input type="search" class="search_input menu_mm" placeholder="Search" required="required">
-				<button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
-					<i class="fa fa-search menu_mm" aria-hidden="true"></i>
-				</button>
-			</form>
-		</div>
-		<nav class="menu_nav">
-			<ul class="menu_mm">
-				<li class="menu_mm"><a href="index.html">Home</a></li>
-				<li class="menu_mm"><a href="#">About</a></li>
-				<li class="menu_mm"><a href="#">Courses</a></li>
-				<li class="menu_mm"><a href="#">Blog</a></li>
-				<li class="menu_mm"><a href="#">Page</a></li>
-				<li class="menu_mm"><a href="contact.html">Contact</a></li>
-			</ul>
-		</nav>
-	</div>
+<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+    <div class="menu_close_container">
+        <div class="menu_close">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="search">
+        <form action="#" class="header_search_form menu_mm">
+            <input type="search" class="search_input menu_mm" placeholder="Search" required="required">
+            <button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+                <i class="fa fa-search menu_mm" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+    <nav class="menu_nav">
+        <ul class="menu_mm">
+            <li class="menu_mm"><a href="index.html">Home</a></li>
+            <li class="menu_mm"><a href="#">About</a></li>
+            <li class="menu_mm"><a href="#">Courses</a></li>
+            <li class="menu_mm"><a href="#">Blog</a></li>
+            <li class="menu_mm"><a href="#">Page</a></li>
+            <li class="menu_mm"><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+</div>

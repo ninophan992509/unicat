@@ -1,0 +1,98 @@
+.main_nav .dropdown
+{
+    position: relative;
+}
+
+.main_nav .dropdown .dropdown_content, .main_nav .dropdown .dropdown_menu {
+
+    min-width: 16rem;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 0;
+    position: absolute;
+    display: none;
+    box-shadow: 0px 8px 16px 0px rgb(129, 157, 170);
+    z-index: 1;
+    background-color: rgb(255, 255, 255);
+    font-family: 'Roboto', sans-serif!important;
+    height: 350px;
+    overflow: hidden;
+    overflow-y: auto;
+   
+}
+
+
+.main_nav .dropdown  li{
+    width: 100%;
+}
+
+.main_nav .dropdown  .list_title{
+     font-weight: 600;
+     color: #000;
+     width: 100%;
+     font-weight: 500;
+     padding: 10px;
+}
+
+.main_nav .dropdown  li a{
+
+    width: 100%;
+    font-size: 14px;
+    padding: 7px;
+    font-weight: 400;
+    text-decoration: none;
+    display: block;
+    border-bottom: rgb(131, 193, 230) 1px solid;
+
+}
+
+.main_nav .dropdown:hover .dropdown_content{
+    display: block;
+
+}
+
+.main_nav .dropdown  li a:hover{
+   background-color: #2CC3ED!important;
+   color: #fff;
+
+}
+
+.main_nav .dropdown .dropdown_content
+{
+    right:50%;   
+}
+
+.main_nav .dropdown .dropdown_menu
+{
+    left:50%;   
+}
+
+.course_button {
+    font-size: 1rem;
+    padding: 0.15rem 0.25rem;
+    margin-bottom: 1rem;
+
+}
+
+.course{
+    position: relative;
+}
+
+.course .course_like
+{   
+    position: absolute;
+    top:8px;
+    right:16px;
+    font-size: 2rem;
+    color: rgb(224, 224, 224);
+    display: block;
+}
+
+.course .course_like:hover i
+{    
+    color: rgb(226, 53, 53);
+}
+
+
+

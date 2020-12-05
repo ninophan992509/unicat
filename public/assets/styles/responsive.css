@@ -328,6 +328,18 @@
 	{
 		padding-left: 0px;
 	}
+
+	.course_button
+	{
+		display:flex ;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.course_button .btn
+	{
+		margin-bottom: 0.5rem;
+	}
 }
 
 /************
@@ -384,6 +396,8 @@
 		width: 100%;
 		padding-left: 0;
 	}
+
+	
 }
 
 /************

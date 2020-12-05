@@ -19,7 +19,10 @@ app.engine('hbs',exphbs({
   defaultLayout: 'main.hbs',
   extname: '.hbs',
   layoutsDir: __dirname + '/views/layouts',
-  partialsDir: __dirname + '/views/partials'
+  partialsDir: __dirname + '/views/partials',
+  helpers:{
+     
+  }
 }));
 
 app.use(logger('dev'));
@@ -28,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(require('./middlewares/locals.mdw'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -47,6 +51,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+  console.log(err);
   res.render('500',{
     layout:false
   });

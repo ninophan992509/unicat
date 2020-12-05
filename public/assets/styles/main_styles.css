@@ -787,15 +787,12 @@ section
 }
 .course_body
 {
-	padding-top: 22px;
-	padding-left: 30px;
-	padding-right: 30px;
-	padding-bottom: 23px;
+	padding: 10px;
 }
 .course_title a
 {
 	font-family: 'Roboto Slab', serif;
-	font-size: 20px;
+	font-size: 1.2rem;
 	color: #384158;
 	-webkit-transition: all 200ms ease;
 	-moz-transition: all 200ms ease;
@@ -817,8 +814,8 @@ section
 }
 
 .course_avatar{
-	height: 40px;
-	width: 40px;
+	height: 30px;
+	width: 30px;
 	margin-right:10px ;
 	
 }
@@ -832,18 +829,20 @@ section
 
 .course_teacher
 {
-	font-size: 15px;
+	font-size: 0.9rem;
 	font-weight: 400;
 	color: #384158;
 }
 .course_text
 {
-	margin-top: 13px;
+	padding: 10px;
+	font-size: 1rem;
+	font-weight: 400;
+
 }
 .course_footer
 {
-	padding-left: 30px;
-	padding-right: 30px;
+	padding: 5px 10px;
 }
 .course_footer_content
 {
@@ -896,7 +895,7 @@ section
 .course_price
 {
 	font-family: 'Roboto Slab', serif;
-	font-size: 20px;
+	font-size: 1.3rem;
 	font-weight: 700;
 	color: #14bdee;
 }
@@ -929,9 +928,10 @@ section
 	margin-top: 41px;
 	box-shadow: 0px 5px 40px rgba(29,34,47,0.15);
 }
+
 .courses_button:hover
 {
-	box-shadow: 0px 5px 40px rgba(29,34,47,0.45);
+	box-shadow: 0px 5px 40px rgba(15, 23, 43, 0.45);
 }
 .courses_button a
 {
