@@ -16,12 +16,8 @@
                             </li>
                         </ul>
                         <div class="top_bar_login ml-auto">
-                            <div class="login_button"><a href="#">Đăng nhập</a></div>
+                            <div class="login_button"><a href="#">Đăng nhập</a>&nbsp;/&nbsp;<a href="#">Đăng ký</a></div>
                         </div>
-                        <div class="top_bar_login ml-2">
-                            <div class="login_button"><a href="#">Đăng ký</a></div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -42,8 +38,8 @@
                     </div>
                     <nav class="main_nav_contaner w-50 d-flex">
                         <ul class="main_nav mr-auto">
-                            <li class="active"><a href="#">Trang chủ</a></li>
-                            <li class="dropdown">
+                            <li class="{{#if isActive}}active{{/if}}"><a href="#">Trang chủ</a></li>
+                            <li class="dropdown {{#if isActive}}active{{/if}}">
                                 <a class="dropdown_link" href="/courses">Các khóa học</a>
                                 <ul class="dropdown_content">
                                     {{#each lcCategories}}
@@ -63,7 +59,6 @@
 
                             </li>
                             <!-- <li><a href="/courses">Khóa học của tôi</a></li>
-                            <li><a href="/course">Kích hoạt khóa học</a></li>
                             <li><a href="/courses">Dành cho giảng viên</a></li>-->
                         </ul>
 
@@ -112,6 +107,8 @@
             <div></div>
         </div>
     </div>
+    <div class="menu_link"><a href="register">Đăng Ký</a></div>
+    <div class="menu_link"><a href="login">Đăng Nhập</a></div>
     <div class="search">
         <form action="#" class="header_search_form menu_mm">
             <input type="search" class="search_input menu_mm" placeholder="Search" required="required">
@@ -122,12 +119,10 @@
     </div>
     <nav class="menu_nav">
         <ul class="menu_mm">
-            <li class="menu_mm"><a href="index.html">Home</a></li>
-            <li class="menu_mm"><a href="#">About</a></li>
-            <li class="menu_mm"><a href="#">Courses</a></li>
-            <li class="menu_mm"><a href="#">Blog</a></li>
-            <li class="menu_mm"><a href="#">Page</a></li>
-            <li class="menu_mm"><a href="contact.html">Contact</a></li>
+            <li class="menu_mm"><a href="/{{#if isActive}}active{{/if}}">Trang chủ</a></li>
+            <li class="menu_mm"><a href=""{{#if isActive}}active{{/if}}>Các khóa học</a></li>
+            <li class="menu_mm"><a href="#">Khóa học của tôi</a></li>
+            <li class="menu_mm"><a href="#">Dành cho giảng viên</a></li>
         </ul>
     </nav>
 </div>

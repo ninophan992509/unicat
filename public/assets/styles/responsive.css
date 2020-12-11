@@ -276,7 +276,16 @@
 
 @media only screen and (max-width: 768px)
 {
+	.owl-theme .owl-nav .owl-prev, .owl-theme .owl-nav .owl-next{
+        font-size: 1.1rem;
+		width: 40px;
+		height: 40px;
+		line-height: 42px;
 	
+	}
+	.course_title{
+		font-size: 1.1rem;
+	}
 }
 
 /************
@@ -329,17 +338,9 @@
 		padding-left: 0px;
 	}
 
-	.course_button
-	{
-		display:flex ;
-		flex-direction: column;
-		justify-content: center;
-	}
+	
 
-	.course_button .btn
-	{
-		margin-bottom: 0.5rem;
-	}
+	
 }
 
 /************

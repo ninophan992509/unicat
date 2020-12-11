@@ -87,5 +87,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log('Server is listening on '+ port);
+  console.log('Server is listening on http://localhost:'+ port);
 }

@@ -6,8 +6,8 @@
 				<div class="col">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="home">Trang chủ</a></li>
-							<li><a href="courses">Các khóa học</a></li>
+							<li><a href="/">Trang chủ</a></li>
+							<li><a href="/courses">Các khóa học</a></li>
 							<li>Chi tiết khóa học</li>
 						</ul>
 					</div>
@@ -20,21 +20,21 @@
 <!-- Course -->
 
 <div class="course">
-	<div class="container">
-		<div class="row">
-
+	<div class="container">	
+		{{#if course}}
+		<div class="row">		
 			<!-- Course -->
 			<div class="col-lg-8">
 
 				<div class="course_container">
-					<div class="course_title">Software Training</div>
+					<div class="course_title">{{course.CourName}}</div>
 					<div
 						class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
 
 						<!-- Course Info Item -->
 						<div class="course_info_item">
 							<div class="course_info_title">Giảng viên:</div>
-							<div class="course_info_text"><a href="#">Jacke Masito</a></div>
+							<div class="course_info_text"><a href="/teacher/{{course.TeachID}}">{{course.TeachID}}</a></div>
 						</div>
 
 						<!-- Course Info Item -->
@@ -46,13 +46,13 @@
 						<!-- Course Info Item -->
 						<div class="course_info_item">
 							<div class="course_info_title">Lĩnh vực:</div>
-							<div class="course_info_text"><a href="#">Ngôn ngữ</a></div>
+							<div class="course_info_text"><a href="#">{{course.FldID}}</a></div>
 						</div>
 
 					</div>
 
 					<!-- Course Image -->
-					<div class="course_image"><img src="assets/images/course_image.jpg" alt=""></div>
+					<div class="course_image"><img src="/images/courses/{{course.CourImgBg}}" alt="Ảnh khóa học"></div>
 
 					<!-- Course Tabs -->
 					<div class="course_tabs_container">
@@ -66,136 +66,19 @@
 
 							<!-- Description -->
 							<div class="tab_panel active">
-								<div class="tab_panel_title">Software Training</div>
+								<div class="tab_panel_title">{{course.CourName}}</div>
 								<div class="tab_panel_content">
 									<div class="tab_panel_text">
-										<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem
-											quis bibendum auci elit consequat ipsutis sem nibh id elit. Duis sed odio
-											sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum
-											velit. Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris
-											vitae erat consequat auctor eu in elit. Class aptent taciti sociosquad
-											litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat
-											justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non
-											mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu
-											ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in
-											erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue.
-											Sed non neque elit. Sed ut imperdiet nisi. Proin condimentum fermentum nunc.
-											Lorem Ipsn gravida nibh vel velit auctor aliquet. Class aptent taciti
-											sociosquad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+										<pre>{{course.CourDesFull}}</pre>
 									</div>
-									<div class="tab_panel_section">
-										<div class="tab_panel_subtitle">Requirements</div>
-										<ul class="tab_panel_bullets">
-											<li>Lorem Ipsn gravida nibh vel velit auctor aliquet. Class aptent taciti
-												sociosquad litora torquent.</li>
-											<li>Cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a
-												odio tincidunt auctor a.</li>
-											<li>Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris
-												vitae erat consequat.</li>
-											<li>Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a
-												ornare odio.</li>
-										</ul>
-									</div>
-									<div class="tab_panel_section">
-										<div class="tab_panel_subtitle">What is the target audience?</div>
-										<div class="tab_panel_text">
-											<p>This course is intended for anyone interested in learning to master his
-												or her own body.This course is aimed at beginners, so no previous
-												experience with hand balancing skillts is necessary Aenean viverra
-												tincidunt nibh, in imperdiet nunc. Suspendisse eu ante pretium,
-												consectetur leo at, congue quam. Nullam hendrerit porta ante vitae
-												tristique. Vestibulum ante ipsum primis in faucibus orci luctus et
-												ultrices posuere cubilia Curae.</p>
-										</div>
-									</div>
-									<div class="tab_panel_faq">
-										<div class="tab_panel_title">FAQ</div>
-
-										<!-- Accordions -->
-										<div class="accordions">
-
-											<div class="elements_accordions">
-
-												<div class="accordion_container">
-													<div class="accordion d-flex flex-row align-items-center">
-														<div>Can I just enroll in a single course?</div>
-													</div>
-													<div class="accordion_panel">
-														<p>Lorem ipsun gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus a.</p>
-													</div>
-												</div>
-
-												<div class="accordion_container">
-													<div class="accordion d-flex flex-row align-items-center active">
-														<div>I'm not interested in the entire Specialization?</div>
-													</div>
-													<div class="accordion_panel">
-														<p>Lorem ipsun gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus a.</p>
-													</div>
-												</div>
-
-												<div class="accordion_container">
-													<div class="accordion d-flex flex-row align-items-center">
-														<div>What is the refund policy?</div>
-													</div>
-													<div class="accordion_panel">
-														<p>Lorem ipsun gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus a.</p>
-													</div>
-												</div>
-
-												<div class="accordion_container">
-													<div class="accordion d-flex flex-row align-items-center">
-														<div>What background knowledge is necessary?</div>
-													</div>
-													<div class="accordion_panel">
-														<p>Lorem ipsun gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus a.</p>
-													</div>
-												</div>
-
-												<div class="accordion_container">
-													<div class="accordion d-flex flex-row align-items-center">
-														<div>Do i need to take the courses in a specific order?</div>
-													</div>
-													<div class="accordion_panel">
-														<p>Lorem ipsun gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus a.</p>
-													</div>
-												</div>
-
-											</div>
-
-										</div>
-									</div>
+									
 								</div>
 							</div>
 
 							<!-- Curriculum -->
 							<div class="tab_panel tab_panel_2">
 								<div class="tab_panel_content">
-									<div class="tab_panel_title">Software Training</div>
 									<div class="tab_panel_content">
-										<div class="tab_panel_text">
-											<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
-												lorem quis bibendum auci elit consequat ipsutis sem nibh id elit. Duis
-												sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi
-												accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare
-												odio.</p>
-										</div>
-
 										<!-- Dropdowns -->
 										<ul class="dropdowns">
 											<li class="has_children">
@@ -321,7 +204,7 @@
 								<div class="sidebar_teacher">
 							<div
 								class="teacher_title_container d-flex flex-row align-items-center justify-content-start">
-								<div class="teacher_image"><img src="assets/images/teacher.jpg" alt=""></div>
+								<div class="teacher_image"><img src="/assets/images/teacher.jpg" alt=""></div>
 								<div class="teacher_title">
 									<div class="teacher_name"><a href="#">Jacke Masito</a></div>
 									<div class="teacher_position">Marketing & Management</div>
@@ -363,7 +246,11 @@
 									<div class="review_rating">
 										<div class="review_rating_num">4.5</div>
 										<div class="review_rating_stars">
-											<div class="rating_r rating_r_4"><i></i><i></i><i></i><i></i><i></i></div>
+											<!-- <div class="rating_r rating_r_4"><i></i><i></i><i></i><i></i><i></i></div>-->
+											<div class="star_outer">
+												<div class="star_inner" style="width:70px;">
+												</div>
+											</div>
 										</div>
 										<div class="review_rating_text">(28 Ratings)</div>
 									</div>
@@ -405,7 +292,7 @@
 											<div
 												class="comment_item d-flex flex-row align-items-start jutify-content-start">
 												<div class="comment_image">
-													<div><img src="assets/images/comment_1.jpg" alt=""></div>
+													<div><img src="/assets/images/comment_1.jpg" alt=""></div>
 												</div>
 												<div class="comment_content">
 													<div
@@ -438,7 +325,7 @@
 													<div
 														class="comment_item d-flex flex-row align-items-start jutify-content-start">
 														<div class="comment_image">
-															<div><img src="assets/images/comment_2.jpg" alt=""></div>
+															<div><img src="/assets/images/comment_2.jpg" alt=""></div>
 														</div>
 														<div class="comment_content">
 															<div
@@ -476,13 +363,14 @@
 											<div
 												class="comment_item d-flex flex-row align-items-start jutify-content-start">
 												<div class="comment_image">
-													<div><img src="assets/images/comment_3.jpg" alt=""></div>
+													<div><img src="/assets/images/comment_3.jpg" alt=""></div>
 												</div>
 												<div class="comment_content">
 													<div
 														class="comment_title_container d-flex flex-row align-items-center justify-content-start">
 														<div class="comment_author"><a href="#">Milley Cyrus</a></div>
 														<div class="comment_rating">
+															
 															<div class="rating_r rating_r_4">
 																<i></i><i></i><i></i><i></i><i></i></div>
 														</div>
@@ -507,9 +395,22 @@
 										</li>
 									</ul>
 									<div class="add_comment_container">
-										<div class="add_comment_title">Add a review</div>
-										<div class="add_comment_text">You must be <a href="#">logged</a> in to post a
-											comment.</div>
+										<div class="add_comment_title">Đánh giá khóa học</div>
+										<div class="add_comment">
+											<form action="" method="post">
+												<div class="rating">
+													<div class="star_outer">
+														<div class="star_inner" style="width:0px;">
+														</div>
+													</div>
+													<div class="rating_num">0</div>
+												</div>
+												<textarea class="form-control" id="feedback_txt" rows="3" placeholder="Nhập bình luận về khóa học"></textarea>	
+												<button type="submit" class="btn btn-primary mb-2">Đánh giá</button>
+											</form>
+										
+										</div>
+										<div class="add_comment_text">Bạn phải đăng nhập<a href="/login">&nbsp;đăng nhập&nbsp;</a>để đánh giá khóa học.</div>
 									</div>
 								</div>
 							</div>
@@ -519,6 +420,7 @@
 					</div>
 				</div>
 			</div>
+			
 
 			<!-- Course Sidebar -->
 			<div class="col-lg-4">
@@ -529,9 +431,9 @@
 						<div class="sidebar_section_title">Thanh toán khóa học</div>
 						<div class="sidebar_feature course_checkout_card">
 							<!-- Course Image -->
-					        <div class="course_image_small"><img src="assets/images/course_image.jpg" alt="Hình ảnh khóa học"></div>
+					        <div class="course_image_small"><img src="/images/courses/{{course.CourImgSm}}" alt="Hình ảnh khóa học"></div>
 							<!-- Course Price -->
-							<div class="course_price">199.000₫</div>
+							<div class="course_price">{{format course.CourPrice}}đ</div>
 
 							
 								<div class="course_checkout">
@@ -552,7 +454,7 @@
 							<!-- Latest Course -->
 							<div class="latest d-flex flex-row align-items-start justify-content-start">
 								<div class="latest_image">
-									<div><img src="assets/images/latest_1.jpg" alt=""></div>
+									<div><img src="/assets/images/latest_1.jpg" alt=""></div>
 								</div>
 								<div class="latest_content">
 									<div class="latest_title"><a href="course.html">How to Design a Logo a Beginners
@@ -564,7 +466,7 @@
 							<!-- Latest Course -->
 							<div class="latest d-flex flex-row align-items-start justify-content-start">
 								<div class="latest_image">
-									<div><img src="assets/images/latest_2.jpg" alt=""></div>
+									<div><img src="/assets/images/latest_2.jpg" alt=""></div>
 								</div>
 								<div class="latest_content">
 									<div class="latest_title"><a href="course.html">Photography for Beginners
@@ -576,7 +478,7 @@
 							<!-- Latest Course -->
 							<div class="latest d-flex flex-row align-items-start justify-content-start">
 								<div class="latest_image">
-									<div><img src="assets/images/latest_3.jpg" alt=""></div>
+									<div><img src="/assets/images/latest_3.jpg" alt=""></div>
 								</div>
 								<div class="latest_content">
 									<div class="latest_title"><a href="course.html">The Secrets of Body Language</a>
@@ -591,6 +493,11 @@
 				</div>
 			</div>
 		</div>
+		{{else}}
+		<div class="row text-center">
+             <h3>Khóa Học Không Tồn Tại</h3>
+		</div>
+		{{/if}}
 	</div>
 </div>
 

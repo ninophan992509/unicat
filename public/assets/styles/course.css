@@ -1046,12 +1046,17 @@ section
 {
 	margin-top: 10px;
 }
-.tab_panel_text p
+.tab_panel_text pre
 {
-	font-size: 16px;
+	font-size: 1rem;
 	font-weight: 400;
 	color: #76777a;
 	line-height: 1.75;
+	white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 .tab_panel_section
 {
@@ -1480,10 +1485,10 @@ section
 }
 .course_price
 {
-	font-family: 'Roboto', serif;
-	font-size: 25px;
-	font-weight: 400;
-	color: #e01130;
+	font-family: '', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #14bdee;
 }
 .feature_list
 {

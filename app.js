@@ -5,12 +5,18 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const numeral = require('numeral');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-//const authRouter  = require('./routes/auth.route');
+
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,27 +27,29 @@ app.engine('hbs',exphbs({
   layoutsDir: __dirname + '/views/layouts',
   partialsDir: __dirname + '/views/partials',
   helpers:{
-     
+      roundRating(point) {
+          return (Math.round(+point * 100)/100).toFixed(1);
+      },
+      format(val) {
+        return numeral(val).format('0,0');
+      },
+       setRatingValue(point) {
+        const urPoint = (Math.round(+point * 100)/100).toFixed(1) / 5;
+        const rPoint  =  (Math.round(urPoint * 100)/100)*70;
+        return rPoint;
+      }
   }
 }));
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 app.use(require('./middlewares/locals.mdw'));
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/',require('./routes/app.route.js'));
+app.use('/courses',require('./routes/courses.route.js'));
+app.use('/course',require('./routes/course.route.js'));
+app.use('/users',require('./routes/users.js'));
 
-
-// catch 404 and forward to error handler
-app.use(function(req, res) {
-  res.render('404', {
-    layout: false
-  });
-});
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -56,6 +64,13 @@ app.use(function(err, req, res, next) {
     layout:false
   });
 
+});
+
+// catch 404 and forward to error handler
+app.use(function(req, res) {
+  res.render('404', {
+    layout: false
+  });
 });
 
 module.exports = app;

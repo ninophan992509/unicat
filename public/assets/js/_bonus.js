@@ -8,10 +8,9 @@ $(document).ready(function()
    // console.log(percentRating);
    // $('.star_inner').style.width = `${Math.round(percentRating/10)*10}`;
 
-   function setRatingValue(point,id) {
-       const width = Math.round(point/5)*70;
-       $('#course'+id).css('width',`${width}px`);
-   }
+   
+
+  
 
    $('.main_nav .dropdown .dropdown_content .dropdown_submenu').hover(function(){
      const subId =  $(this).attr('id');
@@ -27,7 +26,8 @@ $(document).ready(function()
   $('.owl-carousel').owlCarousel({
     loop:true,
     margin:20,
-    nav:false,
+    nav:true,
+    navText: ["<i class='fa fa-chevron-left' aria-hidden='true'></i>","<i class='fa fa-chevron-right' aria-hidden='true'></i>"],
     responsive:{
         0:{
             items:1
