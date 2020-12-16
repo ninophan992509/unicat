@@ -1,0 +1,278 @@
+{{#section 'css'}}
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+<!-- Menu -->
+
+<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+    <div class="menu_close_container">
+        <div class="menu_close">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="search">
+        <form action="#" class="header_search_form menu_mm">
+            <input type="search" class="search_input menu_mm" placeholder="Search" required="required">
+            <button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+                <i class="fa fa-search menu_mm" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+    <nav class="menu_nav">
+        <ul class="menu_mm">
+            <li class="menu_mm"><a href="/">Trang chủ</a></li>
+            <li class="menu_mm"><a href="/courses">Các khóa học</a></li>
+            <!-- <li class="menu_mm"><a href="#">Khóa học của tôi</a></li>
+            <li class="menu_mm"><a href="#">Kích hoạt khóa học</a></li>-->
+
+        </ul>
+    </nav>
+</div>
+
+
+<!--Courses -->
+
+<div class="courses">
+    <div class="section_background parallax-window" data-parallax="scroll"
+        data-image-src="assets/images/courses_background.jpg" data-speed="0.8"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="section_title_container text-center">
+                    <h2 class="section_title">Các khóa học nổi bật</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row courses_row">
+            <div class="owl-carousel owl-theme">
+                {{#each popularCourses}}
+                    <div class="item">
+                        <div class="course_col">
+                            <div class="course">
+                                <div class="course_image">
+                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                </div>
+                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                <div class="course_body">
+                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <div class="course_avatar_teacher">
+                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                                class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
+                                        <div class="course_teacher">
+                                            <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
+                                        </div>
+                                    </div>
+                                    <div class="course_text">
+                                        <p>{{CourDesShort}}</p>
+                                    </div>
+                                </div>
+                                <div class="course_footer">
+                                    <div
+                                        class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+                                        <div class="course_info">
+                                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                            <span>{{CourStudents}} Học viên</span>
+                                        </div>
+                                        <div class="course_info">
+                                            <div class="star_outer">
+                                                <div class="star_inner"
+                                                    style="width: {{setRatingValue CourPoint 70}}px;">
+                                                </div>
+                                            </div>
+                                            <span class="course_rating">{{roundRating CourPoint}}</span>
+                                            <span class="course_count_rating">({{CourRates}})</span>
+                                        </div>
+                                        <div class="course_price ml-auto">{{format CourPrice}}đ</div>
+                                    </div>
+                                    <div class="course_button d-flex justify-content-between">
+                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
+                                            role="button">
+                                            <i class="fa fa-cart-plus"></i>
+                                            Thêm Vào Giỏ Hàng
+                                        </a>
+                                        <a name="btnDetail" class="btn btn-outline-primary btn-detail"
+                                            href="javascipt:;" role="button">
+                                            Xem Chi Tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="section_title_container text-center">
+                    <h2 class="section_title">Các lĩnh vực hot </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row courses_row">
+            <div class="list-group">
+                {{#each topCats}}
+                    <a class="card" href="/courses/byCatID/{{CatID}}">
+                        <div class="card_wrap">
+                            <img class="card-img-top" src="/images/categories/{{CatImg}}" alt="Card image">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{CatName}}</h4>
+                        </div>
+                    </a>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="section_title_container text-center">
+                    <h2 class="section_title">Các khóa học xem nhiều nhất</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row courses_row">
+            <div class="owl-carousel owl-theme">
+                {{#each viewestCourses}}
+                    <div class="item">
+                        <div class="course_col">
+                            <div class="course">
+                                <div class="course_image">
+                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                </div>
+                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                <div class="course_body">
+                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <div class="course_avatar_teacher">
+                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                                class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
+                                        <div class="course_teacher">
+                                            <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
+                                        </div>
+                                    </div>
+                                    <div class="course_text">
+                                        <p>{{CourDesShort}}</p>
+                                    </div>
+                                </div>
+                                <div class="course_footer">
+                                    <div
+                                        class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+                                        <div class="course_info">
+                                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                            <span>{{CourStudents}} Học viên</span>
+                                        </div>
+                                        <div class="course_info">
+                                            <div class="star_outer">
+                                                <div class="star_inner"
+                                                    style="width: {{setRatingValue CourPoint 70}}px;">
+                                                </div>
+                                            </div>
+                                            <span class="course_rating">{{roundRating CourPoint}}</span>
+                                            <span class="course_count_rating">({{CourRates}})</span>
+                                        </div>
+                                        <div class="course_price ml-auto">{{format CourPrice}}đ</div>
+                                    </div>
+                                    <div class="course_button d-flex justify-content-between">
+                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
+                                            role="button">
+                                            <i class="fa fa-cart-plus"></i>
+                                            Thêm Vào Giỏ Hàng
+                                        </a>
+                                        <a name="btnDetail" class="btn btn-outline-primary btn-detail"
+                                            href="javascipt:;" role="button">
+                                            Xem Chi Tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="section_title_container text-center">
+                    <h2 class="section_title">Các khóa học mới nhất</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row courses_row">
+            <div class="owl-carousel owl-theme">
+                {{#each newestCourses}}
+                    <div class="item">
+                        <div class="course_col">
+                            <div class="course">
+                                <div class="course_image">
+                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                </div>
+                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                <div class="course_body">
+                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <div class="course_avatar_teacher">
+                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                                class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
+                                        <div class="course_teacher">
+                                            <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
+                                        </div>
+                                    </div>
+                                    <div class="course_text">
+                                        <p>{{CourDesShort}}</p>
+                                    </div>
+                                </div>
+                                <div class="course_footer">
+                                    <div
+                                        class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+                                        <div class="course_info">
+                                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                            <span>{{CourStudents}} Học viên</span>
+                                        </div>
+                                        <div class="course_info">
+                                            <div class="star_outer">
+                                                <div class="star_inner"
+                                                    style="width: {{setRatingValue CourPoint 70}}px;">
+                                                </div>
+                                            </div>
+                                            <span class="course_rating">{{roundRating CourPoint}}</span>
+                                            <span class="course_count_rating">({{CourRates}})</span>
+                                        </div>
+                                        <div class="course_price ml-auto">{{format CourPrice}}đ</div>
+                                    </div>
+                                    <div class="course_button d-flex justify-content-between">
+                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
+                                            role="button">
+                                            <i class="fa fa-cart-plus"></i>
+                                            Thêm Vào Giỏ Hàng
+                                        </a>
+                                        <a name="btnDetail" class="btn btn-outline-primary btn-detail"
+                                            href="javascipt:;" role="button">
+                                            Xem Chi Tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+{{/section}}

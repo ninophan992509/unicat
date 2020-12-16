@@ -11,7 +11,9 @@ module.exports = {
   },
 
   async single(id) {
-    const rows = await db.load(`select * from ${TBL_COURSES} where CourID = ${id}`);
+    const rows = await db.load(`select c.*, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
+                                from ${TBL_COURSES} c left outer join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID 
+                                where c.CourID =${id}`);
     if (rows.length === 0)
       return null;
     return rows[0];

@@ -230,7 +230,7 @@ section
 .parallax-window
 {
     min-height: 400px;
-    background: transparent;
+    background: #14bdee;
 }
 .nopadding
 {
@@ -980,7 +980,7 @@ section
 }
 .tab
 {
-	height: 40px;
+
 	background: #f2f4f5;
 	font-size: 16px;
 	color: #384158;
@@ -1523,6 +1523,7 @@ section
 {
 	width: 102px;
 	height: 102px;
+	overflow: hidden;
 }
 .teacher_image img
 {

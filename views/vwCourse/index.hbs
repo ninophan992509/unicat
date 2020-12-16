@@ -1,3 +1,8 @@
+{{#section 'css'}}
+	<link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
+	<link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
+	<link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
 <!-- Home -->
 <div class="home">
 	<div class="breadcrumbs_container">
@@ -20,484 +25,452 @@
 <!-- Course -->
 
 <div class="course">
-	<div class="container">	
-		{{#if course}}
-		<div class="row">		
-			<!-- Course -->
-			<div class="col-lg-8">
+	<div class="container">
+		{{#if empty}}
+			<div class="row text-center">
+				<h3>Khóa Học Không Tồn Tại</h3>
+			</div>
+		{{else}}
+			<div class="row">
+				<!-- Course -->
+				<div class="col-lg-8">
 
-				<div class="course_container">
-					<div class="course_title">{{course.CourName}}</div>
-					<div
-						class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+					<div class="course_container">
+						<div class="course_title">{{course.CourName}}</div>
+						<div
+							class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
 
-						<!-- Course Info Item -->
-						<div class="course_info_item">
-							<div class="course_info_title">Giảng viên:</div>
-							<div class="course_info_text"><a href="/teacher/{{course.TeachID}}">{{course.TeachID}}</a></div>
-						</div>
+							<!-- Course Info Item -->
+							<div class="course_info_item">
+								<div class="course_info_title">Giảng viên:</div>
+								<div class="course_info_text"><a
+										href="/teacher/{{course.TeachID}}">{{course.teacher.TeachName}}</a>
+								</div>
+							</div>
 
-						<!-- Course Info Item -->
-						<div class="course_info_item">
-							<div class="course_info_title">Đánh giá:</div>
-							<div class="rating_r rating_r_4"><i></i><i></i><i></i><i></i><i></i></div>
-						</div>
-
-						<!-- Course Info Item -->
-						<div class="course_info_item">
-							<div class="course_info_title">Lĩnh vực:</div>
-							<div class="course_info_text"><a href="#">{{course.FldID}}</a></div>
-						</div>
-
-					</div>
-
-					<!-- Course Image -->
-					<div class="course_image"><img src="/images/courses/{{course.CourImgBg}}" alt="Ảnh khóa học"></div>
-
-					<!-- Course Tabs -->
-					<div class="course_tabs_container">
-						<div class="tabs d-flex flex-row align-items-center justify-content-start">
-							<div class="tab active">Thông tin khóa học</div>
-							<div class="tab">Giáo trình</div>
-							<div class="tab">Giảng viên</div>
-							<div class="tab">Đánh giá & Bình luận</div>
-						</div>
-						<div class="tab_panels">
-
-							<!-- Description -->
-							<div class="tab_panel active">
-								<div class="tab_panel_title">{{course.CourName}}</div>
-								<div class="tab_panel_content">
-									<div class="tab_panel_text">
-										<pre>{{course.CourDesFull}}</pre>
+							<!-- Course Info Item -->
+							<div class="course_info_item">
+								<div class="course_info_title">Đánh giá: {{roundRating course.CourPoint}}</div>
+								<div class="star_outer">
+									<div class="star_inner" style="width: {{setRatingValue course.CourPoint 64.98}}px;">
 									</div>
+								</div>
+							</div>
+
+							<!-- Course Info Item -->
+							<div class="course_info_item">
+								<div class="course_info_title">Lĩnh vực:</div>
+								{{#if course.category}}
+									<div class="course_info_text"><a
+											href="/category/{{CatID}}">{{course.category.CatName}}</a>
+									</div>
+								{{/if}}
+							</div>
+
+						</div>
+
+						<!-- Course Image -->
+						<div class="course_image"><img src="/images/courses/{{course.CourImgBg}}" alt="Ảnh khóa học">
+						</div>
+
+						<!-- Course Tabs -->
+						<div class="course_tabs_container">
+							<div class="tabs d-flex flex-row align-items-center justify-content-start">
+								<div class="tab active">Thông tin khóa học</div>
+								<div class="tab">Giáo trình</div>
+								<div class="tab">Giảng viên</div>
+								<div class="tab">Đánh giá & Bình luận</div>
+							</div>
+							<div class="tab_panels">
+
+								<!-- Description -->
+								<div class="tab_panel active">
 									
-								</div>
-							</div>
-
-							<!-- Curriculum -->
-							<div class="tab_panel tab_panel_2">
-								<div class="tab_panel_content">
+									<div class="tab_panel_title">{{course.CourName}}</div>
 									<div class="tab_panel_content">
-										<!-- Dropdowns -->
-										<ul class="dropdowns">
-											<li class="has_children">
-												<div class="dropdown_item">
-													<div class="dropdown_item_title"><span>Lecture 1:</span> Lorem Ipsn
-														gravida nibh vel velit auctor aliquet.</div>
-													<div class="dropdown_item_text">
-														<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus.</p>
-													</div>
-												</div>
-												<ul>
-													<li>
-														<div class="dropdown_item">
-															<div class="dropdown_item_title"><span>Lecture 1.1:</span>
-																Lorem Ipsn gravida nibh vel velit auctor aliquet.</div>
-															<div class="dropdown_item_text">
-																<p>Lorem Ipsn gravida nibh vel velit auctor aliquet.
-																	Aenean sollicitudin, lorem quis bibendum auci elit
-																	consequat ipsutis sem nibh id elit. Duis sed odio
-																	sit amet nibh vulputate cursus.</p>
-															</div>
-														</div>
-													</li>
-													<li>
-														<div class="dropdown_item">
-															<div class="dropdown_item_title"><span>Lecture 1.2:</span>
-																Lorem Ipsn gravida nibh vel velit auctor aliquet.</div>
-															<div class="dropdown_item_text">
-																<p>Lorem Ipsn gravida nibh vel velit auctor aliquet.
-																	Aenean sollicitudin, lorem quis bibendum auci elit
-																	consequat ipsutis sem nibh id elit. Duis sed odio
-																	sit amet nibh vulputate cursus.</p>
-															</div>
-														</div>
-													</li>
-												</ul>
-											</li>
-											<li class="has_children">
-												<div class="dropdown_item">
-													<div class="dropdown_item_title"><span>Lecture 2:</span> Lorem Ipsn
-														gravida nibh vel velit auctor aliquet.</div>
-													<div class="dropdown_item_text">
-														<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus.</p>
-													</div>
-												</div>
-												<ul>
-													<li>
-														<div class="dropdown_item">
-															<div class="dropdown_item_title"><span>Lecture 2.1:</span>
-																Lorem Ipsn gravida nibh vel velit auctor aliquet.</div>
-															<div class="dropdown_item_text">
-																<p>Lorem Ipsn gravida nibh vel velit auctor aliquet.
-																	Aenean sollicitudin, lorem quis bibendum auci elit
-																	consequat ipsutis sem nibh id elit. Duis sed odio
-																	sit amet nibh vulputate cursus.</p>
-															</div>
-														</div>
-													</li>
-													<li>
-														<div class="dropdown_item">
-															<div class="dropdown_item_title"><span>Lecture 2.2:</span>
-																Lorem Ipsn gravida nibh vel velit auctor aliquet.</div>
-															<div class="dropdown_item_text">
-																<p>Lorem Ipsn gravida nibh vel velit auctor aliquet.
-																	Aenean sollicitudin, lorem quis bibendum auci elit
-																	consequat ipsutis sem nibh id elit. Duis sed odio
-																	sit amet nibh vulputate cursus.</p>
-															</div>
-														</div>
-													</li>
-												</ul>
-											</li>
-											<li>
-												<div class="dropdown_item">
-													<div class="dropdown_item_title"><span>Lecture 3:</span> Lorem Ipsn
-														gravida nibh vel velit auctor aliquet.</div>
-													<div class="dropdown_item_text">
-														<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus.</p>
-													</div>
-												</div>
-											</li>
-											<li>
-												<div class="dropdown_item">
-													<div class="dropdown_item_title"><span>Lecture 4:</span> Lorem Ipsn
-														gravida nibh vel velit auctor aliquet.</div>
-													<div class="dropdown_item_text">
-														<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus.</p>
-													</div>
-												</div>
-											</li>
-											<li>
-												<div class="dropdown_item">
-													<div class="dropdown_item_title"><span>Lecture 5:</span> Lorem Ipsn
-														gravida nibh vel velit auctor aliquet.</div>
-													<div class="dropdown_item_text">
-														<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-															sollicitudin, lorem quis bibendum auci elit consequat
-															ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-															vulputate cursus.</p>
-													</div>
-												</div>
-											</li>
-										</ul>
+										<div class="tab_panel_text">
+											<pre>{{course.CourDesFull}}</pre>
+										</div>
+
 									</div>
 								</div>
-							</div>
-                            
-							<!-- Teachers -->
-							<div class="tab_panel tab_panel_3">
-								<div class="tab_panel_title">Giảng viên</div>
-								<div class="sidebar_teacher">
-							<div
-								class="teacher_title_container d-flex flex-row align-items-center justify-content-start">
-								<div class="teacher_image"><img src="/assets/images/teacher.jpg" alt=""></div>
-								<div class="teacher_title">
-									<div class="teacher_name"><a href="#">Jacke Masito</a></div>
-									<div class="teacher_position">Marketing & Management</div>
-								</div>
-							</div>
-							<div class="teacher_meta_container">
-								<!-- Teacher Rating -->
-								<div class="teacher_meta d-flex flex-row align-items-center justify-content-start">
-									<div class="teacher_meta_title">Đánh giá:</div>
-									<div class="teacher_meta_text ml-auto"><span>4.7</span><i class="fa fa-star"
-											aria-hidden="true"></i></div>
-								</div>
-								<!-- Teacher Review -->
-								<div class="teacher_meta d-flex flex-row align-items-center justify-content-start">
-									<div class="teacher_meta_title">Số khóa học:</div>
-									<div class="teacher_meta_text ml-auto"><span>12k</span><i class="fa fa-comment"
-											aria-hidden="true"></i></div>
-								</div>
-								<!-- Teacher Quizzes -->
-								<div class="teacher_meta d-flex flex-row align-items-center justify-content-start">
-									<div class="teacher_meta_title">Học viên:</div>
-									<div class="teacher_meta_text ml-auto"><span>600</span><i class="fa fa-user"
-											aria-hidden="true"></i></div>
-								</div>
-							</div>
-							<div class="teacher_info">
-								<p>Hi! I am Masion, I’m a marketing & management eros pulvinar velit laoreet, sit amet
-									egestas erat dignissim. Sed quis rutrum tellus, sit amet viverra felis. Cras
-									sagittis sem sit amet urna feugiat rutrum nam nulla ipsum.</p>
-							</div>
-						</div>
-							</div>
-							<!-- Reviews -->
-							<div class="tab_panel tab_panel_4">
-								<div class="tab_panel_title">Đánh giá & Bình luận</div>
 
-								<!-- Rating -->
-								<div class="review_rating_container">
-									<div class="review_rating">
-										<div class="review_rating_num">4.5</div>
-										<div class="review_rating_stars">
-											<!-- <div class="rating_r rating_r_4"><i></i><i></i><i></i><i></i><i></i></div>-->
-											<div class="star_outer">
-												<div class="star_inner" style="width:70px;">
+								<!-- Curriculum -->
+								<div class="tab_panel tab_panel_2">
+									<div class="tab_panel_content">
+										<div class="tab_panel_content">
+											<div class="d-flex justify-content-end " >
+												Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
+											</div>
+											<!-- Dropdowns -->
+											<ul class="dropdowns">
+												{{#each course.chapters}}
+													<li class="has_children">
+														<div class="dropdown_item">
+															<div class="dropdown_item_title"><span>Chương
+																	{{ChapSTT}}: </span>{{ChapName}}</div>
+															<!--	<div class="dropdown_item_text">
+																		<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
+																			sollicitudin, lorem quis bibendum auci elit consequat
+																			ipsutis sem nibh id elit. Duis sed odio sit amet nibh
+																			vulputate cursus.</p>
+																	</div>-->
+														</div>
+														<ul>
+															{{#each ../this/course.lessons}}
+															
+																{{#eq ../this/ChapID ChapID}}
+																    
+																	<li>
+																		<div class="dropdown_item">
+																			<a href="#">
+																				<div class="dropdown_item_title">
+																					<span>Bài
+																						{{LessSTT}}:
+																					</span>
+																					{{LessName}}
+																				</div>
+																			</a>
+																		</div>
+																	</li>
+																{{/eq}}
+															{{/each}}
+
+														</ul>
+													</li>
+												{{/each}}
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<!-- Teachers -->
+								<div class="tab_panel tab_panel_3">
+									<div class="tab_panel_title">Giảng viên</div>
+									<div class="sidebar_teacher">
+										<div
+											class="teacher_title_container d-flex flex-row align-items-center justify-content-start">
+											<div class="teacher_image"><img
+													src="/images/teachers/{{course.teacher.TeachAvatar}}"
+													alt="Avatar giảng viên"></div>
+											<div class="teacher_title">
+												<div class="teacher_name"><a
+														href="/teacher/{{teacher.TeachID}}">{{course.teacher.TeachName}}</a>
 												</div>
+												<!--<div class="teacher_position">Marketing & Management</div>-->
 											</div>
 										</div>
-										<div class="review_rating_text">(28 Ratings)</div>
-									</div>
-									<div class="review_rating_bars">
-										<ul>
-											<li><span>5 Star</span>
-												<div class="review_rating_bar">
-													<div style="width:90%;"></div>
-												</div>
-											</li>
-											<li><span>4 Star</span>
-												<div class="review_rating_bar">
-													<div style="width:75%;"></div>
-												</div>
-											</li>
-											<li><span>3 Star</span>
-												<div class="review_rating_bar">
-													<div style="width:32%;"></div>
-												</div>
-											</li>
-											<li><span>2 Star</span>
-												<div class="review_rating_bar">
-													<div style="width:10%;"></div>
-												</div>
-											</li>
-											<li><span>1 Star</span>
-												<div class="review_rating_bar">
-													<div style="width:3%;"></div>
-												</div>
-											</li>
-										</ul>
+										<div class="teacher_meta_container">
+											<!-- Teacher Rating -->
+											<div
+												class="teacher_meta d-flex flex-row align-items-center justify-content-start">
+												<div class="teacher_meta_title">Đánh giá:</div>
+												<div class="teacher_meta_text ml-auto">
+													<span>{{roundRating course.teacher.TeachPoints}}</span><i
+														class="fa fa-star" aria-hidden="true"></i></div>
+											</div>
+											<!-- Teacher Review -->
+											<div
+												class="teacher_meta d-flex flex-row align-items-center justify-content-start">
+												<div class="teacher_meta_title">Số khóa học:</div>
+												<div class="teacher_meta_text ml-auto">
+													<span>{{course.teacher.TeachCourses}}</span><i class="fa fa-comment"
+														aria-hidden="true"></i></div>
+											</div>
+											<!-- Teacher Quizzes -->
+											<div
+												class="teacher_meta d-flex flex-row align-items-center justify-content-start">
+												<div class="teacher_meta_title">Học viên:</div>
+												<div class="teacher_meta_text ml-auto">
+													<span>{{course.teacher.TeachStudents}}</span><i class="fa fa-user"
+														aria-hidden="true"></i></div>
+											</div>
+										</div>
+										<div class="teacher_info">
+											<p>{{course.teacher.TeachInfo}}</p>
+										</div>
 									</div>
 								</div>
+								<!-- Reviews -->
+								<div class="tab_panel tab_panel_4">
+									<div class="tab_panel_title">Đánh giá & Bình luận</div>
 
-								<!-- Comments -->
-								<div class="comments_container">
-									<ul class="comments_list">
-										<li>
-											<div
-												class="comment_item d-flex flex-row align-items-start jutify-content-start">
-												<div class="comment_image">
-													<div><img src="/assets/images/comment_1.jpg" alt=""></div>
-												</div>
-												<div class="comment_content">
-													<div
-														class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-														<div class="comment_author"><a href="#">Milley Cyrus</a></div>
-														<div class="comment_rating">
-															<div class="rating_r rating_r_4">
-																<i></i><i></i><i></i><i></i><i></i></div>
-														</div>
-														<div class="comment_time ml-auto">1 day ago</div>
-													</div>
-													<div class="comment_text">
-														<p>There are many variations of passages of Lorem Ipsum
-															available, but the majority have alteration in some form, by
-															injected humour.</p>
-													</div>
-													<div
-														class="comment_extras d-flex flex-row align-items-center justify-content-start">
-														<div class="comment_extra comment_likes"><a href="#"><i
-																	class="fa fa-heart"
-																	aria-hidden="true"></i><span>15</span></a></div>
-														<div class="comment_extra comment_reply"><a href="#"><i
-																	class="fa fa-reply"
-																	aria-hidden="true"></i><span>Reply</span></a></div>
+									<!-- Rating -->
+									<div class="review_rating_container">
+										<div class="review_rating">
+											<div class="review_rating_num">{{roundRating course.CourPoint}}</div>
+											<div class="review_rating_stars">
+												<div class="star_outer">
+													<div class="star_inner"
+														style="width:{{setRatingValue course.CourPoint 116}}px;">
 													</div>
 												</div>
 											</div>
+											<div class="review_rating_text">({{course.CourRates}} Đánh giá)</div>
+										</div>
+										<div class="review_rating_bars">
 											<ul>
-												<li>
-													<div
-														class="comment_item d-flex flex-row align-items-start jutify-content-start">
-														<div class="comment_image">
-															<div><img src="/assets/images/comment_2.jpg" alt=""></div>
-														</div>
-														<div class="comment_content">
-															<div
-																class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-																<div class="comment_author"><a href="#">John Tyler</a>
-																</div>
-																<div class="comment_rating">
-																	<div class="rating_r rating_r_4">
-																		<i></i><i></i><i></i><i></i><i></i></div>
-																</div>
-																<div class="comment_time ml-auto">1 day ago</div>
-															</div>
-															<div class="comment_text">
-																<p>There are many variations of passages of Lorem Ipsum
-																	available, but the majority have alteration in some
-																	form, by injected humour.</p>
-															</div>
-															<div
-																class="comment_extras d-flex flex-row align-items-center justify-content-start">
-																<div class="comment_extra comment_likes"><a href="#"><i
-																			class="fa fa-heart"
-																			aria-hidden="true"></i><span>15</span></a>
-																</div>
-																<div class="comment_extra comment_reply"><a href="#"><i
-																			class="fa fa-reply"
-																			aria-hidden="true"></i><span>Reply</span></a>
-																</div>
-															</div>
-														</div>
+												<li><span>5 Star</span>
+													<div class="review_rating_bar">
+														<div style="width:90%;"></div>
+													</div>
+												</li>
+												<li><span>4 Star</span>
+													<div class="review_rating_bar">
+														<div style="width:75%;"></div>
+													</div>
+												</li>
+												<li><span>3 Star</span>
+													<div class="review_rating_bar">
+														<div style="width:32%;"></div>
+													</div>
+												</li>
+												<li><span>2 Star</span>
+													<div class="review_rating_bar">
+														<div style="width:10%;"></div>
+													</div>
+												</li>
+												<li><span>1 Star</span>
+													<div class="review_rating_bar">
+														<div style="width:3%;"></div>
 													</div>
 												</li>
 											</ul>
-										</li>
-										<li>
-											<div
-												class="comment_item d-flex flex-row align-items-start jutify-content-start">
-												<div class="comment_image">
-													<div><img src="/assets/images/comment_3.jpg" alt=""></div>
-												</div>
-												<div class="comment_content">
-													<div
-														class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-														<div class="comment_author"><a href="#">Milley Cyrus</a></div>
-														<div class="comment_rating">
-															
-															<div class="rating_r rating_r_4">
-																<i></i><i></i><i></i><i></i><i></i></div>
-														</div>
-														<div class="comment_time ml-auto">1 day ago</div>
-													</div>
-													<div class="comment_text">
-														<p>There are many variations of passages of Lorem Ipsum
-															available, but the majority have alteration in some form, by
-															injected humour.</p>
-													</div>
-													<div
-														class="comment_extras d-flex flex-row align-items-center justify-content-start">
-														<div class="comment_extra comment_likes"><a href="#"><i
-																	class="fa fa-heart"
-																	aria-hidden="true"></i><span>15</span></a></div>
-														<div class="comment_extra comment_reply"><a href="#"><i
-																	class="fa fa-reply"
-																	aria-hidden="true"></i><span>Reply</span></a></div>
-													</div>
-												</div>
-											</div>
-										</li>
-									</ul>
-									<div class="add_comment_container">
-										<div class="add_comment_title">Đánh giá khóa học</div>
-										<div class="add_comment">
-											<form action="" method="post">
-												<div class="rating">
-													<div class="star_outer">
-														<div class="star_inner" style="width:0px;">
-														</div>
-													</div>
-													<div class="rating_num">0</div>
-												</div>
-												<textarea class="form-control" id="feedback_txt" rows="3" placeholder="Nhập bình luận về khóa học"></textarea>	
-												<button type="submit" class="btn btn-primary mb-2">Đánh giá</button>
-											</form>
-										
 										</div>
-										<div class="add_comment_text">Bạn phải đăng nhập<a href="/login">&nbsp;đăng nhập&nbsp;</a>để đánh giá khóa học.</div>
+									</div>
+
+									<!-- Comments -->
+									<div class="comments_container">
+										<ul class="comments_list">
+											<li>
+												<div
+													class="comment_item d-flex flex-row align-items-start jutify-content-start">
+													<div class="comment_image">
+														<div><img src="/assets/images/comment_1.jpg" alt=""></div>
+													</div>
+													<div class="comment_content">
+														<div
+															class="comment_title_container d-flex flex-row align-items-center justify-content-start">
+															<div class="comment_author"><a href="#">Milley Cyrus</a>
+															</div>
+															<div class="comment_rating">
+																<div class="rating_r rating_r_4">
+																	<i></i><i></i><i></i><i></i><i></i></div>
+															</div>
+															<div class="comment_time ml-auto">1 day ago</div>
+														</div>
+														<div class="comment_text">
+															<p>There are many variations of passages of Lorem Ipsum
+																available, but the majority have alteration in some
+																form, by
+																injected humour.</p>
+														</div>
+														<div
+															class="comment_extras d-flex flex-row align-items-center justify-content-start">
+															<div class="comment_extra comment_likes"><a href="#"><i
+																		class="fa fa-heart"
+																		aria-hidden="true"></i><span>15</span></a></div>
+															<div class="comment_extra comment_reply"><a href="#"><i
+																		class="fa fa-reply"
+																		aria-hidden="true"></i><span>Reply</span></a>
+															</div>
+														</div>
+													</div>
+												</div>
+												<ul>
+													<li>
+														<div
+															class="comment_item d-flex flex-row align-items-start jutify-content-start">
+															<div class="comment_image">
+																<div><img src="/assets/images/comment_2.jpg" alt="">
+																</div>
+															</div>
+															<div class="comment_content">
+																<div
+																	class="comment_title_container d-flex flex-row align-items-center justify-content-start">
+																	<div class="comment_author"><a href="#">John
+																			Tyler</a>
+																	</div>
+																	<div class="comment_rating">
+																		<div class="rating_r rating_r_4">
+																			<i></i><i></i><i></i><i></i><i></i></div>
+																	</div>
+																	<div class="comment_time ml-auto">1 day ago</div>
+																</div>
+																<div class="comment_text">
+																	<p>There are many variations of passages of Lorem
+																		Ipsum
+																		available, but the majority have alteration in
+																		some
+																		form, by injected humour.</p>
+																</div>
+																<div
+																	class="comment_extras d-flex flex-row align-items-center justify-content-start">
+																	<div class="comment_extra comment_likes"><a
+																			href="#"><i class="fa fa-heart"
+																				aria-hidden="true"></i><span>15</span></a>
+																	</div>
+																	<div class="comment_extra comment_reply"><a
+																			href="#"><i class="fa fa-reply"
+																				aria-hidden="true"></i><span>Reply</span></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<div
+													class="comment_item d-flex flex-row align-items-start jutify-content-start">
+													<div class="comment_image">
+														<div><img src="/assets/images/comment_3.jpg" alt=""></div>
+													</div>
+													<div class="comment_content">
+														<div
+															class="comment_title_container d-flex flex-row align-items-center justify-content-start">
+															<div class="comment_author"><a href="#">Milley Cyrus</a>
+															</div>
+															<div class="comment_rating">
+
+																<div class="rating_r rating_r_4">
+																	<i></i><i></i><i></i><i></i><i></i></div>
+															</div>
+															<div class="comment_time ml-auto">1 day ago</div>
+														</div>
+														<div class="comment_text">
+															<p>There are many variations of passages of Lorem Ipsum
+																available, but the majority have alteration in some
+																form, by
+																injected humour.</p>
+														</div>
+														<div
+															class="comment_extras d-flex flex-row align-items-center justify-content-start">
+															<div class="comment_extra comment_likes"><a href="#"><i
+																		class="fa fa-heart"
+																		aria-hidden="true"></i><span>15</span></a></div>
+															<div class="comment_extra comment_reply"><a href="#"><i
+																		class="fa fa-reply"
+																		aria-hidden="true"></i><span>Reply</span></a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<div class="add_comment_container">
+											<div class="add_comment_title">Đánh giá khóa học</div>
+											<div class="add_comment">
+												<form action="" method="post">
+													<div class="rating">
+														<div class="star_outer">
+															<div class="star_inner" style="width:0px;">
+															</div>
+														</div>
+														<div class="rating_num">0</div>
+													</div>
+													<textarea class="form-control" id="feedback_txt" rows="3"
+														placeholder="Nhập bình luận về khóa học"></textarea>
+													<button type="submit" class="btn btn-primary mb-2">Đánh giá</button>
+												</form>
+
+											</div>
+											<div class="add_comment_text">Bạn phải đăng nhập<a href="/login">&nbsp;đăng
+													nhập&nbsp;</a>để đánh giá khóa học.</div>
+										</div>
 									</div>
 								</div>
+
+
 							</div>
-
-
 						</div>
 					</div>
 				</div>
-			</div>
-			
 
-			<!-- Course Sidebar -->
-			<div class="col-lg-4">
-				<div class="sidebar">
 
-					<!-- Feature -->
-					<div class="sidebar_section">
-						<div class="sidebar_section_title">Thanh toán khóa học</div>
-						<div class="sidebar_feature course_checkout_card">
-							<!-- Course Image -->
-					        <div class="course_image_small"><img src="/images/courses/{{course.CourImgSm}}" alt="Hình ảnh khóa học"></div>
-							<!-- Course Price -->
-							<div class="course_price">{{format course.CourPrice}}đ</div>
+				<!-- Course Sidebar -->
+				<div class="col-lg-4">
+					<div class="sidebar">
 
-							
+						<!-- Feature -->
+						<div class="sidebar_section">
+							<div class="sidebar_section_title">Thanh toán khóa học</div>
+							<div class="sidebar_feature course_checkout_card">
+								<!-- Course Image -->
+								<div class="course_image_small"><img src="/images/courses/{{course.CourImgSm}}"
+										alt="Hình ảnh khóa học"></div>
+								<!-- Course Price -->
+								<div class="d-flex justify-content-between align-items-center">
+									<div class="course_price">{{format course.CourPrice}}đ</div>
+									<a href="#" style="font-size: 1.7rem; color:gray"><i class="fa fa-heart"></i></a>
+								</div>
+
+
+
 								<div class="course_checkout">
-									<button type="submit" class="btn btn-primary buy_now" title="Buy Now" id="buy-now" title="buynow-button">Mua Ngay</button>
-									<button type="submit" class="btn btn-outline-primary add_cart" title="Add Cart" id="add-cart" title="addcart-button">Thêm Giỏ Hàng</button>
-									
+									<button type="submit" class="btn btn-primary buy_now" title="Buy Now" id="buy-now"
+										title="buynow-button">Mua Ngay</button>
+									<button type="submit" class="btn btn-outline-primary add_cart" title="Add Cart"
+										id="add-cart" title="addcart-button">Thêm Giỏ Hàng</button>
+
 								</div>
-							
+
+							</div>
 						</div>
-					</div>
 
-					
-					<!-- Latest Course -->
-					<div class="sidebar_section">
-						<div class="sidebar_section_title">Các khóa học mới nhất</div>
-						<div class="sidebar_latest">
 
-							<!-- Latest Course -->
-							<div class="latest d-flex flex-row align-items-start justify-content-start">
-								<div class="latest_image">
-									<div><img src="/assets/images/latest_1.jpg" alt=""></div>
-								</div>
-								<div class="latest_content">
-									<div class="latest_title"><a href="course.html">How to Design a Logo a Beginners
-											Course</a></div>
-									<div class="latest_price">Free</div>
-								</div>
-							</div>
+						<!-- Latest Course -->
+						<div class="sidebar_section">
+							<div class="sidebar_section_title">Các khóa học mới nhất</div>
+							<div class="sidebar_latest">
 
-							<!-- Latest Course -->
-							<div class="latest d-flex flex-row align-items-start justify-content-start">
-								<div class="latest_image">
-									<div><img src="/assets/images/latest_2.jpg" alt=""></div>
-								</div>
-								<div class="latest_content">
-									<div class="latest_title"><a href="course.html">Photography for Beginners
-											Masterclass</a></div>
-									<div class="latest_price">$170</div>
-								</div>
-							</div>
-
-							<!-- Latest Course -->
-							<div class="latest d-flex flex-row align-items-start justify-content-start">
-								<div class="latest_image">
-									<div><img src="/assets/images/latest_3.jpg" alt=""></div>
-								</div>
-								<div class="latest_content">
-									<div class="latest_title"><a href="course.html">The Secrets of Body Language</a>
+								<!-- Latest Course -->
+								<div class="latest d-flex flex-row align-items-start justify-content-start">
+									<div class="latest_image">
+										<div><img src="/assets/images/latest_1.jpg" alt=""></div>
 									</div>
-									<div class="latest_price">$220</div>
+									<div class="latest_content">
+										<div class="latest_title"><a href="course.html">How to Design a Logo a Beginners
+												Course</a></div>
+										<div class="latest_price">Free</div>
+									</div>
 								</div>
+
+								<!-- Latest Course -->
+								<div class="latest d-flex flex-row align-items-start justify-content-start">
+									<div class="latest_image">
+										<div><img src="/assets/images/latest_2.jpg" alt=""></div>
+									</div>
+									<div class="latest_content">
+										<div class="latest_title"><a href="course.html">Photography for Beginners
+												Masterclass</a></div>
+										<div class="latest_price">$170</div>
+									</div>
+								</div>
+
+								<!-- Latest Course -->
+								<div class="latest d-flex flex-row align-items-start justify-content-start">
+									<div class="latest_image">
+										<div><img src="/assets/images/latest_3.jpg" alt=""></div>
+									</div>
+									<div class="latest_content">
+										<div class="latest_title"><a href="course.html">The Secrets of Body Language</a>
+										</div>
+										<div class="latest_price">$220</div>
+									</div>
+								</div>
+
 							</div>
-
 						</div>
-					</div>
 
+					</div>
 				</div>
 			</div>
-		</div>
-		{{else}}
-		<div class="row text-center">
-             <h3>Khóa Học Không Tồn Tại</h3>
-		</div>
 		{{/if}}
 	</div>
 </div>
 
+{{#section 'js'}}
+	<script src="/assets/js/course.js"></script>
+	<script src="/assets/js/_bonus.js"></script>
+{{/section}}

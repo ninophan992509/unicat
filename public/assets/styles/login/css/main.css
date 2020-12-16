@@ -284,7 +284,7 @@ iframe {
   margin-bottom: 10px;
 }
 
-.input100 {
+.input100{
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
   line-height: 1.5;
@@ -297,6 +297,24 @@ iframe {
   border-radius: 25px;
   padding: 0 30px 0 68px;
 }
+
+
+#account_type{
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #666666;
+  display: block;
+  width: 100%;
+  background: #ffffff;
+  height: 50px;
+  border-radius: 25px;
+  padding: 0 30px 0 30px;
+}
+
+
+
+
 
 
 /*------------------------------------------------------------------
