@@ -3,34 +3,11 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
 {{/section}}
-<!-- Menu -->
 
-<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
-    <div class="menu_close_container">
-        <div class="menu_close">
-            <div></div>
-            <div></div>
-        </div>
-    </div>
-    <div class="search">
-        <form action="#" class="header_search_form menu_mm">
-            <input type="search" class="search_input menu_mm" placeholder="Search" required="required">
-            <button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
-                <i class="fa fa-search menu_mm" aria-hidden="true"></i>
-            </button>
-        </form>
-    </div>
-    <nav class="menu_nav">
-        <ul class="menu_mm">
-            <li class="menu_mm"><a href="/">Trang chủ</a></li>
-            <li class="menu_mm"><a href="/courses">Các khóa học</a></li>
-            <!-- <li class="menu_mm"><a href="#">Khóa học của tôi</a></li>
-            <li class="menu_mm"><a href="#">Kích hoạt khóa học</a></li>-->
-
-        </ul>
-    </nav>
-</div>
-
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+{{/section}}
 
 <!--Courses -->
 
@@ -57,7 +34,7 @@
                                 </div>
                                 <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
                                 <div class="course_body">
-                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
                                         <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
@@ -94,7 +71,7 @@
                                             Thêm Vào Giỏ Hàng
                                         </a>
                                         <a name="btnDetail" class="btn btn-outline-primary btn-detail"
-                                            href="javascipt:;" role="button">
+                                            href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
                                         </a>
                                     </div>
@@ -118,7 +95,7 @@
         <div class="row courses_row">
             <div class="list-group">
                 {{#each topCats}}
-                    <a class="card" href="/courses/byCatID/{{CatID}}">
+                    <a class="card" href="/courses/byCat/{{CatID}}">
                         <div class="card_wrap">
                             <img class="card-img-top" src="/images/categories/{{CatImg}}" alt="Card image">
                         </div>
@@ -150,7 +127,7 @@
                                 </div>
                                 <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
                                 <div class="course_body">
-                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
                                         <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
@@ -187,7 +164,7 @@
                                             Thêm Vào Giỏ Hàng
                                         </a>
                                         <a name="btnDetail" class="btn btn-outline-primary btn-detail"
-                                            href="javascipt:;" role="button">
+                                            href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
                                         </a>
                                     </div>
@@ -219,7 +196,7 @@
                                 </div>
                                 <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
                                 <div class="course_body">
-                                    <h3 class="course_title"><a href="/course/{{CourID}}">{{CourName}}</a></h3>
+                                    <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
                                         <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
@@ -256,7 +233,7 @@
                                             Thêm Vào Giỏ Hàng
                                         </a>
                                         <a name="btnDetail" class="btn btn-outline-primary btn-detail"
-                                            href="javascipt:;" role="button">
+                                            href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
                                         </a>
                                     </div>
@@ -272,7 +249,3 @@
 
 </div>
 
-{{#section 'js'}}
-    <script src="/assets/js/custom.js"></script>
-    <script src="/assets/js/_bonus.js"></script>
-{{/section}}

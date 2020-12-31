@@ -1,0 +1,88 @@
+{{#section 'css'}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#input-b6").fileinput({
+                showUpload: false,
+                dropZoneEnabled: false,
+                maxFileCount: 1,
+                allowedFileTypes: ['image'], 
+                mainClass: "input-group-lg"
+            });
+            $(".btn-file .hidden-xs").html('Tải ảnh lên');
+            $(".fileinput-remove .hidden-xs").html('Hủy');
+
+            $("#frmEdit").on('submit', function (e) {
+                e.preventDefault();
+               
+                    if ($('#name').val().match(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i) == null) {
+                        $('.alert strong').html('Tên không hợp lệ. Hãy nhập tên khác');
+                        $('.alert').css('display', 'block');
+                    }else{
+                        $("#frmEdit").off("submit").submit();
+                    }
+                
+            });
+
+            $("#frmEdit input").each(function () {
+                $(this).focus(function () {
+                    $('.alert').css('display','none');
+                });
+            })
+        });
+    </script>
+
+{{/section}}
+<div class="container mtop">
+    {{#with user}}
+        <div class="row">
+            <div class="col-sm-12 co-md-8 col-lg-6">
+                <form action="" method="post" id="frmEdit" enctype="multipart/form-data">               
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Thông tin cá nhân</h4>
+                            <input type="text" name="Id" id="id" class="form-control" value="{{Id}}" hidden>
+                            <div class="form-group">
+                                <div class="alert alert-warning" role="alert" style="display: none;">
+                                    <strong>#</strong>
+                                </div>
+                                <label for="name">Họ tên</label>
+                                <input type="text" name="Username" id="name" class="form-control" autofocus
+                                    value="{{Username}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" name="Email" id="email" class="form-control" value="{{Email}}"
+                                    disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Đổi ảnh đại diện</label>
+                                <div class="file-input">
+                                    <input id="input-b6" name="Avatar" type="file" accept=".jpg,.jpeg,.png">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-muted">
+                            <a name="update_btn" id="updateBtn" class="btn btn-primary" href="javascript:$('#frmEdit').submit();" type="submit" role="button">Cập
+                                nhật</a>
+                            <a name="close_btn" id="close" class="btn btn-outline-primary" href="/account/profile"
+                                role="button">Thoát</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {{/with}}
+</div>

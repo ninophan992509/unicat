@@ -20,7 +20,7 @@
 
   
     <div class="container-login100">
-        <form class="login100-form validate-form">
+        <form class="login100-form validate-form" id="frmLogin" action="" method="POST" >
             <div class="logo_container">
                         <a href="#">
                             <div class="logo_text">Unic<span>at</span></div>
@@ -29,9 +29,18 @@
             <span class="login100-form-title">
                 Đăng Nhập
             </span>
-
+            
+            {{#if err_message}}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{err_message}}
+                </div>
+            {{/if}}
+            
             <div class="wrap-input100 validate-input" data-validate="Bạn cần nhập email dạng: ex@abc.xyz">
-                <input class="input100" type="text" name="email" placeholder="Email">
+                <input class="input100" type="text" name="Email" placeholder="Email" autofocus>
                 <span class="focus-input100"></span>
                 <span class="symbol-input100">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -39,7 +48,7 @@
             </div>
 
             <div class="wrap-input100 validate-input" data-validate="Bạn cần nhập mật khẩu">
-                <input class="input100" type="password" name="pass" placeholder="Password">
+                <input class="input100" type="password" name="Password" placeholder="Password">
                 <span class="focus-input100"></span>
                 <span class="symbol-input100">
                     <i class="fa fa-lock" aria-hidden="true"></i>
@@ -59,13 +68,13 @@
 
             <div class="social-buttons">
                 <!-- facebook  Button -->
-                <a href="http://www.facebook.com" target="blank" class="social-margin"> 
+                <a href="/auth/facebook" target="blank" class="social-margin"> 
                   <div class="social-icon facebook">
                     <i class="fa fa-facebook" aria-hidden="true"></i> 
                   </div>
                 </a>
                 <!-- google Button -->
-                <a href="https://google.com/" target="blank"  class="social-margin">
+                <a href="/auth/google" target="blank"  class="social-margin">
                   <div class="social-icon google-plus">
                     <i class="fa fa-google-plus" aria-hidden="true"></i>
                   </div>

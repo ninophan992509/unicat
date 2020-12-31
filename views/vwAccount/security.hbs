@@ -1,0 +1,149 @@
+{{#section 'css'}}
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+    <script>
+        const id_arr = ["show_hidden_pass", "show_hidden_pass1", "show_hidden_pass2"];
+        id_arr.forEach((id) => {
+            $(`#${id} a`).on('click', function (e) {
+                showPw(id);
+            });
+        });
+        function showPw(id) {
+            if ($(`#${id} input`).attr('type') == 'password') {
+
+                $(`#${id} input`).attr('type', 'text');
+                $(`#${id} i`).removeClass('fa-eye-slash');
+                $(`#${id} i`).addClass('fa-eye');
+            } else {
+
+                $(`#${id} input`).attr('type', 'password');
+                $(`#${id} i`).removeClass('fa-eye');
+                $(`#${id} i`).addClass('fa-eye-slash');
+            }
+        }
+
+        $('#frmChangePw').on('submit', function (e) {
+            e.preventDefault();
+            const input = $('#frmChangePw .form-group input');
+            for (let i = 0; i < input.length; i++) {
+                let error = validateInput(input[i]);
+                if (error) {
+                    showError(error);
+                    return;
+                }
+            }
+
+            const OldPw = $('#oldPw').val();
+            const NewPw = $('#newPw').val();
+            const ConfirmPw = $('#confirmPw').val();
+
+            if (!(NewPw == ConfirmPw)) {
+                showError('Xác nhận mật khẩu không khớp!');
+                return;
+            }
+
+            if (OldPw == NewPw) {
+
+                showError('Mật khẩu mới không được trùng với mật khẩu hiện tại!');
+                return;
+            }
+
+            $("#frmChangePw").off("submit").submit();
+
+        });
+
+        function validateInput(input) {
+            let error = null;
+            if ($(input).val().trim() == "") {
+                return error = `Bạn chưa nhập ${$(input).attr('data-name')}!`;
+            }
+
+            if (
+                $(input)
+                    .val()
+                    .match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/) == null
+            )
+                return error = `${$(input).attr('data-name')} không hợp lệ!`;
+
+        }
+
+        function showError(error) {
+            $('#frmChangePw .alert').html(`${error}`);
+            $('#frmChangePw .alert').show();
+        }
+
+        /** Ẩn thông báo lỗi khi focus */
+        $("#frmChangePw .form-group input").each(function () {
+            $(this).focus(function () {
+                $('#frmChangePw .alert').hide();
+            });
+        });
+
+    </script>
+
+{{/section}}
+<div class="container mtop">
+    <div class="row">
+        <div class="col-sm-12 co-md-8 col-lg-6">
+            <form action="" method="post" id="frmChangePw">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Đổi mật khẩu</h4>
+                        <div class="alert alert-danger" role="alert" style="display: none;">
+                            <strong>...</strong>
+                        </div>
+                        {{#if error}}
+                            <div class="alert alert-danger" role="alert">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {{/if}}
+                        <div class="form-group">
+                            <label for="oldPw">Mật khẩu cũ</label>
+                            <div class="row" id="show_hidden_pass">
+                                <input data-name="Mật khẩu cũ" type="password" name="OldPw" id="oldPw"
+                                    class="form-control" placeholder="Nhập mật khẩu cũ">
+                                <div class="input-group-addon" id="show_hidden_pass">
+                                    <a href="#"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label for="newPw">Mật khẩu mới</label>
+                            <div class="row" id="show_hidden_pass1">
+                                <input data-name="Mật khẩu mới" type="password" name="NewPw" id="newPw"
+                                    class="form-control" placeholder="Nhập mật khẩu mới">
+                                <div class="input-group-addon">
+                                    <a href="#"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPw">Nhập lại mật khẩu mới</label>
+                            <div class="row" id="show_hidden_pass2">
+                                <input data-name="Xác nhận mật khẩu mới" type="password" name="ConfirmPw" id="confirmPw"
+                                    class="form-control" placeholder="Nhập lại mật khẩu mới">
+                                <div class="input-group-addon">
+                                    <a href="#"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <button name="update_btn" id="updateBtn" class="btn btn-primary" type="submit" role="button">Cập
+                            nhật</button>
+                        <a name="close" id="close" class="btn btn-outline-primary" href="/account/profile"
+                            role="button">Thoát</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

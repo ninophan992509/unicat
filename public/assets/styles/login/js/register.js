@@ -3,26 +3,33 @@
 
   /*==================================================================
     [ Validate ]*/
-  var input = $(".validate-input .input100");
+  let input = $(".validate-input .input100");
 
   $(".validate-form").on("submit", function (e) {
     e.preventDefault();
-    var check = true;
+    let check = true;
 
-    for (var i = 0; i < input.length; i++) {
+    for (let i = 0; i < input.length; i++) {
       if (validate(input[i]) == false) {
         showValidate(input[i]);
         check = false;
       }
     }
+    
+    if(check){
+        const email = $('#email').val();
+        $.getJSON(`/account/is-available?email=${email}`, function (data) {
+        if (data === true) {
+          $("#frmRegister").off("submit").submit();
+        } else {          
+          $('#email').parent().attr('data-validate','Email đăng ký đã tồn tại. Vui lòng sử dụng email khác');
+          $("#email").parent().addClass("alert-validate");
+          return;
+        }
+     });
 
-    if ($("select").val() === null) {
-      $("select").parent().addClass("alert-validate");
-      check = false;
-    }
-
-    alert(check);
-    return check;
+    }else
+        return check;
   });
 
   /** Ẩn thông báo lỗi khi focus */
@@ -32,9 +39,6 @@
     });
   });
 
-  $("select").focus(function () {
-    $("select").parent().removeClass("alert-validate");
-  });
 
   /**Hàm validate các input */
   function validate(input) {
@@ -53,7 +57,9 @@
         if (
           $(input)
             .val()
-            .match(/^[a-z ,.'-]+$/i) == null
+            .match(
+              /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i
+            ) == null
         )
           return false;
       }
@@ -75,14 +81,14 @@
   
   /**Hiện các thông báo lỗi */
   function showValidate(input) {
-    var thisAlert = $(input).parent();
+    const thisAlert = $(input).parent();
 
     $(thisAlert).addClass("alert-validate");
   }
   
   /**Ẩn các thông báo lỗi */
   function hideValidate(input) {
-    var thisAlert = $(input).parent();
+    const thisAlert = $(input).parent();
 
     $(thisAlert).removeClass("alert-validate");
   }
