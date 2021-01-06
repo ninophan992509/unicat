@@ -1,8 +1,8 @@
-const db = require('../utils/db');
+const db = require("../utils/db");
 
-const TBL_ACCOUNTS = 'account';
-const TBL_TEACHERS = 'teacher';
-const TBL_STUDENTS = 'student';
+const TBL_ACCOUNTS = "account";
+const TBL_TEACHERS = "teacher";
+const TBL_STUDENTS = "student";
 
 module.exports = {
   all() {
@@ -49,15 +49,15 @@ module.exports = {
   },
 
   async add(entity) {
-    const rows = await db.add(entity, TBL_ACCOUNTS);
-    return rows.insertId;
+    const ret = await db.add(entity, TBL_ACCOUNTS);
+    return ret.insertId;
   },
 
   patch(entity) {
     const condition = { AccID: entity.AccID };
     const acc = {
       Password: entity.Password,
-    }; 
+    };
     return db.patch(acc, condition, TBL_ACCOUNTS);
   },
 };

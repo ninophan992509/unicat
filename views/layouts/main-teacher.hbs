@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>{{title}}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Unicat project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/assets/styles/bootstrap4/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/animate.css">
+        <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+        <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+
+    </head>
+
+    <body class="tc-body">
+        {{{_sections.css}}}
+        <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+        <form id="frmLogout" method="POST" action="/teacher/logout"></form>
+        <div class="container">
+            <div class="row my-container">
+                <div class="left col-md-4">
+                    <div class="logo_container ">
+                        <a href="/teacher">
+                            <div class="logo_text">Unic<span>at</span></div>
+                        </a>
+                    </div>
+                    <div class="user_avatar text-center">
+                        {{#if teacher.Avatar}}
+                            <img src="/images/teachers/{{teacher.Avatar}}" class="rounded" alt="Avatar">
+                        {{else}}
+                            <img src="/images/no-avatar.png" class="rounded" alt="Avatar">
+                        {{/if}}
+
+                    </div>
+
+                    <div class="list-group tc-list" id="list-tab" role="tablist">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Tạo khóa
+                            học</button>
+                        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
+                            href="#list-profile" role="tab" aria-controls="profile"><i class="fa fa-user"></i> Thông tin
+                            cá
+                            nhân</a>
+                        <a class="list-group-item list-group-item-action" id="list-myCourses-list" data-toggle="list"
+                            href="#list-profile" role="tab" aria-controls="myCourses"><i class="fa fa-book"></i> Khóa
+                            học của
+                            tôi</a>
+                        <a class="list-group-item list-group-item-action" id="list-logout-list"
+                            href="#" ><i class="fa fa-power-off"></i>
+                            Đăng xuất</a>
+                    </div>
+
+
+
+
+                </div>
+                <div class="col-md-8">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="list-profile" role="tabpanel"
+                            aria-labelledby="list-profile-list">
+                            {{{body}}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            {{> footer}}
+        </footer>
+
+
+
+        <script src="/assets/js/jquery-3.2.1.min.js"></script>
+        <script src="/assets/styles/bootstrap4/popper.js"></script>
+        <script src="/assets/styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="/assets/plugins/scrollmagic/ScrollMagic.min.js"></script>
+        <script src="/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+        <script src="/assets/js/custom.js"></script>
+        <script src="/assets/js/_bonus.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#list-logout-list").on('click', function(){
+                        $('#frmLogout').submit();
+                });
+            });
+        </script>
+        {{{_sections.js}}}
+
+    </body>
+
+</html>

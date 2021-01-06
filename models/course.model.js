@@ -5,6 +5,7 @@ const TBL_FIELDS = "field";
 const TBL_STUDENT_COURSES = "studentcourse";
 const TBL_TEACHERS = "teacher";
 const TBL_CATEGORIES = "category";
+const TBL_FAVOURITE_COURSES = "favouritecourse";
 
 module.exports = {
   all() {
@@ -16,7 +17,17 @@ module.exports = {
                     from (${TBL_STUDENT_COURSES} sc 
                     inner join ${TBL_COURSES} c on c.CourID = sc.CourID) 
                     inner join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
-                    where sc.StdID = ${id}`);
+                    where sc.StdID = ${id}
+                    order by sc.RatID desc`);
+  },
+
+  allFavByStd(id) {
+    return db.load(`select c.CourID, c.CourName, c.CourImgSm, c.TeachID, tc.TeachName, tc.TeachAvatar, fc.FavID
+                    from (${TBL_FAVOURITE_COURSES} fc
+                    inner join ${TBL_COURSES} c on c.CourID = fc.CourID) 
+                    inner join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
+                    where fc.StdID = ${id}
+                    order by fc.FavID desc`);
   },
 
   pageAll(offset) {
@@ -40,13 +51,13 @@ module.exports = {
                     left join ${TBL_FIELDS} f on f.FldID = c.FldID
                     left join ${TBL_CATEGORIES} ct on ct.CatID = f.CatID
                     where MATCH(ct.CatName )
-                    AGAINST ('${text}' WITH QUERY EXPANSION)
+                    AGAINST ('${text}')
                     or MATCH(f.FldName ) 
-                    AGAINST ('${text}' WITH QUERY EXPANSION)
+                    AGAINST ('${text}')
                     or MATCH(tc.TeachName ) 
-                    AGAINST ('${text}' WITH QUERY EXPANSION)
-                    or MATCH (c.CourName,c.CourDesFull,c.CourDesShort  ) 
-                    AGAINST ('${text}' IN NATURAL LANGUAGE MODE) 
+                    AGAINST ('${text}')
+                    or MATCH (c.CourName ) 
+                    AGAINST ('${text}') 
                     group by c.CourID
                     limit ${config.pagination.limit} offset ${offset}`);
   },
@@ -64,12 +75,34 @@ module.exports = {
                     limit ${config.pagination.limit} offset ${offset}`);
   },
 
+  pageByFldID(id, offset) {
+    return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint, COUNT(*) OVER()
+                    from ${TBL_COURSES} c 
+                    left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
+                    left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
+                    where c.FldID = ${id}
+                    group by c.CourID
+                    order by c.CreatedAt desc                    
+                    limit ${config.pagination.limit} offset ${offset}`);
+  },
 
   async single(id) {
     const rows = await db.load(`select c.*, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
                                 from ${TBL_COURSES} c 
                                 left join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID 
                                 where c.CourID =${id}`);
+    if (rows.length === 0) return null;
+    return rows[0];
+  },
+
+  async singleWithDetails(id) {
+    const rows = await db.load(`select ct.CatName, f.FldName, c.*, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
+                                from ${TBL_COURSES} c 
+                                left join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID 
+                                left join ${TBL_FIELDS} f on f.FldID = c.FldID
+                                left join ${TBL_CATEGORIES} ct on ct.CatID = f.CatID
+                                where c.CourID = ${id}
+                                group by c.CourID`);
     if (rows.length === 0) return null;
     return rows[0];
   },

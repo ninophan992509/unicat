@@ -1,13 +1,14 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const util = require('util');
 
 const pool = mysql.createPool({
-    host:'localhost',
-    port: 3306,
-    user: 'root',
-    password: '',
-    database: 'onlinecourses',
-    connectionLimit: 50,
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "",
+  database: "onlinecourses",
+  connectionLimit: 50,
+  multipleStatements: true,
 });
 
 const pool_query = util.promisify(pool.query).bind(pool);

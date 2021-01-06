@@ -55,20 +55,49 @@ app.engine(
       json(context) {
         return JSON.stringify(context);
       },
+      math(lvalue, operator, rvalue, options) {
+
+        lvalue = parseFloat(lvalue);
+        rvalue = parseFloat(rvalue);
+        
+        return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+       }[operator];
+       },
+     
     },
   })
 );
 
 const passport = require("./auth/social-strategy");
-
-require("./middlewares/session.mdw")(app);
-require("./middlewares/locals.mdw")(app);
 app.use(passport.initialize());
 app.use(passport.session());
+require("./middlewares/session.mdw")(app);
+require("./middlewares/locals-teacher.mdw")(app);
+app.use("/teacher",require("./routes/routeTeacher/index"));
+app.use("/admin", require("./routes/routeAdmin/index"));
+
+
+require("./middlewares/locals.mdw")(app);
 app.use("/", require("./routes/app.route.js"));
 app.use("/auth", require("./routes/auth.route"));
 app.use("/courses", require("./routes/course.route.js"));
 app.use("/account", require("./routes/account.route"));
+app.use(
+   "/cart",
+   require("./middlewares/auth.mdw"),
+   require("./routes/cart.route")
+);
+app.use(
+   "/mycourses",
+   require("./middlewares/auth.mdw"),
+   require("./routes/my-account.route")
+);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {

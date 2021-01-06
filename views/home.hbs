@@ -1,20 +1,143 @@
 {{#section 'css'}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
 {{/section}}
 
 {{#section 'js'}}
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/_bonus.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            if ($('#favList').val()) {
+                const lcFavourite = JSON.parse('{{{json lcFavourite}}}');
+                const items = $('.item');
+
+                for (item of items) {
+                    const id = $(item).data("id");
+                    let ci;
+                    if (ci = lcFavourite.find(x => x.CourID === id)) {
+                        const aLike = $(item).find('.course_like');
+                        aLike.css('color', 'red');
+                        aLike.attr('data-id', `${ci.FavID}`);
+                    }
+                }
+            }
+            $('.course_like').on('click', function () {
+                let url = '/account/myfavourite/';
+                const id = $(this).data("id");
+                if (id) {
+                    url += 'del';
+                    $('#txtID').val(id);
+
+                } else {
+                    url += 'add';
+                    const CourID = $(this).parents('.item').data("id");
+                    $('#txtID').val(CourID);
+                }
+
+                $('#frmFavour').attr('action', url);
+                $('#frmFavour').submit();
+            });
+
+
+            function flyTo(button) {
+                const cart = $('.fa-shopping-cart');
+                const imgtodrag = $(button).parents('.course').find('.course_image').children("img");
+                if (imgtodrag) {
+                    const imgclone = imgtodrag.clone()
+                        .offset({
+                            top: imgtodrag.offset().top,
+                            left: imgtodrag.offset().left
+                        })
+                        .css({
+                            'opacity': '0.5',
+                            'position': 'absolute',
+                            'height': '150px',
+                            'width': '150px',
+                            'z-index': '100'
+                        })
+                        .appendTo($('body'))
+                        .animate({
+                            'top': cart.offset().top + 10,
+                            'left': cart.offset().left + 10,
+                            'width': 75,
+                            'height': 75
+                        }, 1000, 'easeInOutExpo');
+
+                    setTimeout(function () {
+                        cart.effect("shake", {
+                            times: 2
+                        }, 200);
+                    }, 1500);
+
+                    imgclone.animate({
+                        'width': 0,
+                        'height': 0
+                    }, function () {
+                        $(this).detach()
+                    });
+                }
+            }
+
+            $('.btnAddCart').on('click', function (e) {
+                e.preventDefault();
+
+                if (!$('#UserId').val())
+                    window.location.href = '/account/login';
+                const id = $(this).data('id');
+                const btn = this;
+                $.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+                    if (data !== false) {
+                        alert("Bạn đã mua khóa học này!");
+                        return;
+                    } else {
+                        flyTo(btn);
+                        $.ajax({
+                            global: false,
+                            type: 'POST',
+                            url: '/cart/add', // missing quotes  
+                            dataType: 'html',
+                            data: {
+                                id: id,
+                            },
+                            success: function (result) {
+                                const ret = JSON.parse(result);
+                                $('.cart-quantity').children('span').html(ret.cartQuantity);
+                            },
+                            error: function (request, status, error) {
+                                serviceError();
+                            }
+                        });
+                    }
+                });
+
+
+
+
+            });
+        });
+    </script>
 {{/section}}
 
 <!--Courses -->
 
 <div class="courses">
     <div class="section_background parallax-window" data-parallax="scroll"
-        data-image-src="assets/images/courses_background.jpg" data-speed="0.8"></div>
-
+        data-image-src="/assets/images/courses_background.jpg" data-speed="0.8"></div>
+    <input id="userId" type="hidden" value="{{user.Id}}">
+    <input id="favList" type="hidden" value="{{lcFavourite}}">
+    <form id="frmFavour" method="POST" action="">
+        <input id="txtID" name="id" type="hidden">
+    </form>
+    <form id="frmAddCart" action="/cart/add" method="POST">
+        <input type="hidden" name="id" id="txtCourseId">
+    </form>
     <div class="container">
         <div class="row">
             <div class="col">
@@ -23,20 +146,22 @@
                 </div>
             </div>
         </div>
+
         <div class="row courses_row">
             <div class="owl-carousel owl-theme">
                 {{#each popularCourses}}
-                    <div class="item">
+                    <div class="item" data-id="{{CourID}}">
                         <div class="course_col">
                             <div class="course">
                                 <div class="course_image">
-                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                    <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                                 </div>
-                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+
+                                <a class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></a>
                                 <div class="course_body">
                                     <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
-                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                        <div class="course_avatar"><img src="/images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
                                         <div class="course_teacher">
                                             <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
@@ -65,12 +190,12 @@
                                         <div class="course_price ml-auto">{{format CourPrice}}đ</div>
                                     </div>
                                     <div class="course_button d-flex justify-content-between">
-                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
-                                            role="button">
+                                        <button data-id={{CourID}} class="btnAddCart btn btn-primary btn-add"
+                                            href="javascript:;" role="button">
                                             <i class="fa fa-cart-plus"></i>
                                             Thêm Vào Giỏ Hàng
-                                        </a>
-                                        <a name="btnDetail" class="btn btn-outline-primary btn-detail"
+                                        </button>
+                                        <a id="btnDetail" class="btn btn-outline-primary btn-detail"
                                             href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
                                         </a>
@@ -119,17 +244,17 @@
         <div class="row courses_row">
             <div class="owl-carousel owl-theme">
                 {{#each viewestCourses}}
-                    <div class="item">
+                    <div class="item" data-id="{{CourID}}">
                         <div class="course_col">
                             <div class="course">
                                 <div class="course_image">
-                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                    <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                                 </div>
-                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                <a class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></a>
                                 <div class="course_body">
                                     <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
-                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                        <div class="course_avatar"><img src="/images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
                                         <div class="course_teacher">
                                             <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
@@ -158,11 +283,11 @@
                                         <div class="course_price ml-auto">{{format CourPrice}}đ</div>
                                     </div>
                                     <div class="course_button d-flex justify-content-between">
-                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
-                                            role="button">
+                                        <button data-id={{CourID}} class="btnAddCart btn btn-primary btn-add"
+                                            href="javascipt:;" role="button">
                                             <i class="fa fa-cart-plus"></i>
                                             Thêm Vào Giỏ Hàng
-                                        </a>
+                                        </button>
                                         <a name="btnDetail" class="btn btn-outline-primary btn-detail"
                                             href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
@@ -188,17 +313,17 @@
         <div class="row courses_row">
             <div class="owl-carousel owl-theme">
                 {{#each newestCourses}}
-                    <div class="item">
+                    <div class="item" data-id="{{CourID}}">
                         <div class="course_col">
                             <div class="course">
                                 <div class="course_image">
-                                    <img src="images/courses/{{CourImgSm}}" alt="Course Image">
+                                    <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                                 </div>
-                                <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                <a class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></a>
                                 <div class="course_body">
                                     <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                                     <div class="course_avatar_teacher">
-                                        <div class="course_avatar"><img src="images/teachers/{{TeachAvatar}}"
+                                        <div class="course_avatar"><img src="/images/teachers/{{TeachAvatar}}"
                                                 class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
                                         <div class="course_teacher">
                                             <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
@@ -227,11 +352,11 @@
                                         <div class="course_price ml-auto">{{format CourPrice}}đ</div>
                                     </div>
                                     <div class="course_button d-flex justify-content-between">
-                                        <a name="btnAddCard" class="btn btn-primary btn-add" href="javascipt:;"
-                                            role="button">
+                                        <button data-id={{CourID}} class="btnAddCart btn btn-primary btn-add"
+                                            href="javascipt:;" role="button">
                                             <i class="fa fa-cart-plus"></i>
                                             Thêm Vào Giỏ Hàng
-                                        </a>
+                                        </button>
                                         <a name="btnDetail" class="btn btn-outline-primary btn-detail"
                                             href="/courses/detail/{{CourID}}" role="button">
                                             Xem Chi Tiết
@@ -248,4 +373,3 @@
 
 
 </div>
-

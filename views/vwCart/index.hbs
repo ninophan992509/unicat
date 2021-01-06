@@ -1,0 +1,90 @@
+{{#section 'css'}}
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+    <script>
+        $('.removeItem').on('click', function () {
+            const id = $(this).data('id');
+            $('#txtCourseId').val(id);
+            $('#frmRemoveItem').submit();
+        });
+    </script>
+{{/section}}
+<div class="container-cart">
+
+   
+    {{#if this.empty}}
+          <div class="cart-empty">
+              <img src="/images/empty-cart.png" alt="Empty Cart">
+              <h3>Giỏ hàng của bạn rỗng</h3>
+              <a class="btn btn-primary" href="/" role="button">Thêm khóa học vào giỏ</a>
+          </div>
+    {{else}}
+        <div class="card">
+        <h3 class="card-header">
+            <i class="fa fa-shopping-cart"></i> Giỏ hàng của bạn
+        </h3>
+        <form id="frmRemoveItem" action="/cart/remove" method="POST">
+            <input type="hidden" name="id" id="txtCourseId">
+        </form>
+        <div class="card-body">
+            <table class="table table-hover cart-table">
+                <thead>
+                    <tr><th scope="col">STT</th>
+                        <th scope="col">Khóa học</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Thành tiền</th>
+                        <th scope="col">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.items}}
+                        <tr>
+                            <td>
+                                {{math @index "+" 1}}
+                            </td>
+                            <td>
+                                <div class="courInfo" >
+                                <a class="smCourImg" href="/courses/detail/{{id}}">
+                                   <img src="/images/courses/{{course.CourImgSm}}" alt="Course Image">
+                                </a>
+                                    <a href="/courses/detail/{{id}}">{{course.CourName}}</a>
+                                </div>
+                            </td>
+                            <td>{{format course.CourPrice}}đ</td>
+                            <td>{{format amount}}đ</td>
+                            <td class="text-right">
+                                <a data-id="{{id}}" class="btn btn-sm btn-outline-danger removeItem" href="javascript:;"
+                                    role="button" title="Remove Item">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td style="color: red; font-size:1.2rem">{{format this.total}}đ</td>
+                    <td>&nbsp;</td>
+                </tfoot>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            <form action="/cart/checkout" method="POST">
+                <button id="btnCheckout" type="submit" class="btn btn-primary-success float-right">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Thanh toán giỏ hàng
+                </button>
+            </form>
+        </div>
+        </div>
+    {{/if}}
+   
+
+</div>

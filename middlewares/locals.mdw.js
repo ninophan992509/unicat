@@ -3,40 +3,37 @@ const fieldModel = require("../models/field.model");
 const teacherModel = require("../models/teacher.model");
 const studentModel = require("../models/student.model");
 const accountModel = require("../models/account.model");
+const favCourseModel = require("../models/favourite-course.model");
+const cartModel = require("../models/cart.model");
 
 module.exports = function (app) {
   app.use(async function (req, res, next) {
     if (typeof req.session.isAuth === "undefined") {
       req.session.isAuth = false;
+      req.session.cart = [];
     }
-   
+
     res.locals.isAuth = req.session.isAuth;
     res.locals.authUser = req.session.authUser;
+    res.locals.cartSummary = cartModel.getNumberOfItems(req.session.cart);
 
     if (req.session.isAuth && req.session.authUser) {
-        const AccID = req.session.authUser;
-        const account = await accountModel.single(AccID);
-        if (+account.Role === 1) {
-          const teacher = await teacherModel.singleByAccID(account.AccID);
-          const user = {
-            Id:teacher.TeachID,
-            Email:account.Email,
-            Username: teacher.TeachName,
-            Avatar: teacher.TeachAvatar,
-          };
-          res.locals.user = user;
-        } else if (+account.Role === 2) {
-          const student = await studentModel.singleByAccID(account.AccID);
-          const user = {
-            Id:student.StdID,
-            Email: account.Email,
-            Username: student.StdName,
-            Avatar: student.StdAvatar,
-          };
-          res.locals.user = user;
-        }
+      const AccID = req.session.authUser;
+      const account = await accountModel.single(AccID);
+      if (+account.Role === 2) {
+        const student = await studentModel.singleByAccID(account.AccID);
+        const favCourses = await favCourseModel.allByStdID(student.StdID);
+        const user = {
+          Id: student.StdID,
+          Email: account.Email,
+          Username: student.StdName,
+          Avatar: student.StdAvatar,
+        };
+        res.locals.user = user;
+        res.locals.lcFavourite = favCourses;
       }
-    
+    }
+
     next();
   });
 

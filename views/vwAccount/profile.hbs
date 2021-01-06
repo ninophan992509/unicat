@@ -7,8 +7,28 @@
 {{#section 'js'}}
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/_bonus.js"></script>
+    <script>
+        $(document).ready(function(){
+           const url = window.location.href;
+           if(url.toString().includes("#list-my-courses"))
+           {
+               $('#list-myCourses-list').click();
+           }else if(url.toString().includes("#list-fav-courses"))
+           {
+               $('#list-favCourses-list').click();
+           }
+
+           
+           $(".course_like").on('click', function(e){
+              e.preventDefault();
+              const id  = $(this).data("id");
+              $('#txtFavId').val(id);
+              $('#frmRemoveFav').submit();    
+           });
+        });
+    </script>
 {{/section}}
-<div class="container" style="margin-top:200px">
+<div class="container" style="margin:200px 0">
     {{#with user}}
     <div class="row">
         <div class="left col-sm-4">
@@ -80,7 +100,7 @@
                                     </div>
                                    <!-- <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>-->
                                     <div class="course_body">
-                                        <h3 class="course_title"><a href="/mycourse/{{RatID}}">{{CourName}}</a>
+                                        <h3 class="course_title"><a href="/mycourses/{{RatID}}">{{CourName}}</a>
                                         </h3>
                                         <div class="course_avatar_teacher">
                                             <div class="course_avatar"><img src="/images/teachers/{{TeachAvatar}}"
@@ -101,26 +121,31 @@
                     <div class="courses_container my_course">
                         <div class="row">
                             <!-- Course -->
+                            {{#each ../myFavCourses}}
                             <div class="col-sm-4 course_col">
                                 <div class="course">
                                     <div class="course_image">
-                                        <img src="/images/courses/1577205395.jpg" alt="Course Image">
+                                        <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                                     </div>
-                                    <div class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                                    <form id="frmRemoveFav" action="/account/myfavourite/del" method="POST">
+                                        <input name="id" id="txtFavId" type="hidden">
+                                    </form>
+                                    <a class="course_like" data-id="{{FavID}}" href="javascript;:"><i class="fa fa-heart" aria-hidden="true" style="color: red;"></i></a>
                                     <div class="course_body">
-                                        <h3 class="course_title"><a href="/course/{{CourID}}">Khóa học tiếng anh hóa học tiếng anh</a>
+                                        <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a>
                                         </h3>
                                         <div class="course_avatar_teacher">
-                                            <div class="course_avatar"><img src="/images/teachers/avatar_6.jpg"
+                                            <div class="course_avatar"><img src="/images/teachers/{{TeachAvatar}}"
                                                     class="img-fluid rounded-circle" alt="Avatar Teacher"></div>
                                             <div class="course_teacher">
-                                                <a href="/teacher/{{TeachID}}">Nguyễn Văn A</a>
+                                                <a href="/teacher/{{TeachID}}">{{TeachName}}</a>
                                             </div>
                                         </div>
                                     </div>
                     
                                 </div>
                             </div>
+                            {{/each}}
                         </div>
                     </div>
                 </div>

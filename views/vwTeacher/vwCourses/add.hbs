@@ -1,0 +1,193 @@
+{{#section 'css'}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+{{/section}}
+
+{{#section 'js'}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u09j9wu9pqx2l3xotygchvlu8iaw51i3d3zycqe9agitwcw0/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#input-b6").fileinput({
+                showUpload: false,
+                dropZoneEnabled: true,
+                maxFileCount: 1,
+                allowedFileTypes: ['image'],
+                mainClass: "input-group-lg"
+            });
+            $(".cour-img-upload .btn-file .hidden-xs").html('');
+            $(".fileinput-remove .hidden-xs").html('Hủy');
+
+            $(".cour-img-upload #input-b6").change(function () {
+                $(".cour-img-upload .btn-file").css("background-image", "none");
+                $(".cour-img-upload .btn-file").css("height", "3rem");
+                $(".cour-img-upload .btn-file").css("width", "12rem");
+                $(".cour-img-upload .btn-file .hidden-xs").html('Tải ảnh khác lên');
+            });
+
+
+
+            $(".input-video").fileinput({
+                showUpload: false,
+                showUploadStats: true,
+                dropZoneEnabled: true,
+                maxFileCount: 1,
+                allowedFileTypes: ['mp4'],
+                mainClass: "input-group-lg",
+                maxFileSize: 15000,
+                required: true,
+            });
+            $(".file-loading .btn-file .hidden-xs").html('Tải video lên');
+            $(".file-loading .fileinput-remove .hidden-xs").html('Hủy');
+
+
+            tinymce.init({
+                selector: '.txt_description',
+                plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+                //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                toolbar_mode: 'floating',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Unicat',
+                menubar: false,
+            });
+
+
+            $('.btn-add-chapter').on('click', function () {
+
+                $.ajax({
+                    global: false,
+                    type: 'POST',
+                    url: '/teacher/courses/new-chapter',
+                    success: function (data) {
+                        if (data !== null) {
+                            const newChapter = $.parseHTML(data);
+
+                            if ($('.insert-chapter').children().length === 0) {
+
+                                $('.insert-chapter').append($(newChapter));
+
+
+                            } else {
+                                $(newChapter).insertAfter($('.chapter').last());
+                            }
+                            $.getScript('/js/add.js');
+                            
+
+                        }
+                    },
+                    error: function (request, status, error) {
+                        serviceError();
+                    }
+                });
+
+            });
+
+            
+
+
+        });
+
+    </script>
+
+{{/section}}
+<div class="course-edit">
+    <h3>Thông tin khóa học</h3>
+    <form id="frmNewCour" method="POST">
+        <div class="row">
+            <div class="col-md-8 form-input-1">
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert" style="display: none;">
+                        <strong>#</strong>
+                    </div>
+                    <label class="control-label">Tên khóa học</label>
+                    <div class="file-input">
+                        <input id="cour-name" class="form-control" name="CourName" type="text" autofocus
+                            placeholder="VD: Thành thạo Tiếng Anh 30 ngày">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert" style="display: none;">
+                        <strong>#</strong>
+                    </div>
+                    <label for="name">Mô tả ngắn</label>
+                    <input type="text" name="CourShortDes" id="cour-des" class="form-control"
+                        placeholder="VD: Trọn bộ kỹ năng cơ bản">
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <div class="alert alert-warning" role="alert" style="display: none;">
+                    <strong>#</strong>
+                </div>
+                <label class="control-label">Thêm ảnh khóa học</label>
+
+                <div class="file-input cour-img-upload">
+                    <input id="input-b6" name="CourImg" type="file" accept=".jpg,.jpeg,.png">
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="form-group col-md-6">
+                <div class="alert alert-warning" role="alert" style="display: none;">
+                    <strong>#</strong>
+                </div>
+                <label class="control-label">Danh mục</label>
+                <div class="dropdown">
+
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Lựa chọn
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group col-md-6">
+                <div class="alert alert-warning" role="alert" style="display: none;">
+                    <strong>#</strong>
+                </div>
+                <label class="control-label">Danh mục con</label>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Lựa chọn
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group w-100">
+                <div class="alert alert-warning" role="alert" style="display: none;">
+                    <strong>#</strong>
+                </div>
+                <label class="control-label">Mô tả chi tiết khóa học</label>
+                <textarea class="txt_description" id="txt_description"></textarea>
+            </div>
+        </div>
+        <div class="row ">
+            <label class="control-label">Nội dung khóa học</label>
+            <div class="w-100 insert-chapter">
+
+            </div>
+
+            <div class="w-100">
+                <button type="button" class="btn-add-chapter btn btn-primary "><i class="fa fa-plus-circle"
+                        aria-hidden="true"></i> Thêm
+                    chương mới </button>
+            </div>
+        </div>
+    </form>
+</div>

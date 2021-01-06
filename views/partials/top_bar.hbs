@@ -18,39 +18,42 @@
                         <form id="frmLogout" method="post" action="/account/logout" style="display: none;"></form>
                         <div class="top_bar_login ml-auto">
                             {{#if user}}
-                            <div class="dropdown show">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    <div class="wrap_avatar">
-                                        {{#if user.Avatar}}
-                                        <img src="/images/students/{{user.Avatar}}" alt="Avatar" class="avatar">
-                                        {{else}}
-                                          <div class="name">{{user.Username}}</div>
-                                        {{/if}}
-                                    </div>  
-                                     <span>{{user.Username}}</span>
-                                </a>
-                            
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="/account/profile">
+                                <div class="dropdown show">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
                                         <div class="wrap_avatar">
-                                            {{#if user.Avatar }}
+                                            {{#if user.Avatar}}
                                                 <img src="/images/students/{{user.Avatar}}" alt="Avatar" class="avatar">
-                                                {{else}}
+                                            {{else}}
                                                 <div class="name">{{user.Username}}</div>
                                             {{/if}}
                                         </div>
                                         <span>{{user.Username}}</span>
                                     </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="javascript: $('#frmLogout').submit();">
-                                        <i class="fa fa-sign-out"></i><span>Đăng xuất</span>
-                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="/account/profile">
+                                            <div class="wrap_avatar">
+                                                {{#if user.Avatar }}
+                                                    <img src="/images/students/{{user.Avatar}}" alt="Avatar"
+                                                        class="avatar">
+                                                {{else}}
+                                                    <div class="name">{{user.Username}}</div>
+                                                {{/if}}
+                                            </div>
+                                            <span>{{user.Username}}</span>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="javascript: $('#frmLogout').submit();">
+                                            <i class="fa fa-sign-out"></i><span>Đăng xuất</span>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
                             {{else}}
-                             <div class="login_button"><a href="/account/login">Đăng nhập</a>&nbsp;/&nbsp;<a href="/account/register">Đăng ký</a></div>
-                           {{/if}}
+                                <div class="login_button"><a href="/account/login">Đăng nhập</a>&nbsp;/&nbsp;<a
+                                        href="/account/register">Đăng ký</a></div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
@@ -70,36 +73,42 @@
                             <div class="logo_text">Unic<span>at</span></div>
                         </a>
                     </div>
-                    <nav class="main_nav_contaner w-70 d-flex">
+                    <nav class="main_nav_contaner w-70 d-flex align-items-center">
                         <ul class="main_nav mr-auto">
                             <li class="{{#if home_page}}active{{/if}}"><a href="/">Trang chủ</a></li>
                             <li class="{{#if courses_page}}active{{/if}} dropdown">
-                                <a class="dropdown_link" href="/courses">Các khóa học&nbsp;<i class="fa fa-caret-down"></i> </a>
+                                <a class="dropdown_link" href="/courses">Các khóa học&nbsp;<i
+                                        class="fa fa-caret-down"></i> </a>
                                 <ul class="dropdown_content">
                                     {{#each lcCategories}}
-                                    <li class="dropdown_submenu" id="{{CatID}}">
-                                        <a class="cat_name" href="/courses/byCat/{{CatID}}">{{CatName}}</a>
-                                    </li>
+                                        <li class="dropdown_submenu" id="{{CatID}}">
+                                            <a class="cat_name" href="/courses/byCat/{{CatID}}">{{CatName}}</a>
+                                        </li>
                                     {{/each}}
                                 </ul>
                                 {{#each lcCategories}}
-                                <ul class="dropdown_menu" id="ul{{CatID}}">
-                                    <div class="list_title">{{CatName}}</div>
-                                    {{#each Fields}}
-                                    <li><a href="/courses/byFld/{{FldID}}">{{FldName}}</a></li>
-                                    {{/each}}
-                                </ul>
+                                    <ul class="dropdown_menu" id="ul{{CatID}}">
+                                        <div class="list_title">{{CatName}}</div>
+                                        {{#each Fields}}
+                                            <li><a href="/courses/byFld/{{FldID}}">{{FldName}}</a></li>
+                                        {{/each}}
+                                    </ul>
                                 {{/each}}
 
                             </li>
-                
+
                         </ul>
 
                         <div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>
 
                         <!-- Hamburger -->
 
-                        <div class="shopping_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></div>
+                        <a class="shopping_cart" href="/cart">
+                            <i class="fa fa-shopping-cart d-flex" aria-hidden="true">
+                                <div class="cart-quantity"><span>{{cartSummary}}</span></div>
+                            </i>
+
+                        </a>
                         <div class="hamburger menu_mm">
                             <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
                         </div>
@@ -140,9 +149,9 @@
             <div></div>
         </div>
     </div>
-    <div  style="display:{{#if user}}none{{else}}block{{/if}};">
-    <div class="menu_link"><a href="register">Đăng Ký</a></div>
-    <div class="menu_link"><a href="login">Đăng Nhập</a></div>
+    <div style="display:{{#if user}}none{{else}}block{{/if}};">
+        <div class="menu_link"><a href="register">Đăng Ký</a></div>
+        <div class="menu_link"><a href="login">Đăng Nhập</a></div>
     </div>
     <div class="search">
         <form action="#" class="header_search_form menu_mm">
@@ -154,9 +163,8 @@
     </div>
     <nav class="menu_nav">
         <ul class="menu_mm">
-            <li class="menu_mm {{#if home_page}}active{{/if}}"><a  href="/">Trang chủ</a></li>
+            <li class="menu_mm {{#if home_page}}active{{/if}}"><a href="/">Trang chủ</a></li>
             <li class="menu_mm {{#if courses_page}}active{{/if}}"><a href="/courses">Các khóa học</a></li>
         </ul>
     </nav>
 </div>
-

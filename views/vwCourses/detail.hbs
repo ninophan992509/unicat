@@ -1,7 +1,149 @@
 {{#section 'css'}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" />
 	<link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
 	<link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
 	<link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+{{#section 'js'}}
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+	<script src="/assets/js/course.js"></script>
+	<script src="/assets/js/_bonus.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			if ($('#favList').val()) {
+				const lcFavourite = JSON.parse('{{{json lcFavourite}}}');
+				const items = $('.item');
+
+				for (item of items) {
+					const id = $(item).data("id");
+					let ci;
+					if (ci = lcFavourite.find(x => x.CourID === id)) {
+						const aLike = $(item).find('.course_like');
+						aLike.css('color', 'red');
+						aLike.attr('data-id', `${ci.FavID}`);
+					}
+				}
+			}
+
+			$('.course_like').on('click', function () {
+				let url = '/account/myfavourite/';
+				const id = $(this).data("id");
+				if (id) {
+					url += 'del';
+					$('#txtID').val(id);
+
+				} else {
+					url += 'add';
+					const CourID = $(this).parents('.item').data("id");
+					$('#txtID').val(CourID);
+				}
+
+				$('#frmFavour').attr('action', url);
+				$('#frmFavour').submit();
+			});
+
+			function flyTo(button) {
+				const cart = $('.fa-shopping-cart');
+				const imgtodrag = $(button).parents('.item').find('.course_image_small').children("img");
+				if (imgtodrag) {
+					const imgclone = imgtodrag.clone()
+						.offset({
+							top: imgtodrag.offset().top,
+							left: imgtodrag.offset().left
+						})
+						.css({
+							'opacity': '0.5',
+							'position': 'absolute',
+							'height': '150px',
+							'width': '150px',
+							'z-index': '100'
+						})
+						.appendTo($('body'))
+						.animate({
+							'top': cart.offset().top + 10,
+							'left': cart.offset().left + 10,
+							'width': 75,
+							'height': 75
+						}, 1000, 'easeInOutExpo');
+
+					setTimeout(function () {
+						cart.effect("shake", {
+							times: 2
+						}, 200);
+					}, 1500);
+
+					imgclone.animate({
+						'width': 0,
+						'height': 0
+					}, function () {
+						$(this).detach()
+					});
+				}
+			}
+
+			$('.btnAddCart').on('click', function (e) {
+				e.preventDefault();
+				if (!$('#UserId').val())
+					window.location.href = '/account/login';
+				const id = $(this).data('id');
+				const btn = this;
+				$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+					if (data !== false) {
+						alert("Bạn đã mua khóa học này!");
+						return;
+					} else {
+						flyTo(btn);
+						$.ajax({
+							global: false,
+							type: 'POST',
+							url: '/cart/add', // missing quotes  
+							dataType: 'html',
+							data: {
+								id: id,
+							},
+							success: function (result) {
+								const ret = JSON.parse(result);
+								$('.cart-quantity').children('span').html(ret.cartQuantity);
+							},
+							error: function (request, status, error) {
+								serviceError();
+							}
+						});
+					}
+				});
+			});
+
+			$('.btnBuyNow').on('click', function (e) {
+				e.preventDefault();
+				if (!$('#UserId').val())
+					window.location.href = '/account/login';
+				const id = $(this).data('id');
+				$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+					if (data !== false) {
+						alert("Bạn đã mua khóa học này!");
+						return;
+					} else {
+						$.ajax({
+							global: false,
+							type: 'POST',
+							url: '/cart/add', // missing quotes  
+							dataType: 'html',
+							data: {
+								id: id,
+							},
+							success: function (result) {
+								window.location.href = '/cart';
+							},
+							error: function (request, status, error) {
+								serviceError();
+							}
+						});
+					}
+				});
+			});
+		});
+	</script>
 {{/section}}
 <!-- Home -->
 <div class="home">
@@ -23,7 +165,14 @@
 </div>
 
 <!-- Course -->
-
+<form id="frmFavour" method="POST" action="">
+	<input id="txtID" name="id" type="hidden">
+</form>
+<form id="frmAddCart" action="/cart/add" method="POST">
+	<input type="hidden" name="id" id="txtCourseId">
+</form>
+<input id="userId" type="hidden" value="{{user.Id}}">
+<input id="favList" type="hidden" value="{{lcFavourite}}">
 <div class="course">
 	<div class="container">
 		{{#if empty}}
@@ -60,11 +209,8 @@
 							<!-- Course Info Item -->
 							<div class="course_info_item">
 								<div class="course_info_title">Lĩnh vực:</div>
-								{{#if course.category}}
-									<div class="course_info_text"><a
-											href="/category/{{CatID}}">{{course.category.CatName}}</a>
-									</div>
-								{{/if}}
+								<div class="course_info_text"><a href="/category/{{CatID}}">{{course.CatName}}</a>
+								</div>
 							</div>
 
 						</div>
@@ -86,11 +232,11 @@
 
 								<!-- Description -->
 								<div class="tab_panel active">
-									
+
 									<div class="tab_panel_title">{{course.CourName}}</div>
 									<div class="tab_panel_content">
 										<div class="tab_panel_text">
-											<pre>{{course.CourDesFull}}</pre>
+											{{{course.CourDesFull}}}
 										</div>
 
 									</div>
@@ -100,7 +246,7 @@
 								<div class="tab_panel tab_panel_2">
 									<div class="tab_panel_content">
 										<div class="tab_panel_content">
-											<div class="d-flex justify-content-end " >
+											<div class="d-flex justify-content-end ">
 												Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
 											</div>
 											<!-- Dropdowns -->
@@ -119,9 +265,9 @@
 														</div>
 														<ul>
 															{{#each ../this/course.lessons}}
-															
+
 																{{#eq ../this/ChapID ChapID}}
-																    
+
 																	<li>
 																		<div class="dropdown_item">
 																			<a href="#">
@@ -156,7 +302,7 @@
 													alt="Avatar giảng viên"></div>
 											<div class="teacher_title">
 												<div class="teacher_name"><a
-														href="/teacher/{{teacher.TeachID}}">{{course.teacher.TeachName}}</a>
+														href="/teacher/{{course.TeachID}}">{{course.teacher.TeachName}}</a>
 												</div>
 												<!--<div class="teacher_position">Marketing & Management</div>-->
 											</div>
@@ -168,7 +314,8 @@
 												<div class="teacher_meta_title">Đánh giá:</div>
 												<div class="teacher_meta_text ml-auto">
 													<span>{{roundRating course.teacher.TeachPoints}}</span><i
-														class="fa fa-star" aria-hidden="true"></i></div>
+														class="fa fa-star" aria-hidden="true"></i>
+												</div>
 											</div>
 											<!-- Teacher Review -->
 											<div
@@ -176,7 +323,8 @@
 												<div class="teacher_meta_title">Số khóa học:</div>
 												<div class="teacher_meta_text ml-auto">
 													<span>{{course.teacher.TeachCourses}}</span><i class="fa fa-comment"
-														aria-hidden="true"></i></div>
+														aria-hidden="true"></i>
+												</div>
 											</div>
 											<!-- Teacher Quizzes -->
 											<div
@@ -184,11 +332,12 @@
 												<div class="teacher_meta_title">Học viên:</div>
 												<div class="teacher_meta_text ml-auto">
 													<span>{{course.teacher.TeachStudents}}</span><i class="fa fa-user"
-														aria-hidden="true"></i></div>
+														aria-hidden="true"></i>
+												</div>
 											</div>
 										</div>
 										<div class="teacher_info">
-											<p>{{course.teacher.TeachInfo}}</p>
+											{{{course.teacher.TeachInfo}}}
 										</div>
 									</div>
 								</div>
@@ -213,27 +362,37 @@
 											<ul>
 												<li><span>5 Star</span>
 													<div class="review_rating_bar">
-														<div style="width:90%;"></div>
+														<div
+															style="width:{{#if course.reviews.p5}}{{course.reviews.p5}}{{else}}0{{/if}}%;">
+														</div>
 													</div>
 												</li>
 												<li><span>4 Star</span>
 													<div class="review_rating_bar">
-														<div style="width:75%;"></div>
+														<div
+															style="width:{{#if course.reviews.p4}}{{course.reviews.p4}}{{else}}0{{/if}}%;">
+														</div>
 													</div>
 												</li>
 												<li><span>3 Star</span>
 													<div class="review_rating_bar">
-														<div style="width:32%;"></div>
+														<div
+															style="width:{{#if course.reviews.p3}}{{course.reviews.p3}}{{else}}0{{/if}}%;">
+														</div>
 													</div>
 												</li>
 												<li><span>2 Star</span>
 													<div class="review_rating_bar">
-														<div style="width:10%;"></div>
+														<div
+															style="width:{{#if course.reviews.p2}}{{course.reviews.p2}}{{else}}0{{/if}}%;">
+														</div>
 													</div>
 												</li>
 												<li><span>1 Star</span>
 													<div class="review_rating_bar">
-														<div style="width:3%;"></div>
+														<div
+															style="width:{{#if course.reviews.p1}}{{course.reviews.p1}}{{else}}0{{/if}}%;">
+														</div>
 													</div>
 												</li>
 											</ul>
@@ -243,141 +402,54 @@
 									<!-- Comments -->
 									<div class="comments_container">
 										<ul class="comments_list">
-											<li>
-												<div
-													class="comment_item d-flex flex-row align-items-start jutify-content-start">
-													<div class="comment_image">
-														<div><img src="/assets/images/comment_1.jpg" alt=""></div>
-													</div>
-													<div class="comment_content">
-														<div
-															class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-															<div class="comment_author"><a href="#">Milley Cyrus</a>
-															</div>
-															<div class="comment_rating">
-																<div class="rating_r rating_r_4">
-																	<i></i><i></i><i></i><i></i><i></i></div>
-															</div>
-															<div class="comment_time ml-auto">1 day ago</div>
-														</div>
-														<div class="comment_text">
-															<p>There are many variations of passages of Lorem Ipsum
-																available, but the majority have alteration in some
-																form, by
-																injected humour.</p>
-														</div>
-														<div
-															class="comment_extras d-flex flex-row align-items-center justify-content-start">
-															<div class="comment_extra comment_likes"><a href="#"><i
-																		class="fa fa-heart"
-																		aria-hidden="true"></i><span>15</span></a></div>
-															<div class="comment_extra comment_reply"><a href="#"><i
-																		class="fa fa-reply"
-																		aria-hidden="true"></i><span>Reply</span></a>
+											{{#each course.comments}}
+												<li>
+													<div
+														class="comment_item d-flex flex-row align-items-start jutify-content-start">
+														<div class="comment_image">
+															<div><img
+																	src="/images/{{#if StdAvatar}}students/{{StdAvatar}}{{else}}no-avatar.png{{/if}}"
+																	alt="Avatar">
 															</div>
 														</div>
-													</div>
-												</div>
-												<ul>
-													<li>
-														<div
-															class="comment_item d-flex flex-row align-items-start jutify-content-start">
-															<div class="comment_image">
-																<div><img src="/assets/images/comment_2.jpg" alt="">
+														<div class="comment_content">
+															<div
+																class="comment_title_container d-flex flex-row align-items-center justify-content-start">
+																<div class="comment_author"><a href="#">{{StdName}}</a>
 																</div>
-															</div>
-															<div class="comment_content">
-																<div
-																	class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-																	<div class="comment_author"><a href="#">John
-																			Tyler</a>
+																<div class="comment_rating">
+																	<div class="star_outer">
+																		<div class="star_inner"
+																			style="width:{{setRatingValue Point 70}}px;">
+																		</div>
 																	</div>
-																	<div class="comment_rating">
-																		<div class="rating_r rating_r_4">
-																			<i></i><i></i><i></i><i></i><i></i></div>
-																	</div>
-																	<div class="comment_time ml-auto">1 day ago</div>
-																</div>
-																<div class="comment_text">
-																	<p>There are many variations of passages of Lorem
-																		Ipsum
-																		available, but the majority have alteration in
-																		some
-																		form, by injected humour.</p>
-																</div>
-																<div
-																	class="comment_extras d-flex flex-row align-items-center justify-content-start">
-																	<div class="comment_extra comment_likes"><a
-																			href="#"><i class="fa fa-heart"
-																				aria-hidden="true"></i><span>15</span></a>
-																	</div>
-																	<div class="comment_extra comment_reply"><a
-																			href="#"><i class="fa fa-reply"
-																				aria-hidden="true"></i><span>Reply</span></a>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</li>
-												</ul>
-											</li>
-											<li>
-												<div
-													class="comment_item d-flex flex-row align-items-start jutify-content-start">
-													<div class="comment_image">
-														<div><img src="/assets/images/comment_3.jpg" alt=""></div>
-													</div>
-													<div class="comment_content">
-														<div
-															class="comment_title_container d-flex flex-row align-items-center justify-content-start">
-															<div class="comment_author"><a href="#">Milley Cyrus</a>
-															</div>
-															<div class="comment_rating">
+																	<span
+																		class="course_rating">{{roundRating Point}}</span>
 
-																<div class="rating_r rating_r_4">
-																	<i></i><i></i><i></i><i></i><i></i></div>
+																</div>
+																<div class="comment_time ml-auto">{{formatDateTime DOP}}
+																</div>
 															</div>
-															<div class="comment_time ml-auto">1 day ago</div>
-														</div>
-														<div class="comment_text">
-															<p>There are many variations of passages of Lorem Ipsum
-																available, but the majority have alteration in some
-																form, by
-																injected humour.</p>
-														</div>
-														<div
-															class="comment_extras d-flex flex-row align-items-center justify-content-start">
-															<div class="comment_extra comment_likes"><a href="#"><i
-																		class="fa fa-heart"
-																		aria-hidden="true"></i><span>15</span></a></div>
-															<div class="comment_extra comment_reply"><a href="#"><i
-																		class="fa fa-reply"
-																		aria-hidden="true"></i><span>Reply</span></a>
+															<div class="comment_text">
+																<p>{{Feedback}}</p>
+															</div>
+															<div
+																class="comment_extras d-flex flex-row align-items-center justify-content-start">
 															</div>
 														</div>
 													</div>
-												</div>
-											</li>
+												</li>
+											{{/each}}
 										</ul>
 										<div class="add_comment_container">
-											<div class="add_comment_title">Đánh giá khóa học</div>
-											<div class="add_comment">
-												<form action="" method="post">
-													<div class="rating">
-														<div class="star_outer">
-															<div class="star_inner" style="width:0px;">
-															</div>
-														</div>
-														<div class="rating_num">0</div>
-													</div>
-													<textarea class="form-control" id="feedback_txt" rows="3"
-														placeholder="Nhập bình luận về khóa học"></textarea>
-													<button type="submit" class="btn btn-primary mb-2">Đánh giá</button>
-												</form>
-
-											</div>
-											<div class="add_comment_text">Bạn phải đăng nhập<a href="/login">&nbsp;đăng
-													nhập&nbsp;</a>để đánh giá khóa học.</div>
+											{{#if user}}
+												<div class="add_comment_text">Chỉ học viên của khóa học mới có thể bình
+													luận. Thanh toán khóa học để bình luận</div>
+											{{else}}
+												<div class="add_comment_text">Bạn phải đăng nhập<a
+														href="/login">&nbsp;đăng
+														nhập&nbsp;</a>để đánh giá khóa học.</div>
+											{{/if}}
 										</div>
 									</div>
 								</div>
@@ -396,7 +468,7 @@
 						<!-- Feature -->
 						<div class="sidebar_section">
 							<div class="sidebar_section_title">Thanh toán khóa học</div>
-							<div class="sidebar_feature course_checkout_card">
+							<div class="sidebar_feature course_checkout_card item" data-id="{{course.CourID}}">
 								<!-- Course Image -->
 								<div class="course_image_small">
 									<img src="/images/courses/{{course.CourImgSm}}" alt="Hình ảnh khóa học">
@@ -404,16 +476,16 @@
 								<!-- Course Price -->
 								<div class="d-flex justify-content-between align-items-center">
 									<div class="course_price">{{format course.CourPrice}}đ</div>
-									<a href="#" class="course_fav_btn"><i class="fa fa-heart"></i></a>
+									<a href="#" class="course_fav_btn course_like"><i class="fa fa-heart"></i></a>
 								</div>
 
-
-
 								<div class="course_checkout">
-									<button type="submit" class="btn btn-primary buy_now" title="Buy Now" id="buy-now"
-										title="buynow-button">Mua Ngay</button>
-									<button type="submit" class="btn btn-outline-primary add_cart" title="Add Cart"
-										id="add-cart" title="addcart-button">Thêm Giỏ Hàng</button>
+									<button data-id="{{course.CourID}}" type="submit" class="btn btn-primary btnBuyNow"
+										title="Buy Now" title="Buy Now">Mua Ngay</button>
+									<button data-id="{{course.CourID}}" type="submit"
+										class="btn btn-outline-primary btnAddCart" title="Add Cart"
+										title="addcart-button">Thêm Vào Giỏ Hàng
+									</button>
 
 								</div>
 
@@ -471,8 +543,3 @@
 		{{/if}}
 	</div>
 </div>
-
-{{#section 'js'}}
-	<script src="/assets/js/course.js"></script>
-	<script src="/assets/js/_bonus.js"></script>
-{{/section}}

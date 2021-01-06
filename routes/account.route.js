@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const accountModel = require("../models/account.model");
 const teacherModel = require("../models/teacher.model");
 const studentModel = require("../models/student.model");
+const favCourseModel = require("../models/favourite-course.model");
 const courseModel = require("../models/course.model");
 const auth = require("../middlewares/auth.mdw");
 const upload = require("../service/upload");
@@ -24,7 +25,7 @@ router.get("/login", function (req, res) {
 
 router.post("/login", async function (req, res) {
   const user = await accountModel.singleByEmail(req.body.Email);
-  if (user === null) {
+  if (user === null || +user.Role !== 2) {
     return res.render("vwAccount/login", {
       layout: false,
       err_message: "Tài khoản không tồn tại!",
@@ -41,7 +42,8 @@ router.post("/login", async function (req, res) {
 
   req.session.isAuth = true;
   req.session.authUser = user.AccID;
-
+  req.session.role = user.Role;
+  req.session.cart = [];
   let url = req.session.retUrl || "/";
   res.redirect(url);
 });
@@ -49,6 +51,7 @@ router.post("/login", async function (req, res) {
 router.post("/logout", async function (req, res) {
   req.session.isAuth = false;
   req.session.authUser = null;
+  req.session.cart = [];
   res.redirect(req.headers.referer);
 });
 
@@ -88,8 +91,10 @@ router.post("/register", async function (req, res) {
 
 router.get("/profile", auth, async function (req, res) {
   const rows = await courseModel.allByStdID(res.locals.user.Id);
+  const _rows = await courseModel.allFavByStd(res.locals.user.Id);
   res.render("vwAccount/profile", {
     myCourses: rows,
+    myFavCourses: _rows,
   });
 });
 
@@ -136,5 +141,22 @@ router.post("/security", auth, async function (req, res) {
     await accountModel.patch(user);
     res.redirect("/account/profile");
   }
+});
+
+router.post("/myfavourite/add", auth, async function (req, res) {
+  const entity = {
+    CourID: +req.body.id,
+    StdID: +res.locals.user.Id,
+  };
+  await favCourseModel.add(entity);
+  res.redirect(req.headers.referer + "#list-fav-courses");
+});
+
+router.post("/myfavourite/del", auth, async function (req, res) {
+  const entity = {
+    FavID: +req.body.id,
+  };
+  await favCourseModel.del(entity);
+  res.redirect(req.headers.referer + "#list-fav-courses");
 });
 module.exports = router;
