@@ -52,6 +52,11 @@ app.engine(
         moment.suppressDeprecationWarnings = true;
         return moment(`${datetime}`).fromNow();
       },
+      formatDOB(datetime)
+      {
+        const date = new Date(`${datetime}`);
+        return moment(date).format("DD-MM-YYYY");
+      },
       json(context) {
         return JSON.stringify(context);
       },
@@ -78,7 +83,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./middlewares/session.mdw")(app);
 require("./middlewares/locals-teacher.mdw")(app);
-app.use("/teacher",require("./routes/routeTeacher/index"));
+app.use("/teacherpage",require("./routes/routeTeacher/account.route"));
+app.use("/teacherpage/courses", require("./routes/routeTeacher/course.route"));
 app.use("/admin", require("./routes/routeAdmin/index"));
 
 

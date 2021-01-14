@@ -20,7 +20,7 @@
     <body class="tc-body">
         {{{_sections.css}}}
         <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
-        <form id="frmLogout" method="POST" action="/teacher/logout"></form>
+        <form id="frmLogout" method="POST" action="/teacherpage/logout"></form>
         <div class="container">
             <div class="row my-container">
                 <div class="left col-md-4">
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="list-group tc-list" id="list-tab" role="tablist">
-                        <button type="button" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Tạo khóa
+                        <button role="button" id="btnCreate" class="btn btn-primary" ><i class="fa fa-plus-circle"></i> Tạo khóa
                             học</button>
                         <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
                             href="#list-profile" role="tab" aria-controls="profile"><i class="fa fa-user"></i> Thông tin
@@ -50,7 +50,7 @@
                             học của
                             tôi</a>
                         <a class="list-group-item list-group-item-action" id="list-logout-list"
-                            href="#" ><i class="fa fa-power-off"></i>
+                            href="#list-profile" ><i class="fa fa-power-off"></i>
                             Đăng xuất</a>
                     </div>
 
@@ -87,6 +87,17 @@
                 $("#list-logout-list").on('click', function(){
                         $('#frmLogout').submit();
                 });
+
+                $("#btnCreate").on("click", function(){
+                     window.location.assign('/teacherpage/courses/create');
+                });
+                $("#list-myCourses-list").on("click", function () {
+                    window.location.assign('/teacherpage/courses');
+                });
+                $("#list-profile-list").on("click", function () {
+                    window.location.assign('/teacherpage/info');
+                });
+                
             });
         </script>
         {{{_sections.js}}}

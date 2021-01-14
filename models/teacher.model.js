@@ -31,14 +31,14 @@ module.exports = {
       ` select t.*, count( c1.CourID) as TeachCourses , sum(re.CourStudent1) as TeachStudents, 
                 sum(re.CourRates1) as TeachRates, avg(re.CourPoint1) as TeachPoints
         from ${TBL_COURSES} c1 
-        inner join(
+        left join(
 					          select sc1.CourID, count(sc1.CourID) as CourStudent1, 
 					          count(case when sc1.Point!= 0 then 1 end) as CourRates1,
 					          avg(case when sc1.Point!=0 then sc1.Point end) as CourPoint1
 					          from ${TBL_STUDENT_COURSES} sc1
 					          group by sc1.CourID
         ) as re on re.CourID = c1.CourID
-        left join ${TBL_TEACHERS} t on t.TeachID = c1.TeachID
+        join ${TBL_TEACHERS} t on t.TeachID = c1.TeachID
         where t.TeachID = ${id}
         group by c1.TeachID`
     );

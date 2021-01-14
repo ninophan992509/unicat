@@ -1,97 +1,56 @@
-$(document).ready(function () {
+$("#videoSourceWrapper").hide();
+$("#videoSourceWrapper .progress").hide();
 
-  function loadPlugin() {
-    $(".input-video").fileinput({
-      showUpload: false,
-      showUploadStats: true,
-      dropZoneEnabled: true,
-      maxFileCount: 1,
-      allowedFileTypes: ["mp4"],
-      mainClass: "input-group-lg",
-      maxFileSize: 15000,
-      required: true,
-    });
-    $(".file-loading .btn-file .hidden-xs").html("Tải video lên");
-    $(".file-loading .fileinput-remove .hidden-xs").html("Hủy");
+$("#uploadVideoFile").on("change", function () {
+  const fileInput = document.getElementById("uploadVideoFile");
+  const maxSize = 31457280;
 
-    tinymce.init({
-      selector: ".txt_description",
-      plugins:
-        "a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker",
-      //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
-      toolbar_mode: "floating",
-      tinycomments_mode: "embedded",
-      tinycomments_author: "Unicat",
-      menubar: false,
-    });
-
-    
+  if ("files" in fileInput) {
+    if (fileInput.files.length === 0) {
+      alert("Select a file to upload");
+    } else {
+      if (fileInput.files[0].size > maxSize) {
+        alert("Tệp quá lớn!");
+      } else {
+        let $source = $("#videoSource");
+        $source[0].src = URL.createObjectURL(this.files[0]);
+        $source.parent()[0].load();
+        $("#videoSourceWrapper").show();
+        UploadVideo(fileInput.files[0]);
+      }
+    }
+  } else {
+    console.log('No found "files" property');
   }
-
-  $(".btn-remove-chapter").on("click", function () {
-    const btn = this;
-    const stt = $(btn).parents(".chapter").data("stt");
-    $.ajax({
-      global: false,
-      type: "POST",
-      url: "/teacher/courses/remove-chapter",
-      dataType: "html",
-      data: {
-        stt: stt,
-      },
-      success: function (data) {
-        const ret = JSON.parse(data);
-        if (ret === true) {
-          $(btn).parents(".chapter").remove();
-          $(".chapter").each(function () {
-            let chapter_stt = $(this).data("stt");
-            if (+chapter_stt > stt) {
-              $(this).attr("data-stt", `${+chapter_stt - 1}`);
-              $(this)
-                .find(".chapter-name .form-group .chapter_stt")
-                .html(`${+chapter_stt - 1}`);
-            }
-          });
-        }
-      },
-      error: function (request, status, error) {
-        serviceError();
-      },
-    });
-  });
-
-  $(".btn-add-lesson").on("click", function () {
-    const less_stt = $(this).parents(".chapter").data("stt");
-    const btn = this;
-    $.ajax({
-      global: false,
-      type: "POST",
-      url: "/teacher/courses/new-lesson",
-      dataType: "html",
-      data: {
-        stt: less_stt,
-      },
-      success: function (data) {
-        if (data !== null) {
-          const newLesson = $.parseHTML(data);
-          const insertLesson = $(btn)
-            .parents(".chapter")
-            .children(".insert-lesson");
-
-          if ($(insertLesson).children().length === 0) {
-            $(insertLesson).append($(newLesson));
-          } else {
-            $(newLesson).insertAfter($(".lesson").last());
-          }
-          loadPlugin();
-        
-        } else {
-          alert("null");
-        }
-      },
-      error: function (request, status, error) {
-        serviceError();
-      },
-    });
-  });
 });
+
+function UploadVideo(file) {
+  let loaded = 0;
+  const chunkSize = 1000000;
+  const total = file.size;
+  let reader = new FileReader();
+  let slice = file.slice(0, chunkSize);
+
+  // Reading a chunk to invoke the 'onload' event
+  reader.readAsBinaryString(slice);
+  console.log('Started uploading file "' + file.name + '"');
+  $("#uploadVideoProgressBar").show();
+
+  reader.onload = function (e) {
+    setTimeout(function () {
+      loaded += chunkSize;
+      let percentLoaded = Math.min((loaded / total) * 100, 100);
+
+      $("#uploadVideoProgressBar").attr("aria-valuenow", `${percentLoaded}`);
+      $("#uploadVideoProgressBar").css("width", `${percentLoaded}%`);
+      $("#uploadVideoProgressBar").html(Math.floor(percentLoaded) + "%");
+      //Read the next chunk and call 'onload' event again
+      if (loaded <= total) {
+        slice = file.slice(loaded, loaded + chunkSize);
+        reader.readAsBinaryString(slice);
+      } else {
+        loaded = total;
+      }
+    }, 200);
+  };
+}

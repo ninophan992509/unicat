@@ -12,17 +12,25 @@ const lessonModel = require("../models/lesson.model");
 router.get("/detail/:id", async function (req, res) {
   const id = +req.params.id;
   const course = await courseModel.singleWithDetails(id);
-  course.teacher = await teacherModel.singleWithDetails(course.TeachID);
   course.chapters = await chapterModel.allChapterByCourID(id);
   course.lessons = await lessonModel.allLessonByCourID(id);
   course.comments = await studentCourseModel.allByCourID(id);
   const rows = await studentCourseModel.singlePercentReview(id);
   course.reviews = rows[0];
+  if (course != null) {
+    course.teacher = await teacherModel.singleWithDetails(course.TeachID);
+  }
   res.render("vwCourses/detail", {
     title: "Chi tiết khóa học",
     course,
     empty: course === null,
   });
+
+  const view = {
+    CourID: course.CourID,
+    Views: course.Views + 1,
+  };
+  await courseModel.update_view(view);
 });
 
 router.get("/search", async function (req, res) {
@@ -30,7 +38,9 @@ router.get("/search", async function (req, res) {
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
   const offset = (page - 1) * limit;
-  const rows = await courseModel.pageSearch(text, offset);
+  const opt = +req.query.sort || 0;
+  const ord = +req.query.desc || 0;
+  const rows = await courseModel.pageSearch(text, offset, opt, ord);
   const numRows = rows.length !== 0 ? rows[0]["COUNT(*) OVER()"] : 0;
   const totalPage =
     +numRows % limit === 0
@@ -43,6 +53,8 @@ router.get("/search", async function (req, res) {
     courses: rows,
     currentPage: page,
     limit,
+    opt,
+    ord,
     totalPage,
     empty: rows.length === 0,
     text,
@@ -54,7 +66,9 @@ router.get("/byCat/:id", async function (req, res) {
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
   const offset = (page - 1) * limit;
-  const rows = await courseModel.pageByCatID(id, offset);
+  const opt = +req.query.sort || 0;
+  const ord = +req.query.desc || 0;
+  const rows = await courseModel.pageByCatID(id, offset, opt, ord);
   const numRows = rows.length !== 0 ? rows[0]["COUNT(*) OVER()"] : 0;
 
   const lcCategories = res.locals.lcCategories;
@@ -76,6 +90,8 @@ router.get("/byCat/:id", async function (req, res) {
     courses: rows,
     currentPage: page,
     limit,
+    opt,
+    ord,
     totalPage,
     catSearch,
     empty: rows.length === 0,
@@ -88,7 +104,9 @@ router.get("/byFld/:id", async function (req, res) {
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
   const offset = (page - 1) * limit;
-  const rows = await courseModel.pageByFldID(id, offset);
+  const opt = +req.query.sort || 0;
+  const ord = +req.query.desc || 0;
+  const rows = await courseModel.pageByFldID(id, offset, opt, ord);
   const numRows = rows.length !== 0 ? rows[0]["COUNT(*) OVER()"] : 0;
 
   const lcCategories = res.locals.lcCategories;
@@ -112,6 +130,8 @@ router.get("/byFld/:id", async function (req, res) {
     courses: rows,
     currentPage: page,
     limit,
+    opt,
+    ord,
     totalPage,
     catSearch,
     fldSearch,
@@ -124,7 +144,9 @@ router.get("/", async function (req, res) {
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
   const offset = (page - 1) * limit;
-  const rows = await courseModel.pageAll(offset);
+  const opt = +req.query.sort || 0;
+  const ord = +req.query.desc || 0;
+  const rows = await courseModel.pageAll(offset, opt, ord);
   const numRows = rows ? rows[0]["COUNT(*) OVER()"] : 0;
   const totalPage =
     +numRows % limit === 0
@@ -137,6 +159,8 @@ router.get("/", async function (req, res) {
     courses: rows,
     currentPage: page,
     limit,
+    opt,
+    ord,
     totalPage,
     empty: rows.length === 0,
   });

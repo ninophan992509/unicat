@@ -137,34 +137,55 @@
 
             $('.btnAddCart').on('click', function (e) {
                 e.preventDefault();
-                if (!$('#UserId').val())
+                if ($('#userId').val() === "")
                     window.location.href = '/account/login';
-                const id = $(this).data('id');
-                const btn = this;
-                $.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
-                    if (data !== false) {
-                        alert("Bạn đã mua khóa học này!");
-                        return;
-                    } else {
-                        flyTo(btn);
-                        $.ajax({
-                            global: false,
-                            type: 'POST',
-                            url: '/cart/add', // missing quotes  
-                            dataType: 'html',
-                            data: {
-                                id: id,
-                            },
-                            success: function (result) {
-                                const ret = JSON.parse(result);
-                                $('.cart-quantity').children('span').html(ret.cartQuantity);
-                            },
-                            error: function (request, status, error) {
-                                serviceError();
-                            }
-                        });
-                    }
-                });
+                else {
+                    const id = $(this).data('id');
+                    const btn = this;
+                    $.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+                        if (data !== false) {
+                            alert("Bạn đã mua khóa học này!");
+                            return;
+                        } else {
+                            flyTo(btn);
+                            $.ajax({
+                                global: false,
+                                type: 'POST',
+                                url: '/cart/add', // missing quotes  
+                                dataType: 'html',
+                                data: {
+                                    id: id,
+                                },
+                                success: function (result) {
+                                    const ret = JSON.parse(result);
+                                    $('.cart-quantity').children('span').html(ret.cartQuantity);
+                                },
+                                error: function (request, status, error) {
+                                    serviceError();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            $("#sl_sort").on("change", function () {
+                const data = $(this).val();
+                const params = new URLSearchParams(location.search);
+                params.set('sort', data);
+                params.set('page', 1);
+                params.toString();
+                window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+                document.location = window.location.href;
+            });
+            $("#sl_order").on("change", function () {
+                const data = $(this).val();
+                const params = new URLSearchParams(location.search);
+                params.set('desc', data);
+                params.set('page', 1);
+                params.toString();
+                window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+                document.location = window.location.href;
             });
         });
     </script>
@@ -211,6 +232,7 @@
                 <div class="sidebar">
                     <!-- Categories -->
                     <div class="sidebar_section">
+
                         {{#if catSearch}}
                             <div class="sidebar_section_title">{{catSearch.CatName}}</div>
                             <div class="sidebar_categories">
@@ -244,8 +266,25 @@
                         <input type="search" name="text" class="courses_search_input" placeholder="Tìm kiếm khóa học"
                             required="required" value="{{text}}">
                         <button action="submit" class="courses_search_button ml-auto">Tìm kiếm</button>
-
                     </form>
+                    <div class="row w-100">
+                        <div class="form-group col-md-6">
+                            <label for="sort">Sắp xếp theo</label>
+                            <select class="form-control" name="sort" id="sl_sort">
+                                <option disabled selected>Lựa chọn</option>
+                                <option value="1" {{#eq opt 1}}selected{{/eq}}>Điểm đánh giá</option>
+                                <option value="2" {{#eq opt 2}}selected{{/eq}}>Giá</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="order">Thứ tự</label>
+                            <select class="form-control" name="order" id="sl_order">
+                                <option disabled selected>Lựa chọn</option>
+                                <option value="1" {{#eq ord 1}}selected{{/eq}}>Tăng dần</option>
+                                <option value="0" {{#eq ord 0}}selected{{/eq}}>Giảm dần</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="courses_container">
                     <div class="row courses_row">

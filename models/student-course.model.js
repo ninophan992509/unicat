@@ -44,4 +44,11 @@ module.exports = {
   add(entity) {
     return db.add(entity, TBL_STUDENT_COURSES);
   },
+   
+  patch(entity)
+  {
+     const condition = { RatID:entity.RatID};
+     delete entity.RatID;
+     return db.patch(entity,condition,TBL_STUDENT_COURSES);
+  },
 };

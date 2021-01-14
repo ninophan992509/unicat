@@ -6,7 +6,8 @@ const TBL_STUDENT_COURSES = "studentcourse";
 const TBL_TEACHERS = "teacher";
 const TBL_CATEGORIES = "category";
 const TBL_FAVOURITE_COURSES = "favouritecourse";
-
+const criteria = ["CreatedAt", "CourPoint", "CourPrice"];
+const order = ["desc","asc"];
 module.exports = {
   all() {
     return db.load(`select * from ${TBL_COURSES}`);
@@ -18,7 +19,17 @@ module.exports = {
                     inner join ${TBL_COURSES} c on c.CourID = sc.CourID) 
                     inner join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
                     where sc.StdID = ${id}
+                    group by sc.CourID
                     order by sc.RatID desc`);
+  },
+
+  allByTeachID(id) {
+    return db.load(`select c.*, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
+                                from ${TBL_COURSES} c 
+                                left join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID 
+                                where c.TeachID = ${id}
+                                group by c.CourID
+                                order by c.CreatedAt desc`);
   },
 
   allFavByStd(id) {
@@ -30,17 +41,22 @@ module.exports = {
                     order by fc.FavID desc`);
   },
 
-  pageAll(offset) {
+  pageAll(offset, opt, ord) {
+
+    if(opt > 2 ) opt = 0;
+    if(ord > 1) ord = 0;
     return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint, COUNT(*) OVER()
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
                     group by c.CourID
-                    order by c.CreatedAt desc 
+                    order by ${criteria[opt]} ${order[ord]} 
                     limit ${config.pagination.limit} offset ${offset}`);
   },
 
-  pageSearch(text, offset) {
+  pageSearch(text, offset, opt, ord) {
+    if (opt > 2) opt = 0;
+    if (ord > 1) ord = 0;
     return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, 
                     count(case when sc.Point != 0 then 1 end) as CourRates,
                     avg(case when sc.Point != 0 then sc.Point end) as CourPoint, 
@@ -59,10 +75,13 @@ module.exports = {
                     or MATCH (c.CourName ) 
                     AGAINST ('${text}') 
                     group by c.CourID
+                    order by ${criteria[opt]} ${order[ord]} 
                     limit ${config.pagination.limit} offset ${offset}`);
   },
 
-  pageByCatID(id, offset) {
+  pageByCatID(id, offset, opt, ord) {
+    if (opt > 2) opt = 0;
+    if (ord > 1) ord = 0;
     return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint, COUNT(*) OVER()
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
@@ -71,18 +90,20 @@ module.exports = {
                     inner join ${TBL_CATEGORIES} ct on ct.CatID = f.CatID
                     where ct.CatID = ${id}
                     group by c.CourID
-                    order by c.CreatedAt desc                    
+                    order by ${criteria[opt]} ${order[ord]}                    
                     limit ${config.pagination.limit} offset ${offset}`);
   },
 
-  pageByFldID(id, offset) {
+  pageByFldID(id, offset, opt, ord) {
+    if (opt > 2) opt = 0;
+    if (ord > 1) ord = 0;
     return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint, COUNT(*) OVER()
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
                     where c.FldID = ${id}
                     group by c.CourID
-                    order by c.CreatedAt desc                    
+                    order by ${criteria[opt]} ${order[ord]}                   
                     limit ${config.pagination.limit} offset ${offset}`);
   },
 
@@ -167,5 +188,15 @@ module.exports = {
                     where sc1.CourID = re.CourID and c.CourID = sc1.CourID and tc.TeachID = c.TeachID
                     group by sc1.CourID`;
     return db.load(query);
+  },
+
+  async add(entity) {
+    const ret = await db.add(entity, TBL_COURSES);
+    return ret.insertId;
+  },
+  update_view(entity) {
+    const condition = { CourID: entity.CourID };
+    delete entity.CourID;
+    return db.patch(entity, condition, TBL_COURSES);
   },
 };

@@ -5,10 +5,10 @@ const courseModel = require("../models/course.model");
 const studentCourseModel = require("../models/student-course.model");
 const ordersModel = require("../models/orders.model");
 const orderDetailModel = require("../models/order-detail.model");
-
+const auth = require("../middlewares/auth.mdw");
 const router = express.Router();
 
-router.get("/", async function (req, res) {
+router.get("/",auth,async function (req, res) {
   const items = [];
   const cart = req.session.cart;
   let total = 0;
@@ -29,7 +29,7 @@ router.get("/", async function (req, res) {
   });
 });
 
-router.post("/add", function (req, res) {
+router.post("/add",auth,function (req, res) {
   const item = {
     id: +req.body.id,
   };
@@ -43,7 +43,7 @@ router.post("/remove", function (req, res) {
   res.redirect(req.headers.referer);
 });
 
-router.get("/is-bought", async function (req, res) {
+router.get("/is-bought", auth, async function (req, res) {
   const CourID = +req.query.courID;
   const StdID = +res.locals.user.Id;
 
@@ -54,7 +54,7 @@ router.get("/is-bought", async function (req, res) {
   res.json(true);
 });
 
-router.post("/checkout", async function (req, res) {
+router.post("/checkout",auth,async function (req, res) {
   const details = [];
   let total = 0;
   const cart = req.session.cart;

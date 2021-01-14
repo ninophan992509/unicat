@@ -1,0 +1,57 @@
+{{#section 'css'}}
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+{{/section}}
+
+<div class="row courses_row courses_of_teacher">
+    {{#each mycourses}}
+        <div class="col-sm-6 course_col item" data-id="{{CourID}}">
+            <div class="course_col">
+                <div class="course">
+                    <div class="course_image">
+                        <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
+                    </div>
+                    <div class="course_body">
+                        <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
+                        <div class="course_text">
+                            <p>{{CourDesShort}}</p>
+                        </div>
+                    </div>
+                    <div class="course_footer">
+                        <div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="course_info">
+                                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                <span>{{CourStudents}} Học viên</span>
+                            </div>
+                            <div class="course_info">
+                                <div class="star_outer">
+                                    <div class="star_inner" style="width: {{setRatingValue CourPoint 70}}px;">
+                                    </div>
+                                </div>
+                                <span class="course_rating">{{roundRating CourPoint}}</span>
+                                <span class="course_count_rating">({{CourRates}})</span>
+                            </div>
+                            <div class="course_price ml-auto">{{format CourPrice}}đ</div>
+                        </div>
+                        <div class="course_button d-flex justify-content-between">
+                            <a name="btnDetail" class="btn btn-outline-primary btn-detail"
+                                href="/teacherpage/courses/detail/{{CourID}}" role="button">
+                                Xem Chi Tiết
+                            </a>
+                            <button data-id={{CourID}} class="btn-edit btn btn-primary btn-add" href="javascipt:;"
+                                role="button">
+                                <i class="fa fa-edit"></i>
+                                Chỉnh sửa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>

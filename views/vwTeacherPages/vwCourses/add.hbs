@@ -1,0 +1,419 @@
+{{#section 'css'}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u09j9wu9pqx2l3xotygchvlu8iaw51i3d3zycqe9agitwcw0/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        $(document).ready(function () {
+            $("#input-b6").fileinput({
+                showUpload: false,
+                dropZoneEnabled: true,
+                maxFileCount: 1,
+                allowedFileTypes: ['image'],
+                mainClass: "input-group-lg"
+            });
+
+            $(".cour-img-upload .btn-file .hidden-xs").html('');
+
+            $(".fileinput-remove .hidden-xs").html('Hủy');
+
+            $(".cour-img-upload #input-b6").on('change', function () {
+                $(".cour-img-upload .btn-file").css("background-image", "none");
+                $(".cour-img-upload .btn-file").css("height", "3rem");
+                $(".cour-img-upload .btn-file").css("width", "12rem");
+                $(".cour-img-upload .btn-file .hidden-xs").html('Tải ảnh khác lên');
+            });
+
+            tinymce.init({
+                selector: '.txt_description',
+                plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+                //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                toolbar_mode: 'floating',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Unicat',
+                browser_spellcheck: false,
+                menubar: false,
+            });
+
+            $('.btn-add-chapter').off('click').on('click', function (e) {
+                e.preventDefault();
+                offAlert();
+                $.ajax({
+                    global: false,
+                    type: 'POST',
+                    url: '/teacherpage/courses/new-chapter',
+                    success: function (data) {
+                        if (data !== null) {
+                            const newChapter = $.parseHTML(data);
+
+                            if ($('.insert-chapter').children().length === 0) {
+
+                                $('.insert-chapter').append($(newChapter));
+
+                            } else {
+                                $(newChapter).insertAfter($('.chapter').last());
+                            }
+                            loadFnButton();
+
+                        }
+                    },
+                    error: function (request, status, error) {
+                        serviceError();
+                    }
+                });
+
+            });
+
+            function loadPlugin() {
+
+                $(".input-video").fileinput({
+                    showUpload: false,
+                    maxFileCount: 1,
+                    allowedFileTypes: ["mp4"],
+                    mainClass: "input-group-lg",
+                    maxFileSize: 30000,
+                    required: true,
+                });
+
+                $(".file-loading .btn-file .hidden-xs").html("Tải video lên");
+                $(".file-loading .fileinput-remove .hidden-xs").html("Hủy");
+
+                tinymce.init({
+                    selector: ".txt_description",
+                    plugins:
+                        "a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker",
+                    //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                    toolbar_mode: "floating",
+                    tinycomments_mode: "embedded",
+                    tinycomments_author: "Unicat",
+                    browser_spellcheck: false,
+                    menubar: false,
+                });
+
+                $(".btn-remove-lesson").off('click').on("click", function (e) {
+                    e.preventDefault();
+                    const lessons = $(this).parents(".lesson").parents(".chapter").children('.insert-lesson');
+                    const btn = this;
+                    const lesson_stt = $(this).parents(".lesson").data("stt");
+                    const chapter_stt = $(this).parents(".lesson").parents(".chapter").data("stt");
+
+                    $.ajax({
+                        global: false,
+                        type: "POST",
+                        url: "/teacherpage/courses/remove-lesson",
+                        dataType: "html",
+                        data: {
+                            stt: chapter_stt,
+                        },
+                        success: function (data) {
+                            if (data) {
+                                $(btn).parents(".lesson").remove();
+                                const n = $(lessons).children('.lesson').length;
+
+
+                                for (let i = lesson_stt; i <= n; i++) {
+
+                                    $(lessons).children(`.lesson:nth-child(${i})`).attr('data-stt', `${i}`);
+                                    $(lessons).children(`.lesson:nth-child(${i})`).find('.lesson-name .form-group .control-label .lesson_stt').html(`${i}`);
+                                    $(lessons).children(`.lesson:nth-child(${i})`).find('.lesson-name .form-group .form-control').attr('name', `lesson${chapter_stt}_${i}`);
+                                    $(lessons).children(`.lesson:nth-child(${i})`).find('.form-group .txt_description').attr('id', `${chapter_stt}_${i}`);
+                                    $(lessons).children(`.lesson:nth-child(${i})`).find('.upload-video .file-loading .input-video').attr('name', `${chapter_stt}_${i}`);
+                                }
+                            }
+                        },
+                        error: function (request, status, error) {
+                            serviceError();
+                        },
+                    });
+                });
+            }
+
+            function loadFnButton() {
+                $(".btn-remove-chapter").off('click').on("click", function (e) {
+                    e.preventDefault();
+                    const btn = this;
+                    const stt = $(btn).parents(".chapter").data("stt");
+                    $.ajax({
+                        global: false,
+                        type: "POST",
+                        url: "/teacherpage/courses/remove-chapter",
+                        dataType: "html",
+                        data: {
+                            stt: stt,
+                        },
+                        success: function (data) {
+                            if (data) {
+                                $(btn).parents(".chapter").remove();
+                                const n = $('.chapter').length;
+
+                                for (let i = stt; i <= n; i++) {
+
+                                    $(`.chapter:nth-child(${i})`).attr('data-stt', `${i}`);
+                                    $(`.chapter:nth-child(${i})`).find('.chapter-name .form-group .control-label .chapter_stt').html(`${i}`);
+                                    $(`.chapter:nth-child(${i})`).find('.chapter-name .form-group .form-control ').attr('name', `chapter${i}`);
+                                }
+                            }
+                        },
+                        error: function (request, status, error) {
+                            serviceError();
+                        },
+                    });
+                });
+
+                $(".btn-add-lesson").off('click').on("click", function (e) {
+                    e.preventDefault();
+                    const chap_stt = $(this).parents(".chapter").data("stt");
+                    const btn = this;
+                    $.ajax({
+                        global: false,
+                        type: "POST",
+                        url: "/teacherpage/courses/new-lesson",
+                        dataType: "html",
+                        data: {
+                            stt: chap_stt,
+                        },
+                        success: function (data) {
+
+                            if (data !== null) {
+                                const newLesson = $.parseHTML(data);
+                                const insertLesson = $(btn)
+                                    .parents(".chapter")
+                                    .children(".insert-lesson");
+
+                                if ($(insertLesson).children().length === 0) {
+                                    $(insertLesson).append($(newLesson));
+                                } else {
+                                    $(newLesson).insertAfter($(btn).parents(".chapter").children(".insert-lesson").children(".lesson").last());
+                                }
+
+                                loadPlugin();
+                            }
+                        },
+                        error: function (request, status, error) {
+                            serviceError();
+                        },
+                    });
+                });
+            }
+
+            $('#selectCat').on('change', function (e) {
+                const optionSelected = $("option:selected", this);
+                const valueSelected = this.value;
+                const categories = JSON.parse('{{{json categories}}}');
+                let fields = [];
+                for (const cat of categories) {
+                    if (+cat.CatID === +valueSelected) {
+                        fields = [...cat.fields];
+                        break;
+                    }
+                }
+
+                $('#selectFld').html('');
+                for (const f of fields) {
+                    let opt = `<option value="${f.FldID}">${f.FldName}</option>`;
+                    $('#selectFld').append(opt);
+                }
+
+            });
+
+            $('input').on('focus', function () {
+                offAlert();
+            });
+
+            $('select').on('click', function () {
+                offAlert();
+            });
+
+            function offAlert() {
+                $('.alert').hide();
+                $('input').css("border", "none");
+            }
+
+            $('#btnAddCourse').off('click').on('click', function (e) {
+                e.preventDefault();
+                offAlert();
+                let valid = true;
+                const inputs = $('.ip');
+                for (const input of inputs) {
+                    if ($(input).val() === "") {
+                        $(input).parents(".form-group").children(".alert").html("Hãy điền vào mục này");
+                        $(input).parents(".form-group").children(".alert").show();
+                        $(input).css("border", "1px solid red");
+                        if ($(input).attr("id") === "input-b6") {
+                            $(input).parents(".form-group").children(".alert").html("Chọn ảnh mô tả khóa học");
+                        }
+                        valid = false;
+                    }
+                }
+
+                if ($('#selectPrice option:selected').text() === "Lựa chọn") {
+                    $('.alert-select').html("Hãy chọn học phí cho khóa học của bạn");
+                    $('.alert-select').show();
+                    valid = false;
+                }
+
+                if ($('#selectCat option:selected').text() === "Lựa chọn") {
+                    $('.alert-select').html("Hãy chọn loại cho khóa học của bạn");
+                    $('.alert-select').show();
+                    valid = false;
+                }
+
+                if (tinymce.get('fullDes').getContent() === "") {
+
+                    $('.detail-course').children(".form-group").children(".alert").html("Hãy mô tả khóa học của bạn");
+                    $('.detail-course').children(".form-group").children(".alert").show();
+                    valid = false;
+                }
+
+                if ($('.insert-chapter').children().length === 0) {
+                    $('.alert-no-course').html("Vui lòng tạo ít nhất 1 bài học mới!");
+                    $('.alert-no-course').show();
+                    valid = false;
+                } else {
+                    if ($('.chapter').first().children('.insert-lesson').children().length === 0) {
+                        $('.alert-no-course').html("Vui lòng tạo ít nhất 1 bài học mới!");
+                        $('.alert-no-course').show();
+                        valid = false;
+                    }
+                }
+
+                if (valid) {
+                    $('#detailDes').val(tinymce.get('fullDes').getContent());
+
+                    let contents = [];
+                    const chapters = $('.chapter');
+                    for (const chapter of chapters) {
+                        let new_chap = {
+                            chap_stt: $(chapter).data("stt"),
+                            chap_name: $(chapter).find(".chapter-name .form-group input").val(),
+                        }
+
+                        const ls = [];
+                        const lessons = $(chapter).children(".insert-lesson").children(".lesson");
+                        for (const lesson of lessons) {
+                            let new_leson = {
+                                less_stt: $(lesson).data("stt"),
+                                less_name: $(lesson).find(".lesson-name .form-group input").val(),
+                                less_text: tinymce.get(`${$(chapter).data("stt")}_${$(lesson).data("stt")}`).getContent(),
+                                less_link: ($(lesson).find(".upload-video .file-loading .input-video").val()) ? true : false,
+                            }
+                            ls.push(new_leson);
+                        }
+                        new_chap.chap_lessons = ls;
+
+                        contents.push(new_chap);
+                    }
+
+                    $("#chap_lessons").val(JSON.stringify(contents));
+                    $("#frmNewCour").submit();
+                }
+            });
+
+
+        });
+
+    </script>
+
+{{/section}}
+<div class="course-edit new-course">
+    <h3>Thông tin khóa học</h3>
+    <form id="frmNewCour" method="POST" action="#" enctype="multipart/form-data">
+        <input type="hidden" name="chap_lessons[]" id="chap_lessons">
+        <div class="row d-flex flex-column">
+            <div class="form-group">
+                <label class="control-label">Tên khóa học</label>
+                <input id="cour-name" class="form-control ip" name="cour_name" type="text" autofocus
+                    placeholder="VD: Thành thạo Tiếng Anh 30 ngày">
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">Mô tả ngắn</label>
+                <input type="text" name="cour_des" id="cour-des" class="form-control ip"
+                    placeholder="VD: Trọn bộ kỹ năng cơ bản">
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="control-label">Thêm ảnh khóa học</label>
+                <div class="file-input cour-img-upload">
+                    <input id="input-b6" class="ip" name="cour_img" type="file" accept=".jpg,.jpeg,.png">
+                </div>
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="control-label">Danh mục</label>
+                <select id="selectCat" name="category" class="form-control">
+                    <option selected disabled>Lựa chọn</option>
+                    {{#each categories}}
+                        <option value="{{CatID}}">{{CatName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">Danh mục con</label>
+                <select id="selectFld" name="field" class="form-control">
+                    <option selected disabled>Lựa chọn</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">Giá khóa học</label>
+                <select id="selectPrice" class="form-control" name="price">
+                    <option selected disabled>Lựa chọn</option>
+                    {{#each prices}}
+                        <option value="{{price}}">{{format price}}đ</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="alert alert-danger alert-select" role="alert" style="display: none;">
+        </div>
+        <div class="row detail-course">
+            <div class="form-group w-100">
+                <input type="hidden" name="detail_des" id="detailDes">
+                <label class="control-label">Mô tả chi tiết khóa học</label>
+                <textarea class="txt_description" id="fullDes"></textarea>
+                <div class="alert alert-danger" role="alert" style="display: none;"></div>
+            </div>
+
+        </div>
+        <div class="row">
+            <label class="control-label">Nội dung khóa học</label>
+            <div class="w-100 insert-chapter">
+            </div>
+            <div class="w-100">
+                <button type="button" class="btn-add-chapter btn btn-primary "><i class="fa fa-plus-circle"
+                        aria-hidden="true"></i> Thêm
+                    chương mới </button>
+            </div>
+            <div class="alert alert-danger alert-no-course" role="alert" style="display: none;"></div>
+        </div>
+        <div class="row w-100 btnEditCourse">
+
+            <div class="col-md-4">
+                <a role="button" id="btnClose" class="btn btn-outline-primary" href="/teacherpage/courses">Đóng</a>
+            </div>
+            <div class="col-md-4">
+                <a id="btnReset" role="button" href="/teacherpage/courses/create" class="btn btn-outline-primary">Đặt
+                    lại</a>
+            </div>
+            <div class="col-md-4">
+                <a type="submit" id="btnAddCourse" class="btn btn-primary" href="#" role="button">Tải lên</a>
+            </div>
+
+        </div>
+    </form>
+</div>

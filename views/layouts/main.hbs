@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>{{title}}</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Unicat project">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="/assets/styles/bootstrap4/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" >
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/colorbox/colorbox.css" >
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/animate.css">
-    {{{_sections.css}}}
-</head>
+    <head>
+        <title>{{title}}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Unicat project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/assets/styles/bootstrap4/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/colorbox/colorbox.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/OwlCarousel2-2.2.1/animate.css">
+        {{{_sections.css}}}
+    </head>
 
-<body>
-    
+    <body>
 
-    <div class="super_container">
 
-        <!-- Header -->
-        <header class="header">
-            {{> top_bar}}
-        </header>
+        <div class="super_container">
+
+            <!-- Header -->
+            <header class="header">
+                {{> top_bar}}
+            </header>
 
             {{{body}}}
 
-        <!-- Newsletter -->
-        {{> newletter}}
-        
-         <!-- Footer -->
-        <footer class="footer">
-            {{> footer}}
-        </footer>
-            
+            <!-- Newsletter -->
+            {{> newletter}}
+
+            <!-- Footer -->
+            <footer class="footer">
+                {{> footer}}
+            </footer>
+
             <script src="/assets/js/jquery-3.2.1.min.js"></script>
             <script src="/assets/styles/bootstrap4/popper.js"></script>
             <script src="/assets/styles/bootstrap4/bootstrap.min.js"></script>
@@ -46,17 +46,26 @@
             <script src="/assets/plugins/greensock/ScrollToPlugin.min.js"></script>
             <script src="/assets/plugins/easing/easing.js"></script>
             <script src="/assets/plugins/parallax-js-master/parallax.min.js"></script>
-            <script src="/assets/plugins/colorbox/jquery.colorbox-min.js"></script>  
+            <script src="/assets/plugins/colorbox/jquery.colorbox-min.js"></script>
             <script src="/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
             <script>
                 $(".nav .nav-link").on("click", function () {
                     $(".nav").find(".active").removeClass("active");
                     $(this).addClass("active");
                 });
-            </script>
-        {{{_sections.js}}}
 
-    </div>
-</body>
+                $('.header_search_button').on('click', function (e) {
+                    e.preventDefault();
+                    const txt_search = $('.header_search_form').children('input').val().trim();
+                    if ( txt_search != "") {
+                        $('#courses_search_form').children('input').val(txt_search);
+                        $('#courses_search_form').off('submit').submit();
+                    }
+                });
+            </script>
+            {{{_sections.js}}}
+
+        </div>
+    </body>
 
 </html>

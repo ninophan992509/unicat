@@ -10,6 +10,25 @@
     <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
     <script src="/assets/js/course.js"></script>
     <script src="/assets/js/_bonus.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#star").on("click", function (e) {
+                const x = e.clientX;
+                const w = (x - 94);
+                $('#star').children(".star_inner").css("width", `${w}px`);
+                const point = ( w / 148.57 *5 ).toFixed(1);
+                $('#txt_point').val(point);
+            });
+
+            $("#frmRating").on("submit",function(e){
+                e.preventDefault();
+                 if(parseFloat($('#txt_point').val())!== 0)
+                 {   
+                     $('#frmRating').off("submit").submit();
+                 }
+            });
+        });
+    </script>
 
 {{/section}}
 <!-- Home -->
@@ -76,15 +95,15 @@
                     <!-- Course Tabs -->
                     <div class="course_tabs_container">
                         <div class="tabs d-flex flex-row align-items-center justify-content-start">
-                            <div class="tab active">Thông tin khóa học</div>
-                            <div class="tab">Giáo trình</div>
-                            <div class="tab">Giảng viên</div>
-                            <div class="tab">Đánh giá & Bình luận</div>
+                            <div class="tab {{#eq tab 1}}active{{/eq}}">Thông tin khóa học</div>
+                            <div class="tab {{#eq tab 2}}active{{/eq}}">Giáo trình</div>
+                            <div class="tab {{#eq tab 3}}active{{/eq}}">Giảng viên</div>
+                            <div class="tab {{#eq tab 4}}active{{/eq}}">Đánh giá & Bình luận</div>
                         </div>
                         <div class="tab_panels">
 
                             <!-- Description -->
-                            <div class="tab_panel active">
+                            <div class="tab_panel {{#eq tab 1}}active{{/eq}}">
 
                                 <div class="tab_panel_title">{{course.CourName}}</div>
                                 <div class="tab_panel_content">
@@ -96,7 +115,7 @@
                             </div>
 
                             <!-- Curriculum -->
-                            <div class="tab_panel tab_panel_2">
+                            <div class="tab_panel tab_panel_2 {{#eq tab 2}}active{{/eq}}">
                                 <div class="tab_panel_content">
                                     <div class="tab_panel_content">
                                         <div class="d-flex justify-content-end ">
@@ -117,53 +136,54 @@
                                                             {{#eq ../this/ChapID ChapID}}
                                                                 <li>
                                                                     <div class="dropdown_item">
-                                                                        <div class="modal fade" id="modal1"
-                                                                            tabindex="-1" role="dialog"
-                                                                            aria-labelledby="myModalLabel"
-                                                                            aria-hidden="true">
-                                                                            <div class="modal-dialog modal-lg"
-                                                                                role="document">
+                                                                        {{#if LessLink}}
+                                                                            <div class="modal fade" id="modal{{LessID}}"
+                                                                                tabindex="-1" role="dialog"
+                                                                                aria-labelledby="myModalLabel"
+                                                                                aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg"
+                                                                                    role="document">
 
-                                                                                <!--Content-->
-                                                                                <div class="modal-content">
+                                                                                    <!--Content-->
+                                                                                    <div class="modal-content">
 
-                                                                                    <!--Body-->
-                                                                                    <div class="modal-body mb-0 p-0">
-                                                                                        <video id="my_video_1"
-                                                                                            class="video-js vjs-default-skin"
-                                                                                            controls preload="auto"
-                                                                                            data-setup='{ "asdf": true }'
-                                                                                            poster="http://video-js.zencoder.com/oceans-clip.png">
-                                                                                            <source
-                                                                                                src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
-                                                                                                type='video/mp4'>
-                                                                                            <!-- <source src="https://vjs.zencdn.net/v/oceans.webm" type='video/webm'>-->
-                                                                                        </video>
-                                                                                    </div>
-
-                                                                                    <!--Footer-->
-                                                                                    <div
-                                                                                        class="modal-footer justify-content-between">
+                                                                                        <!--Body-->
                                                                                         <div
-                                                                                            class="dropdown_item_title">
-                                                                                            <span>Bài
-                                                                                                {{LessSTT}}:
-                                                                                            </span>
-                                                                                            {{LessName}}
+                                                                                            class="modal-body mb-0 p-0">
+                                                                                            <video
+                                                                                                id="my_video_{{LessID}}"
+                                                                                                class="video-js vjs-default-skin"
+                                                                                                controls preload="auto"
+                                                                                                data-setup='{ "asdf": true }'
+                                                                                                poster="http://video-js.zencoder.com/oceans-clip.png">
+                                                                                                <source
+                                                                                                    src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
+                                                                                                    type='video/mp4'>
+                                                                                                <!-- <source src="https://vjs.zencdn.net/v/oceans.webm" type='video/webm'>-->
+                                                                                            </video>
                                                                                         </div>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-outline-primary btn-rounded btn-md ml-4"
-                                                                                            data-dismiss="modal">Close</button>
+
+                                                                                        <!--Footer-->
+                                                                                        <div
+                                                                                            class="modal-footer justify-content-between">
+                                                                                            <div
+                                                                                                class="dropdown_item_title">
+                                                                                                <span>Bài
+                                                                                                    {{LessSTT}}:
+                                                                                                </span>
+                                                                                                {{LessName}}
+                                                                                            </div>
+                                                                                            <button type="button"
+                                                                                                class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                                                                                data-dismiss="modal">Close</button>
+                                                                                        </div>
+
                                                                                     </div>
+
 
                                                                                 </div>
-
-
                                                                             </div>
-                                                                        </div>
-
-
-
+                                                                        {{/if}}
                                                                         <div class="dropdown_item_title">
                                                                             <span>Bài
                                                                                 {{LessSTT}}:
@@ -172,20 +192,13 @@
                                                                         </div>
                                                                         {{#if LessLink}}
                                                                             <a href="#" data-toggle="modal"
-                                                                                data-target="#modal1"
+                                                                                data-target="#modal{{LessID}}"
                                                                                 class="btn btn-primary mt-2"><i
                                                                                     class="fa fa-video-camera"></i> Xem
                                                                                 video khóa học</a>
                                                                         {{/if}}
                                                                         <div class="dropdown_item_text">
                                                                             {{{LessText}}}
-                                                                            <p>Lorem Ipsn gravida nibh vel velit auctor
-                                                                                aliquet. Aenean
-                                                                                sollicitudin, lorem quis bibendum auci
-                                                                                elit consequat
-                                                                                ipsutis sem nibh id elit. Duis sed odio
-                                                                                sit amet nibh
-                                                                                vulputate cursus.</p>
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -201,7 +214,7 @@
                             </div>
 
                             <!-- Teachers -->
-                            <div class="tab_panel tab_panel_3">
+                            <div class="tab_panel tab_panel_3 {{#eq tab 3}}active{{/eq}}">
                                 <div class="tab_panel_title">Giảng viên</div>
                                 <div class="sidebar_teacher">
                                     <div
@@ -251,7 +264,7 @@
                                 </div>
                             </div>
                             <!-- Reviews -->
-                            <div class="tab_panel tab_panel_4">
+                            <div class="tab_panel tab_panel_4 {{#eq tab 4}}active{{/eq}}">
                                 <div class="tab_panel_title">Đánh giá & Bình luận</div>
 
                                 <!-- Rating -->
@@ -271,27 +284,37 @@
                                         <ul>
                                             <li><span>5 Star</span>
                                                 <div class="review_rating_bar">
-                                                    <div style="width:{{#if course.reviews.p5}}{{course.reviews.p5}}{{else}}0{{/if}}%;"></div>
+                                                    <div
+                                                        style="width:{{#if course.reviews.p5}}{{course.reviews.p5}}{{else}}0{{/if}}%;">
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li><span>4 Star</span>
                                                 <div class="review_rating_bar">
-                                                    <div style="width:{{#if course.reviews.p4}}{{course.reviews.p4}}{{else}}0{{/if}}%;"></div>
+                                                    <div
+                                                        style="width:{{#if course.reviews.p4}}{{course.reviews.p4}}{{else}}0{{/if}}%;">
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li><span>3 Star</span>
                                                 <div class="review_rating_bar">
-                                                    <div style="width:{{#if course.reviews.p3}}{{course.reviews.p3}}{{else}}0{{/if}}%;"></div>
+                                                    <div
+                                                        style="width:{{#if course.reviews.p3}}{{course.reviews.p3}}{{else}}0{{/if}}%;">
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li><span>2 Star</span>
                                                 <div class="review_rating_bar">
-                                                    <div style="width:{{#if course.reviews.p2}}{{course.reviews.p2}}{{else}}0{{/if}}%;"></div>
+                                                    <div
+                                                        style="width:{{#if course.reviews.p2}}{{course.reviews.p2}}{{else}}0{{/if}}%;">
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li><span>1 Star</span>
                                                 <div class="review_rating_bar">
-                                                    <div style="width:{{#if course.reviews.p1}}{{course.reviews.p1}}{{else}}0{{/if}}%;"></div>
+                                                    <div
+                                                        style="width:{{#if course.reviews.p1}}{{course.reviews.p1}}{{else}}0{{/if}}%;">
+                                                    </div>
                                                 </div>
                                             </li>
                                         </ul>
@@ -319,7 +342,7 @@
                                                             <div class="comment_rating">
                                                                 <div class="star_outer">
                                                                     <div class="star_inner"
-                                                                        style="width:{{setRatingValue Point 70}}px;">
+                                                                        style="width:{{setRatingValue Point 64.5}}px;">
                                                                     </div>
                                                                 </div>
                                                                 <span class="course_rating">{{roundRating Point}}</span>
@@ -342,15 +365,16 @@
                                     <div class="add_comment_container">
                                         <div class="add_comment_title">Đánh giá khóa học</div>
                                         <div class="add_comment">
-                                            <form action="" method="post">
+                                            <form action="/mycourses/rating" id="frmRating" method="post">
+                                                <input type="hidden" id="txt_id" name="id" value="{{ratID}}">
                                                 <div class="rating">
-                                                    <div class="star_outer">
+                                                    <div class="star_outer" id="star">
                                                         <div class="star_inner" style="width:0px;">
                                                         </div>
                                                     </div>
-                                                    <div class="rating_num">0</div>
+                                                    <input class="rating_num" name="point" type="text" readonly="readonly" id="txt_point" value="0">
                                                 </div>
-                                                <textarea class="form-control" id="feedback_txt" rows="3"
+                                                <textarea class="form-control" name="comment" id="feedback_txt" rows="3"
                                                     placeholder="Nhập bình luận về khóa học"></textarea>
                                                 <button type="submit" class="btn btn-primary mb-2">Đánh giá</button>
                                             </form>
@@ -369,3 +393,4 @@
 
     </div>
 </div>
+

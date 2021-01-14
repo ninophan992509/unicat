@@ -33,7 +33,6 @@ module.exports = function (app) {
         res.locals.lcFavourite = favCourses;
       }
     }
-
     next();
   });
 

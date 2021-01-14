@@ -9,8 +9,6 @@
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/_bonus.js"></script>
-
-
     <script>
         $(document).ready(function () {
 
@@ -88,7 +86,7 @@
             $('.btnAddCart').on('click', function (e) {
                 e.preventDefault();
 
-                if (!$('#UserId').val())
+                if (!$('#userId').val())
                     window.location.href = '/account/login';
                 const id = $(this).data('id');
                 const btn = this;

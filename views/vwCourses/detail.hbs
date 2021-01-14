@@ -1,11 +1,13 @@
 {{#section 'css'}}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" />
+	<link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
 	<link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
 	<link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
 {{/section}}
 {{#section 'js'}}
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+	<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
 	<script src="/assets/js/course.js"></script>
 	<script src="/assets/js/_bonus.js"></script>
 
@@ -84,63 +86,67 @@
 
 			$('.btnAddCart').on('click', function (e) {
 				e.preventDefault();
-				if (!$('#UserId').val())
+				if ($('#userId').val() === "") {
 					window.location.href = '/account/login';
-				const id = $(this).data('id');
-				const btn = this;
-				$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
-					if (data !== false) {
-						alert("Bạn đã mua khóa học này!");
-						return;
-					} else {
-						flyTo(btn);
-						$.ajax({
-							global: false,
-							type: 'POST',
-							url: '/cart/add', // missing quotes  
-							dataType: 'html',
-							data: {
-								id: id,
-							},
-							success: function (result) {
-								const ret = JSON.parse(result);
-								$('.cart-quantity').children('span').html(ret.cartQuantity);
-							},
-							error: function (request, status, error) {
-								serviceError();
-							}
-						});
-					}
-				});
+				} else {
+					const id = $(this).data('id');
+					const btn = this;
+					$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+						if (data !== false) {
+							alert("Bạn đã mua khóa học này!");
+							return;
+						} else {
+							flyTo(btn);
+							$.ajax({
+								global: false,
+								type: 'POST',
+								url: '/cart/add', // missing quotes  
+								dataType: 'html',
+								data: {
+									id: id,
+								},
+								success: function (result) {
+									const ret = JSON.parse(result);
+									$('.cart-quantity').children('span').html(ret.cartQuantity);
+								},
+								error: function (request, status, error) {
+									serviceError();
+								}
+							});
+						}
+					});
+				}
 			});
 
 			$('.btnBuyNow').on('click', function (e) {
 				e.preventDefault();
-				if (!$('#UserId').val())
+				if ($('#userId').val() === "")
 					window.location.href = '/account/login';
-				const id = $(this).data('id');
-				$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
-					if (data !== false) {
-						alert("Bạn đã mua khóa học này!");
-						return;
-					} else {
-						$.ajax({
-							global: false,
-							type: 'POST',
-							url: '/cart/add', // missing quotes  
-							dataType: 'html',
-							data: {
-								id: id,
-							},
-							success: function (result) {
-								window.location.href = '/cart';
-							},
-							error: function (request, status, error) {
-								serviceError();
-							}
-						});
-					}
-				});
+				else {
+					const id = $(this).data('id');
+					$.getJSON(`/cart/is-bought?courID=${id}`, function (data) {
+						if (data !== false) {
+							alert("Bạn đã mua khóa học này!");
+							return;
+						} else {
+							$.ajax({
+								global: false,
+								type: 'POST',
+								url: '/cart/add', // missing quotes  
+								dataType: 'html',
+								data: {
+									id: id,
+								},
+								success: function (result) {
+									window.location.href = '/cart';
+								},
+								error: function (request, status, error) {
+									serviceError();
+								}
+							});
+						}
+					});
+				}
 			});
 		});
 	</script>
@@ -213,6 +219,12 @@
 								</div>
 							</div>
 
+							<div class="course_info_item">
+								<div class="course_info_title">Lượt xem:</div>
+								<div class="course_info_text">{{course.Views}}
+								</div>
+							</div>
+
 						</div>
 
 						<!-- Course Image -->
@@ -246,8 +258,10 @@
 								<div class="tab_panel tab_panel_2">
 									<div class="tab_panel_content">
 										<div class="tab_panel_content">
-											<div class="d-flex justify-content-end ">
-												Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
+											<div class="d-flex justify-content-between">
+												<h6>Trạng thái: {{#eq course.Finish 1}}Đã hoàn thành{{/eq}}
+														{{#eq course.Finish 0}}Đang cập nhật{{/eq}}</h6>
+												<h6>Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}</h6>
 											</div>
 											<!-- Dropdowns -->
 											<ul class="dropdowns">
@@ -256,12 +270,6 @@
 														<div class="dropdown_item">
 															<div class="dropdown_item_title"><span>Chương
 																	{{ChapSTT}}: </span>{{ChapName}}</div>
-															<!--	<div class="dropdown_item_text">
-																		<p>Lorem Ipsn gravida nibh vel velit auctor aliquet. Aenean
-																			sollicitudin, lorem quis bibendum auci elit consequat
-																			ipsutis sem nibh id elit. Duis sed odio sit amet nibh
-																			vulputate cursus.</p>
-																	</div>-->
 														</div>
 														<ul>
 															{{#each ../this/course.lessons}}
@@ -270,14 +278,79 @@
 
 																	<li>
 																		<div class="dropdown_item">
-																			<a href="#">
-																				<div class="dropdown_item_title">
-																					<span>Bài
-																						{{LessSTT}}:
-																					</span>
-																					{{LessName}}
+																			{{#eq ../this/ChapSTT 1}}
+																				{{#if LessLink}}
+																					<div class="modal fade"
+																						id="modal{{LessID}}"
+																						tabindex="-1" role="dialog"
+																						aria-labelledby="myModalLabel"
+																						aria-hidden="true">
+																						<div class="modal-dialog modal-lg"
+																							role="document">
+
+																							<!--Content-->
+																							<div class="modal-content">
+
+																								<!--Body-->
+																								<div
+																									class="modal-body mb-0 p-0">
+																									<video
+																										id="my_video_{{LessID}}"
+																										class="video-js vjs-default-skin"
+																										controls
+																										preload="auto"
+																										data-setup='{ "asdf": true }'
+																										poster="http://video-js.zencoder.com/oceans-clip.png">
+																										<source
+																											src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
+																											type='video/mp4'>
+
+																									</video>
+																								</div>
+
+
+																								<div
+																									class="modal-footer justify-content-between">
+																									<div
+																										class="dropdown_item_title">
+																										<span>Bài
+																											{{LessSTT}}:
+																										</span>
+																										{{LessName}}
+																									</div>
+																									<button
+																										type="button"
+																										class="btn btn-outline-primary btn-rounded btn-md ml-4"
+																										data-dismiss="modal">Close</button>
+																								</div>
+
+																							</div>
+
+
+																						</div>
+																					</div>
+																				{{/if}}
+																			{{/eq}}
+																			<div class="dropdown_item_title">
+																				<span>Bài
+																					{{LessSTT}}:
+																				</span>
+																				{{LessName}}
+																			</div>
+																			{{#eq ../this/ChapSTT 1}}
+																				{{#if LessLink}}
+																					<a href="#" data-toggle="modal"
+																						data-target="#modal{{LessID}}"
+																						class="btn btn-primary mt-2"><i
+																							class="fa fa-video-camera"></i>
+																						Xem
+																						video khóa học</a>
+																				{{/if}}
+																				<div class="dropdown_item_text">
+																					{{{LessText}}}
+
 																				</div>
-																			</a>
+																			{{/eq}}
 																		</div>
 																	</li>
 																{{/eq}}

@@ -1,0 +1,279 @@
+{{#section 'css'}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" />
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+{{#section 'js'}}
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+    <script src="/assets/js/course.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+
+{{/section}}
+
+<div class="course">
+    <div class="container">
+        <div class="row">
+            <!-- Course -->
+            <div class="col-sm-12">
+
+                <div class="course_container">
+                    <div class="course_title">{{course.CourName}}</div>
+                    <div
+                        class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+
+                        <!-- Course Info Item -->
+                        <div class="course_info_item">
+                            <div class="course_info_title">Đánh giá: {{roundRating course.CourPoint}}</div>
+                            <div class="star_outer">
+                                <div class="star_inner" style="width: {{setRatingValue course.CourPoint 64.98}}px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Course Info Item -->
+                        <div class="course_info_item">
+                            <div class="course_info_title">Lĩnh vực:</div>
+                            <div class="course_info_text"><a href="/category/{{CatID}}">{{course.CatName}}</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Course Image -->
+                    <div class="course_imageBg">
+                        <img src="/images/courses/{{course.CourImgBg}}" alt="Ảnh khóa học">
+                    </div>
+
+                    <!-- Course Tabs -->
+                    <div class="course_tabs_container">
+                        <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                            <div class="tab active">Thông tin khóa học</div>
+                            <div class="tab">Giáo trình</div>
+                            <div class="tab">Đánh giá & Bình luận</div>
+                        </div>
+                        <div class="tab_panels">
+
+                            <!-- Description -->
+                            <div class="tab_panel active">
+
+                                <div class="tab_panel_title">{{course.CourName}}</div>
+                                <div class="tab_panel_content">
+                                    <div class="tab_panel_text">
+                                        {{{course.CourDesFull}}}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Curriculum -->
+                            <div class="tab_panel tab_panel_2">
+                                <div class="tab_panel_content">
+                                    <div class="tab_panel_content">
+                                        <div class="d-flex justify-content-end ">
+                                            Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
+                                        </div>
+                                        <!-- Dropdowns -->
+                                        <ul class="dropdowns">
+                                            {{#each course.chapters}}
+                                                <li class="has_children">
+                                                    <div class="dropdown_item">
+                                                        <div class="dropdown_item_title"><span>Chương
+                                                                {{ChapSTT}}: </span>{{ChapName}}</div>
+
+                                                    </div>
+                                                    <ul>
+                                                        {{#each ../this/course.lessons}}
+
+                                                            {{#eq ../this/ChapID ChapID}}
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        {{#if LessLink}}
+                                                                        <div class="modal fade" id="modal{{LessID}}"
+                                                                            tabindex="-1" role="dialog"
+                                                                            aria-labelledby="myModalLabel"
+                                                                            aria-hidden="true">
+                                                                            <div class="modal-dialog modal-lg"
+                                                                                role="document">
+
+                                                                                <!--Content-->
+                                                                                <div class="modal-content">
+
+                                                                                    <!--Body-->
+                                                                                    <div class="modal-body mb-0 p-0">
+                                                                                        <video id="my_video_{{LessID}}"
+                                                                                            class="video-js vjs-default-skin"
+                                                                                            controls preload="auto"
+                                                                                            data-setup='{ "asdf": true }'
+                                                                                            poster="http://video-js.zencoder.com/oceans-clip.png">
+                                                                                            <source
+                                                                                                src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
+                                                                                                type='video/mp4'>
+                                                                                          
+                                                                                        </video>
+                                                                                    </div>
+
+                                                                                    <!--Footer-->
+                                                                                    <div
+                                                                                        class="modal-footer justify-content-between">
+                                                                                        <div
+                                                                                            class="dropdown_item_title">
+                                                                                            <span>Bài
+                                                                                                {{LessSTT}}:
+                                                                                            </span>
+                                                                                            {{LessName}}
+                                                                                        </div>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                                                                            data-dismiss="modal">Close</button>
+                                                                                    </div>
+
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                        {{/if}}
+                                                                        <div class="dropdown_item_title">
+                                                                            <span>Bài
+                                                                                {{LessSTT}}:
+                                                                            </span>
+                                                                            {{LessName}}
+                                                                        </div>
+                                                                        
+                                                                        {{#if LessLink}}
+                                                                            <a href="#" data-toggle="modal"
+                                                                                data-target="#modal{{LessID}}"
+                                                                                class="btn btn-primary mt-2"><i
+                                                                                    class="fa fa-video-camera"></i> Xem
+                                                                                video khóa học</a>
+                                                                        {{/if}}
+                                                                        <div class="dropdown_item_text">
+                                                                            {{{LessText}}}
+
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            {{/eq}}
+                                                        {{/each}}
+
+                                                    </ul>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Reviews -->
+                            <div class="tab_panel tab_panel_4">
+                                <div class="tab_panel_title">Đánh giá & Bình luận</div>
+
+                                <!-- Rating -->
+                                <div class="review_rating_container">
+                                    <div class="review_rating">
+                                        <div class="review_rating_num">{{roundRating course.CourPoint}}</div>
+                                        <div class="review_rating_stars">
+                                            <div class="star_outer">
+                                                <div class="star_inner"
+                                                    style="width:{{setRatingValue course.CourPoint 116}}px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="review_rating_text">({{course.CourRates}} Đánh giá)</div>
+                                    </div>
+                                    <div class="review_rating_bars">
+                                        <ul>
+                                            <li><span>5 Star</span>
+                                                <div class="review_rating_bar">
+                                                    <div
+                                                        style="width:{{#if course.reviews.p5}}{{course.reviews.p5}}{{else}}0{{/if}}%;">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li><span>4 Star</span>
+                                                <div class="review_rating_bar">
+                                                    <div
+                                                        style="width:{{#if course.reviews.p4}}{{course.reviews.p4}}{{else}}0{{/if}}%;">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li><span>3 Star</span>
+                                                <div class="review_rating_bar">
+                                                    <div
+                                                        style="width:{{#if course.reviews.p3}}{{course.reviews.p3}}{{else}}0{{/if}}%;">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li><span>2 Star</span>
+                                                <div class="review_rating_bar">
+                                                    <div
+                                                        style="width:{{#if course.reviews.p2}}{{course.reviews.p2}}{{else}}0{{/if}}%;">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li><span>1 Star</span>
+                                                <div class="review_rating_bar">
+                                                    <div
+                                                        style="width:{{#if course.reviews.p1}}{{course.reviews.p1}}{{else}}0{{/if}}%;">
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Comments -->
+                                <div class="comments_container">
+                                    <ul class="comments_list">
+                                        {{#each course.comments}}
+                                            <li>
+                                                <div
+                                                    class="comment_item d-flex flex-row align-items-start jutify-content-start">
+                                                    <div class="comment_image">
+                                                        <div><img
+                                                                src="/images/{{#if StdAvatar}}students/{{StdAvatar}}{{else}}no-avatar.png{{/if}}"
+                                                                alt="Avatar">
+                                                        </div>
+                                                    </div>
+                                                    <div class="comment_content">
+                                                        <div
+                                                            class="comment_title_container d-flex flex-row align-items-center justify-content-start">
+                                                            <div class="comment_author"><a href="#">{{StdName}}</a>
+                                                            </div>
+                                                            <div class="comment_rating">
+                                                                <div class="star_outer">
+                                                                    <div class="star_inner"
+                                                                        style="width:{{setRatingValue Point 70}}px;">
+                                                                    </div>
+                                                                </div>
+                                                                <span class="course_rating">{{roundRating Point}}</span>
+
+                                                            </div>
+                                                            <div class="comment_time ml-auto">{{formatDateTime DOP}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="comment_text">
+                                                            <p>{{Feedback}}</p>
+                                                        </div>
+                                                        <div
+                                                            class="comment_extras d-flex flex-row align-items-center justify-content-start">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

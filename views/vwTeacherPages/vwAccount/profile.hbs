@@ -1,0 +1,51 @@
+{{#with info_teacher}}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Thông tin cá nhân</h4>
+            <p class="card-text">
+            <table class="table_tc_profile">
+                <td>
+                    <tr>
+                        <th>Họ tên</th>
+                        <td>{{TeachName}}</td>
+                    </tr>
+                    <tr>
+                        <th>Email tài khoản</th>
+                        <td>{{Email}}</td>
+                    </tr>
+                    <tr>
+                        <th>Số điện thoại</th>
+                        <td>{{Phone}}</td>
+                    </tr>
+                    <tr>
+                        <th>Email liên lạc</th>
+                        <td>{{SubEmail}}</td>
+                    </tr>
+                    <tr>
+                        <th>Ngày sinh</th>
+                        <td>{{formatDOB DateOfBirth}}</td>
+                    </tr>
+                    <tr>
+                        <th>Giới tính</th>
+                        <td>{{Gender}}</td>
+                    </tr>
+                    <tr>
+                        <th>Tiểu sử giảng viên</th>
+                        <td>{{{TeachInfo}}}</td>
+                    </tr>
+                </td>
+            </table>
+
+
+            </p>
+        </div>
+        <div class="card-footer text-muted">
+            <a name="edit_profile" id="editProfile" class="btn btn-primary" href="teacherpage/info/edit"
+                role="button">Chỉnh
+                sửa thông tin</a>
+            <a name="change_pw" id="changePw" class="btn btn-outline-primary" href="teacherpage/info/security"
+                role="button">Đổi
+                mật khẩu</a>
+        </div>
+    </div>
+{{/with}}
