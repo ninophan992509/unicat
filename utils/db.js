@@ -1,12 +1,22 @@
-const mysql = require('mysql2');
-const util = require('util');
-
+const mysql = require("mysql2");
+const util = require("util");
+/*
 const pool = mysql.createPool({
   host: "localhost",
   port: 3306,
   user: "root",
   password: "",
   database: "onlinecourses",
+  connectionLimit: 50,
+  multipleStatements: true,
+});*/
+
+const pool = mysql.createPool({
+  host: "esilxl0nthgloe1y.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+  port: 3306,
+  user: "c4esiwwwmxu0l688",
+  password: "hd2vzhlku394jka7",
+  database: "if12tx3pg34dcyi1",
   connectionLimit: 50,
   multipleStatements: true,
 });
@@ -21,7 +31,7 @@ module.exports = {
     pool_query(`delete from ${tableName} where ?`, condition),
   patch: (entity, condition, tableName) =>
     pool_query(`update ${tableName} set ? where ?`, [entity, condition]),
-    
+
   /* load(sql){
         return new Promise(
             function (done,fail) {
@@ -37,5 +47,3 @@ module.exports = {
         )
     }*/
 };
-
- 

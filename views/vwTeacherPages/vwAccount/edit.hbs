@@ -51,7 +51,7 @@
                 $(input).parents(".form-group").children(".alert").html(`${msg}`);
                 $(input).css("border","red");
                 $(input).focus();
-               // return false;
+                return false;
             }
 
             $("#frmEdit").on('submit', function (e) {
