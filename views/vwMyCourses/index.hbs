@@ -14,18 +14,17 @@
         $(document).ready(function () {
             $("#star").on("click", function (e) {
                 const x = e.clientX;
-                const w = (x - 94);
+                const w = (x - 78);
                 $('#star').children(".star_inner").css("width", `${w}px`);
-                const point = ( w / 148.57 *5 ).toFixed(1);
+                const point = (w / 148.57 * 5).toFixed(1);
                 $('#txt_point').val(point);
             });
 
-            $("#frmRating").on("submit",function(e){
+            $("#frmRating").on("submit", function (e) {
                 e.preventDefault();
-                 if(parseFloat($('#txt_point').val())!== 0)
-                 {   
-                     $('#frmRating').off("submit").submit();
-                 }
+                if (parseFloat($('#txt_point').val()) !== 0) {
+                    $('#frmRating').off("submit").submit();
+                }
             });
         });
     </script>
@@ -118,8 +117,10 @@
                             <div class="tab_panel tab_panel_2 {{#eq tab 2}}active{{/eq}}">
                                 <div class="tab_panel_content">
                                     <div class="tab_panel_content">
-                                        <div class="d-flex justify-content-end ">
-                                            Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
+                                        <div class="d-flex justify-content-between">
+                                            <h6>Trạng thái: {{#eq course.Finish 1}}Đã hoàn thành{{/eq}}
+                                                    {{#eq course.Finish 0}}Đang cập nhật{{/eq}}</h6>
+                                            <h6>Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}</h6>
                                         </div>
                                         <!-- Dropdowns -->
                                         <ul class="dropdowns">
@@ -134,7 +135,7 @@
                                                         {{#each ../this/course.lessons}}
 
                                                             {{#eq ../this/ChapID ChapID}}
-                                                                <li>
+                                                                <li class="has_children">
                                                                     <div class="dropdown_item">
                                                                         {{#if LessLink}}
                                                                             <div class="modal fade" id="modal{{LessID}}"
@@ -190,17 +191,24 @@
                                                                             </span>
                                                                             {{LessName}}
                                                                         </div>
+
+                                                                    </div>
+                                                                    <ul>
+
                                                                         {{#if LessLink}}
                                                                             <a href="#" data-toggle="modal"
                                                                                 data-target="#modal{{LessID}}"
                                                                                 class="btn btn-primary mt-2"><i
                                                                                     class="fa fa-video-camera"></i> Xem
                                                                                 video khóa học</a>
+
                                                                         {{/if}}
                                                                         <div class="dropdown_item_text">
                                                                             {{{LessText}}}
                                                                         </div>
-                                                                    </div>
+
+
+                                                                    </ul>
                                                                 </li>
                                                             {{/eq}}
                                                         {{/each}}
@@ -372,7 +380,8 @@
                                                         <div class="star_inner" style="width:0px;">
                                                         </div>
                                                     </div>
-                                                    <input class="rating_num" name="point" type="text" readonly="readonly" id="txt_point" value="0">
+                                                    <input class="rating_num" name="point" type="text"
+                                                        readonly="readonly" id="txt_point" value="0">
                                                 </div>
                                                 <textarea class="form-control" name="comment" id="feedback_txt" rows="3"
                                                     placeholder="Nhập bình luận về khóa học"></textarea>
@@ -393,4 +402,3 @@
 
     </div>
 </div>
-

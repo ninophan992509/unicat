@@ -9,6 +9,8 @@ const courseModel = require("../models/course.model");
 const auth = require("../middlewares/auth.mdw");
 const upload = require("../service/upload");
 const deleteFile = require("../service/delete");
+const email = require("../service/email");
+const generator = require("generate-password");
 
 /* GET login page. */
 router.get("/login", function (req, res) {
@@ -77,16 +79,52 @@ router.post("/register", async function (req, res) {
     Password: hash,
   };
 
-  await accountModel.add(account);
-  const newAccount = await accountModel.singleByEmail(req.body.Email);
+  const AccID = await accountModel.add(account);
+  const code = generator.generate({
+    length: 8,
+    lowercase: true,
+    uppercase: true,
+    numbers: true,
+  });
+
   const student = {
-    AccID: newAccount.AccID,
+    AccID,
     StdName: req.body.Username,
+    ActiveCode: code,
   };
+
   await studentModel.add(student);
 
-  let url = req.session.retUrl || "/account/login";
-  res.redirect(url);
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: req.body.Email,
+    subject: "Unicat - Your Email Confirmation Code",
+    html: `<h1>Thanks for your registration!</h1><p>This is your active code: <span>${code}</span></p>`,
+  };
+
+  email(mailOptions);
+  res.redirect("/account/active");
+});
+
+router.get("/active", function (req, res) {
+  res.render("vwAccount/confirm");
+});
+
+router.post("/active", async function (req, res) {
+  const student = await studentModel.single(+res.locals.user.Id);
+  if (student && student.ActiveCode === req.body.code) {
+    const entity = {
+      ActiveCode: null,
+      StdID: student.StdID,
+    };
+    await studentModel.patch(entity);
+    let url = req.session.retUrl || "/";
+    res.redirect(url);
+  } else {
+    res.render("vwAccount/confirm", {
+      error: "Mã xác nhận không đúng. Vui lòng kiểm tra lại!",
+    });
+  }
 });
 
 router.get("/profile", auth, async function (req, res) {
@@ -116,7 +154,8 @@ router.post("/edit", auth, function (req, res, next) {
       StdAvatar: req.file ? req.file.filename : null,
     };
     await studentModel.patch(student);
-    deleteFile(`./public/images/students/${res.locals.user.Avatar}`);
+    if (res.locals.user.Avatar !== null)
+      deleteFile(`./public/images/students/${res.locals.user.Avatar}`);
   });
   res.redirect("/account/profile");
 });

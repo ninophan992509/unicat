@@ -1,0 +1,79 @@
+{{#section 'js'}}
+    <script>
+        $(document).ready(function () {
+            function showAlert(msg) {
+                $('.alert').html(msg);
+                $('.alert').show();
+            }
+
+            $('#btnNewCat').click(function () {
+
+                if (
+                    $('#fieldName')
+                        .val()
+                        .match(
+                            /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i
+                        ) == null
+                ) {
+                    showAlert("Vui lòng điền tên danh mục!");
+                    return false;
+                }
+
+                if ($('#selectCat').val() === "") {
+                    showAlert("Vui lòng chọn cho danh mục cha!");
+                    return false;
+                }
+
+                $('#frmNewCat').off('submit').submit();
+            });
+
+        });
+    </script>
+{{/section}}
+<div class="d-flex justify-content-center">
+    <div class="card w-75">
+        <div class="card-header">
+            <strong>Thêm danh mục</strong>
+        </div>
+        <div class="card-body card-block">
+            <form action="/admin/manage-categories/new-sub-cat" id="frmNewCat" method="post" class="form-horizontal">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <strong class="title-alert">Không thể tạo!</strong>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">
+                        <label for="select" class=" form-control-label">Chọn danh mục cha</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <select name="cat_id" id="selectCat" class="form-control">
+                            {{#each categories}}
+                                <option value="{{CatID}}">{{CatName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">
+                        <label for="text-input" class=" form-control-label">Tên danh mục</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <input type="text" id="fieldName" name="field_name" placeholder="Text" class="form-control">
+                        <small class="form-text text-muted">Nhập vào tên danh mục</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
+                <i class="fa fa-dot-circle-o"></i> Thêm
+            </button>
+            <button type="reset" class="btn btn-danger btn-sm">
+                <i class="fa fa-ban"></i> Hủy
+            </button>
+        </div>
+    </div>
+</div>

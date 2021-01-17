@@ -1,0 +1,368 @@
+{{#section 'css'}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u09j9wu9pqx2l3xotygchvlu8iaw51i3d3zycqe9agitwcw0/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+    <script src="/assets/js/course.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#input-b6").fileinput({
+                showUpload: false,
+                dropZoneEnabled: true,
+                maxFileCount: 1,
+                allowedFileTypes: ['image'],
+                mainClass: "input-group-lg"
+            });
+
+            $(".cour-img-upload .btn-file .hidden-xs").html('');
+
+            $(".fileinput-remove .hidden-xs").html('Hủy');
+
+            $(".cour-img-upload #input-b6").on('change', function () {
+                $(".cour-img-upload .btn-file").css("background-image", "none");
+                $(".cour-img-upload .btn-file").css("height", "3rem");
+                $(".cour-img-upload .btn-file").css("width", "12rem");
+                $(".cour-img-upload .btn-file .hidden-xs").html('Tải ảnh khác lên');
+            });
+
+            tinymce.init({
+                selector: '.txt_description',
+                plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+                //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                toolbar_mode: 'floating',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Unicat',
+                browser_spellcheck: false,
+                menubar: false,
+            });
+
+
+            $('#selectCat').on('change', function (e) {
+                const optionSelected = $("option:selected", this);
+                const valueSelected = this.value;
+                const categories = JSON.parse('{{{json categories}}}');
+                let fields = [];
+                for (const cat of categories) {
+                    if (+cat.CatID === +valueSelected) {
+                        fields = [...cat.fields];
+                        break;
+                    }
+                }
+
+                $('#selectFld').html('');
+                for (const f of fields) {
+                    let opt = `<option value="${f.FldID}">${f.FldName}</option>`;
+                    $('#selectFld').append(opt);
+                }
+
+            });
+
+            $('input').on('focus', function () {
+                offAlert();
+            });
+
+            $('select').on('click', function () {
+                offAlert();
+            });
+
+            function offAlert() {
+                $('.alert').hide();
+                $('input').css("border", "none");
+            }
+            $('#finish').click(function () {
+                $('#finish').val(this.checked);
+
+            });
+
+            $('#btnAddCourse').off('click').on('click', function (e) {
+                e.preventDefault();
+                offAlert();
+                let valid = true;
+                const inputs = $('.ip');
+                for (const input of inputs) {
+                    if ($(input).val() === "") {
+                        $(input).parents(".form-group").children(".alert").html("Hãy điền vào mục này");
+                        $(input).parents(".form-group").children(".alert").show();
+                        $(input).css("border", "1px solid red");
+                        valid = false;
+                    }
+                }
+
+                if (tinymce.get('fullDes').getContent() === "") {
+
+                    $('.detail-course').children(".form-group").children(".alert").html("Hãy mô tả khóa học của bạn");
+                    $('.detail-course').children(".form-group").children(".alert").show();
+                    valid = false;
+                }
+
+
+                if (valid) {
+                    $('#detailDes').val(tinymce.get('fullDes').getContent());
+                    $("#frmNewCour").submit();
+                }
+            });
+
+
+            $('.btn-edit-chap').off("click").click(function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".has_children").data("id");
+                if (id !== "") {
+                    $("#txt_id").val(id);
+                    $("#frmEditChap").submit();
+                }
+            });
+
+            $('.btn-remove-chap').off("click").click(function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".has_children").data("id");
+                if (id !== "") {
+                    $("#txt_id1").val(id);
+                    $("#frmDelChap").submit();
+                }
+            });
+        });
+
+    </script>
+
+{{/section}}
+<div class="course-edit new-course">
+    <div class="d-flex flex-row justify-content-start">
+        <h3>Thông tin khóa học</h3>
+    </div>
+    <form action="/teacherpage/courses/edit-chap" method="POST" id="frmEditChap">
+        <input type="hidden" name="id" id="txt_id">
+    </form>
+    <form action="/teacherpage/courses/delete-chapter" method="POST" id="frmDelChap">
+        <input type="hidden" name="id" id="txt_id1">
+    </form>
+    <form id="frmNewCour" method="POST" action="/teacherpage/courses/edit" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{{course.CourID}}">
+        <div class="row d-flex flex-column">
+            <div class="form-group">
+                <label class="control-label">Tên khóa học</label>
+                <input id="cour-name" class="form-control ip" name="cour_name" type="text" autofocus
+                    placeholder="VD: Thành thạo Tiếng Anh 30 ngày" value="{{course.CourName}}">
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">Mô tả ngắn</label>
+                <input type="text" name="cour_des" id="cour-des" class="form-control ip"
+                    placeholder="VD: Trọn bộ kỹ năng cơ bản" value="{{course.CourDesShort}}">
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <img src="/images/courses/{{course.CourImgBg}}" alt="Ảnh khóa học" width="100%">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="control-label">Thay ảnh khóa học</label>
+                <div class="file-input cour-img-upload">
+                    <input id="input-b6" name="cour_img" type="file" accept=".jpg,.jpeg,.png">
+                </div>
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="control-label">Danh mục</label>
+                <select id="selectCat" name="category" class="form-control">
+                    <option selected value="{{course.CatID}}">{{course.CatName}}</option>
+                    {{#each categories}}
+                        <option value="{{CatID}}">{{CatName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">Danh mục con</label>
+                <select id="selectFld" name="field" class="form-control">
+                    <option selected value="{{course.FldID}}">{{course.FldName}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">Giá khóa học</label>
+                <select id="selectPrice" class="form-control" name="price">
+                    <option selected value="{{course.CourPrice}}">{{format course.CourPrice}}đ</option>
+                    {{#each prices}}
+                        <option value="{{price}}">{{format price}}đ</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="row detail-course">
+            <div class="form-group w-100">
+                <input type="hidden" name="detail_des" id="detailDes">
+                <label class="control-label">Mô tả chi tiết khóa học</label>
+                <textarea class="txt_description" id="fullDes">{{course.CourDesFull}}</textarea>
+                <div class="alert alert-danger" role="alert" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="w-100 mg-5">
+            <div class="d-flex flex-row justify-content-between">
+                <h3>Nội dung khóa học</h3>
+                <a role="button" class="btn btn-primary" href="/teacherpage/courses/add-chap/{{course.CourID}}"><i
+                        class="fa fa-plus-circle" aria-hidden="true"></i> Thêm
+                    chương mới </a>
+            </div>
+            <div class="w-100 d-flex justify-content-end mg-3">
+                <div class="form-group">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" style="width:20px; height:20px;" name="finish"
+                            id="finish" value="{{course.Finish}}" {{#eq course.Finish 1}}checked{{/eq}}>
+                        <span>&nbsp; Đã hoàn thành (Khóa đã đăng tải đầy đủ)</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 curriculum">
+
+                <div class="course_container">
+
+                    <!-- Course Tabs -->
+                    <div class="course_tabs_container">
+                        <!--
+                        <div class="tabs d-flex flex-row align-items-center justify-content-start">  
+                            <div class="tab active">Giáo trình</div>
+                        </div>-->
+                        <div class="tab_panels">
+                            <!-- Curriculum -->
+                            <div class="tab_panel tab_panel_1 active">
+                                <div class="tab_panel_content">
+                                    <div class="tab_panel_content">
+                                        <!-- Dropdowns -->
+                                        <ul class="dropdowns">
+                                            {{#each course.chapters}}
+                                                <li class="has_children" data-id="{{ChapID}}">
+                                                    <div
+                                                        class="dropdown_item d-flex flex-row justify-content-between align-items-center">
+                                                        <div class="dropdown_item_title mr-auto" style="width:80%">
+                                                            <span>Chương
+                                                                {{ChapSTT}}: </span>
+                                                            <p>{{ChapName}}</p>
+                                                        </div>
+                                                        <div class="dropdown_btn_edit">
+                                                            <button type="button"
+                                                                    class="btn-edit-chap btn btn-primary mr-auto"><i
+                                                                    class="fa fa-pencil"
+                                                                    aria-hidden="true"></i></button>
+                                                            <button type="button"
+                                                                class="btn-remove-chap btn btn-primary"><i
+                                                                    class="fa fa-trash-o" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+                                                    <ul>
+                                                        {{#each ../this/course.lessons}}
+                                                            {{#eq ../this/ChapID ChapID}}
+                                                                <li class="has_children">
+                                                                    <div class="dropdown_item">
+                                                                        {{#if LessLink}}
+                                                                            <div class="modal fade" id="modal{{LessID}}"
+                                                                                tabindex="-1" role="dialog"
+                                                                                aria-labelledby="myModalLabel"
+                                                                                aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg"
+                                                                                    role="document">
+
+                                                                                    <!--Content-->
+                                                                                    <div class="modal-content">
+
+                                                                                        <!--Body-->
+                                                                                        <div
+                                                                                            class="modal-body mb-0 p-0">
+                                                                                            <video
+                                                                                                id="my_video_{{LessID}}"
+                                                                                                class="video-js vjs-default-skin"
+                                                                                                controls preload="auto"
+                                                                                                data-setup='{ "asdf": true }'
+                                                                                                poster="http://video-js.zencoder.com/oceans-clip.png">
+                                                                                                <source
+                                                                                                    src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
+                                                                                                    type='video/mp4'>
+
+                                                                                            </video>
+                                                                                        </div>
+
+                                                                                        <!--Footer-->
+                                                                                        <div
+                                                                                            class="modal-footer justify-content-between">
+                                                                                            <div
+                                                                                                class="dropdown_item_title">
+                                                                                                <span>Bài
+                                                                                                    {{LessSTT}}:
+                                                                                                </span>
+                                                                                                {{LessName}}
+                                                                                            </div>
+                                                                                            <button type="button"
+                                                                                                class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                                                                                data-dismiss="modal">Close</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        {{/if}}
+                                                                        <div class="dropdown_item_title">
+                                                                            <span>Bài
+                                                                                {{LessSTT}}:
+                                                                            </span>
+                                                                            {{LessName}}
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <ul>
+                                                                        {{#if LessLink}}
+                                                                            <a href="#" data-toggle="modal"
+                                                                                data-target="#modal{{LessID}}"
+                                                                                class="btn btn-primary mt-2"><i
+                                                                                    class="fa fa-video-camera"></i> Xem
+                                                                                video khóa học</a>
+                                                                        {{/if}}
+                                                                        <div class="dropdown_item_text">
+                                                                            {{{LessText}}}
+
+                                                                        </div>
+                                                                    </ul>
+                                                                </li>
+                                                            {{/eq}}
+                                                        {{/each}}
+
+                                                    </ul>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row w-100">
+            <div class="ml-auto mr-2">
+                <a role="button" id="btnClose" class="btn btn-danger" href="/teacherpage/courses">Hủy và quay lại</a>
+            </div>
+            <div class="ml-2">
+                <button type="submit" id="btnAddCourse" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+        </div>
+    </form>
+</div>

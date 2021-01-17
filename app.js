@@ -8,8 +8,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const numeral = require("numeral");
 const moment = require("moment");
-
 const app = express();
+require("dotenv").config();
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(logger("dev"));
@@ -52,8 +52,7 @@ app.engine(
         moment.suppressDeprecationWarnings = true;
         return moment(`${datetime}`).fromNow();
       },
-      formatDOB(datetime)
-      {
+      formatDOB(datetime) {
         const date = new Date(`${datetime}`);
         return moment(date).format("DD-MM-YYYY");
       },
@@ -61,49 +60,42 @@ app.engine(
         return JSON.stringify(context);
       },
       math(lvalue, operator, rvalue, options) {
-
         lvalue = parseFloat(lvalue);
         rvalue = parseFloat(rvalue);
-        
+
         return {
-        "+": lvalue + rvalue,
-        "-": lvalue - rvalue,
-        "*": lvalue * rvalue,
-        "/": lvalue / rvalue,
-        "%": lvalue % rvalue
-       }[operator];
-       },
-     
+          "+": lvalue + rvalue,
+          "-": lvalue - rvalue,
+          "*": lvalue * rvalue,
+          "/": lvalue / rvalue,
+          "%": lvalue % rvalue,
+        }[operator];
+      },
     },
   })
 );
-
+const auth = require("./middlewares/auth.mdw");
 const passport = require("./auth/social-strategy");
 app.use(passport.initialize());
 app.use(passport.session());
-require("./middlewares/session.mdw")(app);
-require("./middlewares/locals-teacher.mdw")(app);
-app.use("/teacherpage",require("./routes/routeTeacher/account.route"));
-app.use("/teacherpage/courses", require("./routes/routeTeacher/course.route"));
-app.use("/admin", require("./routes/routeAdmin/index"));
 
+require("./middlewares/session.mdw")(app);
+
+require("./middlewares/locals-admin.mdw")(app);
+app.use("/admin", require("./routes/routeAdmin/admin.route"));
+app.use("/admin/manage-categories", require("./routes/routeAdmin/cat.route"));
+
+require("./middlewares/locals-teacher.mdw")(app);
+app.use("/teacherpage", require("./routes/routeTeacher/account.route"));
+app.use("/teacherpage/courses", require("./routes/routeTeacher/course.route"));
 
 require("./middlewares/locals.mdw")(app);
 app.use("/", require("./routes/app.route.js"));
-app.use("/auth", require("./routes/auth.route"));
-app.use("/courses", require("./routes/course.route.js"));
+app.use("/auth",require("./routes/auth.route"));
+app.use("/courses",require("./routes/course.route.js"));
 app.use("/account", require("./routes/account.route"));
-app.use(
-   "/cart",
-   require("./middlewares/auth.mdw"),
-   require("./routes/cart.route")
-);
-app.use(
-   "/mycourses",
-   require("./middlewares/auth.mdw"),
-   require("./routes/my-account.route")
-);
-
+app.use("/cart", auth, require("./routes/cart.route"));
+app.use("/mycourses", auth, require("./routes/my-account.route"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {

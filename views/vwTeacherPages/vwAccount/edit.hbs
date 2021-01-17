@@ -1,6 +1,8 @@
 {{#section 'css'}}
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet"
+        type="text/css" />
     <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
@@ -8,6 +10,9 @@
 
 {{#section 'js'}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u09j9wu9pqx2l3xotygchvlu8iaw51i3d3zycqe9agitwcw0/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
     <script src="/assets/js/custom.js"></script>
     <script src="/assets/js/_bonus.js"></script>
     <script>
@@ -20,93 +25,157 @@
                 allowedFileTypes: ['image'],
                 mainClass: "input-group-lg"
             });
+
             $(".btn-file .hidden-xs").html('Tải ảnh lên');
             $(".fileinput-remove .hidden-xs").html('Hủy');
+            tinymce.init({
+                selector: '.txt_description',
+                plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+                //  toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                toolbar_mode: 'floating',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Unicat',
+                browser_spellcheck: false,
+                menubar: false,
+            });
+
+            $(function () {
+                $("#datepicker").datepicker({
+                    autoclose: true,
+                    todayHighlight: true
+                }).datepicker('update', new Date());
+            });
+
+            function showAlert(input, msg) {
+                $(input).parents(".form-group").children(".alert").show();
+                $(input).parents(".form-group").children(".alert").html(`${msg}`);
+                $(input).css("border","red");
+                $(input).focus();
+               // return false;
+            }
 
             $("#frmEdit").on('submit', function (e) {
                 e.preventDefault();
-
                 if ($('#name').val().match(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i) == null) {
-                    $('.alert strong').html('Tên không hợp lệ. Hãy nhập tên khác');
-                    $('.alert').css('display', 'block');
-                } else {
-                    $("#frmEdit").off("submit").submit();
+                    return showAlert($('#name'), 'Tên không hợp lệ. Hãy nhập tên khác');
                 }
+                if (
+                    $('#sub_email')
+                        .val()
+                        .trim()
+                        .match(
+                            /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
+                        ) == null
+                )
+                    return showAlert($('#sub_email'), 'Email không hợp lệ. Hãy nhập email khác');
+                if (
+                    $('#phone')
+                        .val()
+                        .trim()
+                        .match(
+                            /^([0-9]{10,11})$/
+                        ) == null
+                )
+                    return showAlert($('#phone'), 'Số điện thoại không hợp lệ. Hãy nhập số điện thoại khác');
 
+                if (tinymce.get('txt_teach_info').getContent() === "")
+                    return showAlert('#txt_teach_info', "Vui lòng nhập thông tin về kinh nghiệm giảng dạy của giảng viên");
+                $('#teachInfo').val(tinymce.get('txt_teach_info').getContent());
+              //  $("#frmEdit").off("submit").submit();
             });
 
             $("#frmEdit input").each(function () {
                 $(this).focus(function () {
                     $('.alert').css('display', 'none');
+                    $(this).css("border", "1px solid #ced4da");
                 });
-            })
+            });
         });
     </script>
 
 {{/section}}
-<div class="container mtop">
-    {{#with user}}
+<div class="container p-2 m-2">
+    {{#with info_teacher}}
         <div class="row">
-            <div class="col-sm-12 co-md-8 col-lg-6">
-                <form action="" method="post" id="frmEdit" enctype="multipart/form-data">
+            <div class="col-sm-12">
+                <form action="/teacherpage/info/edit" method="post" id="frmEdit" enctype="multipart/form-data">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin cá nhân</h4>
-                            <input type="text" name="Id" id="id" class="form-control" value="{{Id}}" hidden>
                             <div class="form-group">
                                 <div class="alert alert-warning" role="alert" style="display: none;">
-                                    <strong>#</strong>
                                 </div>
                                 <label for="name">Họ tên</label>
-                                <input type="text" name="Username" id="name" class="form-control" autofocus
-                                    value="{{Username}}">
+                                <input type="text" name="username" id="name" class="form-control" autofocus
+                                    value="{{TeachName}}">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email tài khoản</label>
-                                <input type="text" name="Email" id="email" class="form-control" value="{{Email}}"
+                                <input type="text" name="email" id="email" class="form-control" value="{{Email}}"
                                     disabled>
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-warning" role="alert" style="display: none;">
-                                    <strong>#</strong>
+                                    
                                 </div>
-                                <label for="name">Họ tên</label>
-                                <input type="text" name="Username" id="name" class="form-control" autofocus value="{{Username}}">
+                                <label for="name">Số điện thoại</label>
+                                <input type="text" name="phone" id="phone" class="form-control" value="{{Phone}}">
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-warning" role="alert" style="display: none;">
-                                    <strong>#</strong>
+                                    
                                 </div>
-                                <label for="name">Họ tên</label>
-                                <input type="text" name="Username" id="name" class="form-control" autofocus value="{{Username}}">
+                                <label for="name">Email liên lạc</label>
+                                <input type="text" name="sub_email" id="sub_email" class="form-control"
+                                    value="{{SubEmail}}">
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-warning" role="alert" style="display: none;">
-                                    <strong>#</strong>
+                                    
                                 </div>
-                                <label for="name">Họ tên</label>
-                                <input type="text" name="Username" id="name" class="form-control" autofocus value="{{Username}}">
+                                <label for="name">Ngày sinh</label>
+                                <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+                                    <input class="form-control" type="text" readonly name="birth" {{#if DateOfBirth}}
+                                        value="{{DateOfBirth}}" {{/if}} />
+                                    <span class="input-group-addon"> <i class="fa fa-calendar"
+                                            aria-hidden="true"></i></span>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="alert alert-warning" role="alert" style="display: none;">
-                                    <strong>#</strong>
+                                    
                                 </div>
-                                <label for="name">Họ tên</label>
-                                <input type="text" name="Username" id="name" class="form-control" autofocus value="{{Username}}">
+
+                                <div class="form-group">
+                                    <label for="gender">Giới tính</label>
+                                    <select class="form-control" name="gender" id="slGender">
+                                        <option value="0" {{#eq Gender 0}}selected{{/eq}}>Nam</option>
+                                        <option value="1" {{#eq Gender 1}}selected{{/eq}}>Nữ</option>
+                                        <option value="2" {{#eq Gender 2}}selected{{/eq}}>Khác</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Đổi ảnh đại diện</label>
                                 <div class="file-input">
-                                    <input id="input-b6" name="Avatar" type="file" accept=".jpg,.jpeg,.png">
+                                    <input id="input-b6" name="avatar" type="file" accept=".jpg,.jpeg,.png">
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-warning" role="alert" style="display: none;">
+                                    
+                                </div>
+                                <label class="control-label">Tiểu sử giảng viên</label>
+                                <input type="hidden" name="teach_info" id="teachInfo">
+                                <textarea class="txt_description" id="txt_teach_info">{{TeachInfo}}</textarea>
+                                <div class="alert alert-danger" role="alert" style="display: none;"></div>
                             </div>
 
                         </div>
                         <div class="card-footer text-muted">
-                            <a name="update_btn" id="updateBtn" class="btn btn-primary"
-                                href="javascript:$('#frmEdit').submit();" type="submit" role="button">Cập
-                                nhật</a>
-                            <a name="close_btn" id="close" class="btn btn-outline-primary" href="/account/profile"
+                            <button name="update_btn" id="updateBtn" class="btn btn-primary" type="submit">Cập
+                                nhật</button>
+                            <a name="close_btn" id="close" class="btn btn-outline-primary" href="teacherpage/info"
                                 role="button">Thoát</a>
                         </div>
                     </div>

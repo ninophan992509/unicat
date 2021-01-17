@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const courseModel = require('../models/course.model');
-
-
+const active = require("../middlewares/active.mdw");
 /* GET home page. */
-router.get('/', async function(req, res) {
+router.get('/',active,async function(req, res) {
   
   try { 
     const new_rows  =  await courseModel.top10NewestCourses();

@@ -7,12 +7,11 @@ const TBL_TEACHERS = "teacher";
 const TBL_CATEGORIES = "category";
 const TBL_FAVOURITE_COURSES = "favouritecourse";
 const criteria = ["CreatedAt", "CourPoint", "CourPrice"];
-const order = ["desc","asc"];
+const order = ["desc", "asc"];
 module.exports = {
   all() {
     return db.load(`select * from ${TBL_COURSES}`);
   },
-
   allByStdID(id) {
     return db.load(`select c.CourID, c.CourName, c.CourImgSm, c.TeachID, tc.TeachName, tc.TeachAvatar, sc.RatID
                     from (${TBL_STUDENT_COURSES} sc 
@@ -42,9 +41,8 @@ module.exports = {
   },
 
   pageAll(offset, opt, ord) {
-
-    if(opt > 2 ) opt = 0;
-    if(ord > 1) ord = 0;
+    if (opt > 2) opt = 0;
+    if (ord > 1) ord = 0;
     return db.load(`select c.*,tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint, COUNT(*) OVER()
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
@@ -194,7 +192,8 @@ module.exports = {
     const ret = await db.add(entity, TBL_COURSES);
     return ret.insertId;
   },
-  update_view(entity) {
+
+  patch(entity) {
     const condition = { CourID: entity.CourID };
     delete entity.CourID;
     return db.patch(entity, condition, TBL_COURSES);

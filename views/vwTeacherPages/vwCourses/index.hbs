@@ -17,7 +17,7 @@
                         <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                     </div>
                     <div class="course_body">
-                        <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a></h3>
+                        <h3 class="course_title"><a href="/teacherpage/courses/detail/{{CourID}}">{{CourName}}</a></h3>
                         <div class="course_text">
                             <p>{{CourDesShort}}</p>
                         </div>
@@ -43,11 +43,11 @@
                                 href="/teacherpage/courses/detail/{{CourID}}" role="button">
                                 Xem Chi Tiết
                             </a>
-                            <button data-id={{CourID}} class="btn-edit btn btn-primary btn-add" href="javascipt:;"
+                            <a class="btn-edit btn btn-primary btn-add" href="/teacherpage/courses/edit/{{CourID}}"
                                 role="button">
                                 <i class="fa fa-edit"></i>
                                 Chỉnh sửa
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

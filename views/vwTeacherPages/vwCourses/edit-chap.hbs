@@ -1,0 +1,370 @@
+{{#section 'css'}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/course_responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+
+{{#section 'js'}}
+    <script src="/assets/js/course.js"></script>
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.5/js/fileinput.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u09j9wu9pqx2l3xotygchvlu8iaw51i3d3zycqe9agitwcw0/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        $(document).ready(function () {
+            loadFnButton();
+            loadPlugin();
+            function loadPlugin() {
+                $(".input-video").fileinput({
+                    showUpload: false,
+                    maxFileCount: 1,
+                    allowedFileTypes: ["mp4"],
+                    mainClass: "input-group-lg",
+                    maxFileSize: 30000,
+                    required: true,
+                });
+
+                $(".file-loading .btn-file .hidden-xs").html("Tải video lên");
+                $(".file-loading .fileinput-remove .hidden-xs").html("Hủy");
+
+                tinymce.init({
+                    selector: ".txt_description",
+                    plugins:
+                        "a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker",
+                    // toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+                    toolbar_mode: "floating",
+                    tinycomments_mode: "embedded",
+                    tinycomments_author: "Unicat",
+                    browser_spellcheck: false,
+                    menubar: false,
+                });
+
+                $(".btn-remove-lesson")
+                    .off("click")
+                    .on("click", function (e) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: "Xóa bài học này?",
+                            text: "Bạn sẽ không thể phục hồi lại bài học này sau khi xóa!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "OK, xác nhận xóa!",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const id = $(this).parents(".lesson").data("id");
+                                if (id === "") {
+                                    $(this).parents(".lesson").remove();
+                                    Swal.fire(
+                                        "Đã xóa!",
+                                        "Bài học đã khóa. Hãy đăng bài học khác thay thế!",
+                                        "success"
+                                    );
+                                } else {
+                                    const btn = this;
+                                    $.ajax({
+                                        global: false,
+                                        type: "POST",
+                                        url: "/teacherpage/courses/delete-lesson",
+                                        data: {
+                                            id: id,
+                                        },
+                                        success: function (data) {
+                                            if (data) {
+                                                $(btn).parents(".lesson").remove();
+                                                Swal.fire(
+                                                    "Đã xóa!",
+                                                    "Bài học đã khóa. Hãy đăng bài học khác thay thế!",
+                                                    "success"
+                                                );
+                                            } else {
+                                                SwalWithBootstrapButtons.fire(
+                                                    "Error",
+                                                    "Có 1 lỗi đã xảy ra. Vui lòng thử lại",
+                                                    "error"
+                                                );
+                                            }
+                                        },
+                                        error: function (request, status, error) {
+                                            SwalWithBootstrapButtons.fire(
+                                                "Error",
+                                                "Có 1 lỗi đã xảy ra. Vui lòng thử lại",
+                                                "error"
+                                            );
+                                            serviceError();
+                                        },
+                                    });
+                                }
+                            }
+                        });
+                    });
+            }
+
+            let count = 0;
+            function loadFnButton() {
+                $('.btn-remove-chap').off('click').on("click", function (e) {
+                    e.preventDefault();
+                    const id = $(this).parents(".chapter").data("id");
+                    if (id !== "") {
+                        $("#txt_id1").val(id);
+                        $("#frmDelChap").submit();
+                    }
+                });
+
+                $(".btn-add-lesson").off('click').on("click", function (e) {
+                    e.preventDefault();
+                    const btn = this;
+
+                    $.ajax({
+                        global: false,
+                        type: "POST",
+                        url: "/teacherpage/courses/add-lesson",
+                        success: function (data) {
+
+                            if (data !== null) {
+                                const newLesson = $.parseHTML(data);
+                                const insertLesson = $(btn)
+                                    .parents(".chapter")
+                                    .children(".insert-lesson");
+
+                                if ($(insertLesson).children().length === 0) {
+                                    $(insertLesson).append($(newLesson));
+                                } else {
+                                    $(newLesson).insertAfter($(btn).parents(".chapter").children(".insert-lesson").children(".lesson").last());
+                                }
+                                count += 1;
+                                $(".lesson").last().find('.form-group .txt_description').attr("id", `lesson${count}`);
+                                loadPlugin();
+                            }
+                        },
+                        error: function (request, status, error) {
+                            serviceError();
+                        },
+                    });
+                });
+            }
+
+            $('input').click(function () {
+                offAlert();
+            });
+
+            function offAlert() {
+                $('.alert').hide();
+                $('input').css("border-color", "#e4e4e4");
+            }
+
+            function submitForm() {
+                offAlert();
+                let valid = true;
+                const inputs = $('.ip');
+                for (const input of inputs) {
+                    if ($(input).val() === "") {
+
+                        $(input).parents(".form-group").find(".alert").html("Hãy điền vào mục này");
+                        $(input).parents(".form-group").find(".alert").show();
+                        $(input).css("border", "1px solid red");
+                        $(input).focus();
+                        valid = false;
+                    }
+                }
+
+                if (valid) {
+
+                    let contents = [];
+                    const lessons = $('.lesson');
+                    for (const lesson of lessons) {
+                        const less_id = ($(lesson).data("id") === "") ? null : $(lesson).data("id");
+                        const less_stt = $(lesson).find(".lesson-name .form-group .stt .add-stt").val();
+                        const less_name = $(lesson).find(".lesson-name .form-group .stt .add-name").val();
+                        const chap_stt = $(lesson).parents('.chapter').find(".chapter-name .form-group .stt .add-stt").val();
+                        $(lesson).find(".upload-video .file-loading .input-video").attr("name", `${chap_stt}_${less_stt}`);
+                        const less_link = ($(lesson).find(".upload-video .file-loading .input-video").val()) ? true : false;
+                        const index = $(lesson).find('.form-group .txt_description').attr("id");
+                        const less_text = tinymce.get(`${index}`).getContent();
+
+                        const new_lesson = {
+                            less_id,
+                            less_stt,
+                            less_name,
+                            less_text,
+                            less_link
+                        }
+
+                        contents.push(new_lesson);
+                    }
+                    $('#new-lessons').val(JSON.stringify(contents));
+                    $("#frmEditChap").submit();
+                }
+            }
+
+            $('#btnSave').on('click', function (e) {
+                e.preventDefault();
+                submitForm();
+            });
+
+            $('#btnExit').on("click", function () {
+                const id = $('#txt_c_id').val();
+                window.location.href = '/teacherpage/courses/edit/' + id;
+            });
+
+            $('.btn-delete-video').on('click', function (e) {
+                e.preventDefault();
+                const btn = this;
+
+                Swal.fire({
+                    title: 'Xóa video này?',
+                    text: "Bạn sẽ không thể phục hồi lại video này sau khi xóa!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK, xác nhận xóa!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const id = $(btn).parents('.lesson').data("id");
+                        $.ajax({
+                            global: false,
+                            type: "POST",
+                            url: "/teacherpage/courses/remove-video",
+                            data: {
+                                id: id
+                            },
+                            success: function (data) {
+                                if (data) {
+                                    $(btn).parents(".upload-video").children(".file-loading").show();
+                                    $(btn).parents(".display-video").remove();
+
+
+                                    Swal.fire(
+                                        'Đã xóa!',
+                                        'Video bài học đã khóa. Hãy đăng video khác thay thế!',
+                                        'success'
+                                    );
+
+                                } else {
+                                    SwalWithBootstrapButtons.fire(
+                                        'Error',
+                                        'Có 1 lỗi đã xảy ra. Vui lòng thử lại',
+                                        'error'
+                                    )
+                                }
+                            },
+                            error: function (request, status, error) {
+                                SwalWithBootstrapButtons.fire(
+                                    'Error',
+                                    'Có 1 lỗi đã xảy ra. Vui lòng thử lại',
+                                    'error'
+                                )
+                                serviceError();
+                            }
+                        });
+
+                    }
+                });
+            });
+        });
+
+    </script>
+
+{{/section}}
+{{#if chapter}}
+    <div class="row-100 new-chap">
+        <form action="/teacherpage/courses/delete-chapter" method="POST" id="frmDelChap">
+            <input type="hidden" name="id" id="txt_id1">
+        </form>
+        <form action="/teacherpage/courses/edit-chap-done" method="post" id="frmEditChap" enctype="multipart/form-data">
+            <input type="hidden" name="courID" id="txt_c_id" value="{{chapter.CourID}}">
+            <input type="hidden" name="chapID" id="txt_ch_id" value="{{chapter.ChapID}}">
+            <input type="hidden" name="lessons" id="new-lessons">
+            
+            <h3 class="add-chapter-title">Chỉnh sửa chương</h3>
+            <div class="chapter add-chapter" data-id="{{chapter.ChapID}}">
+                <div class="chapter-name">
+                    <div class="form-group d-flex flex-column align-items-start justify-content-between">
+
+                        <div class="stt w-100 d-flex justify-content-between align-items-center">
+                            <label class="control-label">Chương</label>
+                            <input type="number" min="1" class="add-stt form-control ip" name="chap_stt"
+                                value="{{chapter.ChapSTT}}" placeholder="1">
+                            <input type="text" name="chap_name" class="form-control ip" value="{{chapter.ChapName}}"
+                                placeholder="Nhập tên chương">
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" style="display: none;">
+                        </div>
+                    </div>
+                    <a name="remove" class="btn-remove-chap btn btn-primary" href="#" role="button"><i
+                            class="fa fa-times"></i></a>
+                </div>
+
+                <div class="w-100 insert-lesson">
+                    {{#each lessons}}
+                        <div class="lesson" data-id="{{LessID}}">
+                            <div class="lesson-name">
+                                <div class="form-group d-flex flex-column align-items-start justify-content-between">
+                                    <div class="stt w-100 d-flex justify-content-between align-items-center">
+                                        <label class="control-label">Bài</label>
+                                        <input type="number" min="1" class="add-stt form-control ip" value="{{LessSTT}}"
+                                            placeholder="1">
+                                        <input type="text" class="add-name form-control ip" value="{{LessName}}"
+                                            placeholder="Nhập tên bài học">
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" style="display: none;">
+                                    </div>
+
+                                </div>
+                                <a name="remove" class="btn-remove-lesson btn btn-primary" href="#" role="button"><i
+                                        class="fa fa-times"></i></a>
+                            </div>
+                            <div class="upload-video">
+                                {{#if LessLink}}
+                                    <div class="display-video my-2">
+                                        <video id="my-video{{LessID}}" class="video-js" controls preload="auto"
+                                            width="640" height="264" data-setup="{}">
+                                            <source src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}" type="video/mp4" />
+                                        </video>
+
+                                        <button type="button" class="btn-delete-video btn btn-danger my-2">Xóa video
+                                            hiện
+                                            tại</button>
+                                    </div>
+                                {{/if}}
+                                <div class="file-loading my-2" {{#if LessLink}} style="display:none;" {{/if}}>
+                                    <input class="input-video" type="file" accept="video/*">
+                                </div>
+
+                            </div>
+                            <div class="form-group w-100">
+                                <div class="alert alert-warning" role="alert" style="display: none;">
+                                    <strong>#</strong>
+                                </div>
+                                <label class="control-label">Nội dung bài học</label>
+                                <textarea class="txt_description" id="{{ChapSTT}}_{{LessSTT}}">{{{LessText}}}</textarea>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+
+                <div class="w-100 p-2">
+                    <button type="button" class="btn-add-lesson btn btn-primary "><i class="fa fa-plus-circle"
+                            aria-hidden="true"></i> Thêm
+                        bài mới </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="w-100 d-flex justify-content-end">
+        <button type="button" id="btnExit" class="btn btn-danger m-2">
+            Thoát không lưu
+        </button>
+        <button type="submit" id="btnSave" class="btn btn-primary m-2"> <i class="fa fa-refresh" aria-hidden="true"></i>
+            Lưu thay đổi
+        </button>
+    </div>
+{{/if}}

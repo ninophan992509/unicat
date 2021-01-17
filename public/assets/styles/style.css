@@ -660,23 +660,22 @@
   border-top-right-radius: 0;
 }
 
-.table_profile{
+.table_profile {
   font-size: 1rem;
   color: #384158;
 }
-
 
 .table_profile tr,
 .table_profile th {
   padding: 1.5rem;
 }
 
-
-.table_tc_profile{
+.table_tc_profile {
   width: 100%;
 }
 
-.table_tc_profile tr, .table_tc_profile th {
+.table_tc_profile tr,
+.table_tc_profile th {
   padding: 1rem;
 }
 
@@ -685,13 +684,13 @@
 }
 
 .table_tc_profile {
-     font-size: 1rem;
-     color: #384158;
+  font-size: 1rem;
+  color: #384158;
 }
 
 .table_tc_profile tr:nth-child(7) td > * {
-     font-size: inherit;
-     color: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 .btn-outline-primary {
@@ -705,14 +704,13 @@
   color: #fff;
 }
 
-
 .btn-primary {
   background-color: #14bdee;
   border: 1px #fff solid;
   color: #fff;
 }
 
-.btn-outline-primary:hover{
+.btn-outline-primary:hover {
   color: #14bdee;
   border: 1px #14bdee solid;
   background-color: #eeeeee;
@@ -966,6 +964,7 @@
 
 .chapter .form-control {
   border: 1px solid #e4e4e4;
+  background-color: #eeeeee;
   box-shadow: none;
   width: 80%;
 }
@@ -1044,39 +1043,97 @@
   }
 }
 
-.courses_of_teacher .item{
+.courses_of_teacher .item {
   margin-bottom: 3rem;
 }
 
-.file-preview{
+.file-preview {
   border: none;
   box-shadow: none;
 }
 
 .file-thumbnail-footer {
-    display: none;
+  display: none;
 }
 
-.kv-preview-data{
-  width: 80%!important;
-  height: auto!important;
+.kv-preview-data {
+  width: 80% !important;
+  height: auto !important;
 }
 
-.new-course .alert-danger{
-   background-color: transparent;
-   font-size: 0.9rem;
-   border: none;
-   color: red;
-   padding: 0.2rem;
-   margin-bottom: 0;
-   text-align: start;
-   font-weight: 500;
+.new-course .alert-danger,
+.new-chap .alert-danger {
+  background-color: transparent;
+  font-size: 0.9rem;
+  border: none;
+  color: red;
+  padding: 0.2rem;
+  margin-bottom: 0;
+  text-align: start;
+  font-weight: 500;
 }
 
-.tox-tinymce{
-  height: 300px!important;
+.tox-tinymce {
+  height: 300px !important;
 }
 
-.course_info{
+.course_info {
   margin-top: 1rem;
 }
+
+.review_rating_container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review_rating_bars {
+  padding: 0;
+}
+
+.mg-3 {
+  margin-top: 3rem;
+}
+
+.mg-5 {
+  margin: 5rem 0;
+}
+
+.add-chapter {
+  color: #384158;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.add-chapter .control-label {
+  margin-bottom: 0;
+}
+
+.add-chapter-title {
+  margin: 2rem 0;
+}
+
+.add-stt {
+  width: 5rem !important;
+  margin: 0 1rem 0 0.5rem;
+}
+
+.curriculum {
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 1px 1px 20px 0.25rem #d9eaec;
+}
+.curriculum .tab_panels {
+  background-color: #fff;
+}
+
+.curriculum .course_tabs_container {
+  margin-top: 0;
+}
+
+.video-js {
+    width: 100%;
+    height: 480px!important;
+}
+
+#datepicker{width:180px; margin: 0 20px 20px 20px;}
+#datepicker > span:hover{cursor: pointer;}

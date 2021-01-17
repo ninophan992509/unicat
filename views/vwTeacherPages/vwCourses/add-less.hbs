@@ -1,0 +1,30 @@
+<div class="lesson" data-id="{{LessID}}">
+    <div class="lesson-name">
+        <div class="form-group  d-flex flex-column align-items-start justify-content-between">
+            <div class="stt w-100 d-flex justify-content-between align-items-center">
+                <label class="control-label">Bài</label>
+                <input type="number" min="1" class="add-stt form-control ip " name="lesson_stt" value="{{LessSTT}}"
+                    placeholder="1">
+                <input type="text" class="add-name form-control ip" value="{{LessName}}" placeholder="Nhập tên bài học">
+            </div>
+            
+            <div class="alert alert-danger" role="alert" style="display: none;">
+            </div>
+
+        </div>
+        <a name="remove" class="btn-remove-lesson btn btn-primary" href="#" role="button"><i
+                class="fa fa-times"></i></a>
+    </div>
+    <div class="upload-video">
+        <div class="file-loading">
+            <input class="input-video" type="file" accept="video/*">
+        </div>
+    </div>
+    <div class="form-group w-100">
+        <label class="control-label">Thêm nội dung bài học</label>
+        <textarea class="txt_description" id="{{ChapSTT}}_{{LessSTT}}">{{{LessText}}}</textarea>
+        <div class="alert alert-warning" role="alert" style="display: none;">
+            <strong>#</strong>
+        </div>
+    </div>
+</div>

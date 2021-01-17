@@ -72,8 +72,10 @@
                             <div class="tab_panel tab_panel_2">
                                 <div class="tab_panel_content">
                                     <div class="tab_panel_content">
-                                        <div class="d-flex justify-content-end ">
-                                            Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}
+                                        <div class="d-flex justify-content-between">
+                                            <h6>Trạng thái: {{#eq course.Finish 1}}Đã hoàn thành{{/eq}}
+                                                    {{#eq course.Finish 0}}Đang cập nhật{{/eq}}</h6>
+                                            <h6>Lần cập nhật gần đây:&nbsp;{{formatDateTime course.UpdatedAt}}</h6>
                                         </div>
                                         <!-- Dropdowns -->
                                         <ul class="dropdowns">
@@ -88,53 +90,52 @@
                                                         {{#each ../this/course.lessons}}
 
                                                             {{#eq ../this/ChapID ChapID}}
-                                                                <li>
+                                                                <li class="has_children">
                                                                     <div class="dropdown_item">
                                                                         {{#if LessLink}}
-                                                                        <div class="modal fade" id="modal{{LessID}}"
-                                                                            tabindex="-1" role="dialog"
-                                                                            aria-labelledby="myModalLabel"
-                                                                            aria-hidden="true">
-                                                                            <div class="modal-dialog modal-lg"
-                                                                                role="document">
+                                                                            <div class="modal fade" id="modal{{LessID}}"
+                                                                                tabindex="-1" role="dialog"
+                                                                                aria-labelledby="myModalLabel"
+                                                                                aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg"
+                                                                                    role="document">
 
-                                                                                <!--Content-->
-                                                                                <div class="modal-content">
+                                                                                    <!--Content-->
+                                                                                    <div class="modal-content">
 
-                                                                                    <!--Body-->
-                                                                                    <div class="modal-body mb-0 p-0">
-                                                                                        <video id="my_video_{{LessID}}"
-                                                                                            class="video-js vjs-default-skin"
-                                                                                            controls preload="auto"
-                                                                                            data-setup='{ "asdf": true }'
-                                                                                            poster="http://video-js.zencoder.com/oceans-clip.png">
-                                                                                            <source
-                                                                                                src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
-                                                                                                type='video/mp4'>
-                                                                                          
-                                                                                        </video>
-                                                                                    </div>
-
-                                                                                    <!--Footer-->
-                                                                                    <div
-                                                                                        class="modal-footer justify-content-between">
+                                                                                        <!--Body-->
                                                                                         <div
-                                                                                            class="dropdown_item_title">
-                                                                                            <span>Bài
-                                                                                                {{LessSTT}}:
-                                                                                            </span>
-                                                                                            {{LessName}}
+                                                                                            class="modal-body mb-0 p-0">
+                                                                                            <video
+                                                                                                id="my_video_{{LessID}}"
+                                                                                                class="video-js vjs-default-skin"
+                                                                                                controls preload="auto"
+                                                                                                data-setup='{ "asdf": true }'
+                                                                                                poster="http://video-js.zencoder.com/oceans-clip.png">
+                                                                                                <source
+                                                                                                    src="/videos/{{CourID}}/{{ChapID}}/{{LessLink}}"
+                                                                                                    type='video/mp4'>
+
+                                                                                            </video>
                                                                                         </div>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-outline-primary btn-rounded btn-md ml-4"
-                                                                                            data-dismiss="modal">Close</button>
+
+                                                                                        <!--Footer-->
+                                                                                        <div
+                                                                                            class="modal-footer justify-content-between">
+                                                                                            <div
+                                                                                                class="dropdown_item_title">
+                                                                                                <span>Bài
+                                                                                                    {{LessSTT}}:
+                                                                                                </span>
+                                                                                                {{LessName}}
+                                                                                            </div>
+                                                                                            <button type="button"
+                                                                                                class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                                                                                data-dismiss="modal">Close</button>
+                                                                                        </div>
                                                                                     </div>
-
                                                                                 </div>
-
-
                                                                             </div>
-                                                                        </div>
                                                                         {{/if}}
                                                                         <div class="dropdown_item_title">
                                                                             <span>Bài
@@ -142,7 +143,8 @@
                                                                             </span>
                                                                             {{LessName}}
                                                                         </div>
-                                                                        
+                                                                    </div>
+                                                                    <ul>
                                                                         {{#if LessLink}}
                                                                             <a href="#" data-toggle="modal"
                                                                                 data-target="#modal{{LessID}}"
@@ -152,9 +154,8 @@
                                                                         {{/if}}
                                                                         <div class="dropdown_item_text">
                                                                             {{{LessText}}}
-
                                                                         </div>
-                                                                    </div>
+                                                                    </ul>
                                                                 </li>
                                                             {{/eq}}
                                                         {{/each}}

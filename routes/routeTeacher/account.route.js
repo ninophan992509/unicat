@@ -14,7 +14,6 @@ router.get("/login", function (req, res) {
       req.session.retUrl = null;
     }
   }
-
   res.render("vwTeacherPages/vwAccount/login", { layout: false });
 });
 
@@ -48,7 +47,7 @@ router.post("/logout", async function (req, res) {
   res.redirect(req.headers.referer);
 });
 
-router.get("/info", async function (req, res) {
+router.get("/info",authTeacher,async function (req, res) {
   const info_teacher = await teacherModel.single(res.locals.teacher.Id);
   info_teacher.Email = res.locals.teacher.Email;
   info_teacher.Gender =
@@ -63,5 +62,29 @@ router.get("/info", async function (req, res) {
   });
 });
 
-router.post("/info/edit", function (req, res) {});
+router.get("/info/edit",authTeacher,async function (req, res) {
+  const info_teacher = await teacherModel.single(res.locals.teacher.Id);
+  info_teacher.Email = res.locals.teacher.Email;
+  res.render("vwTeacherPages/vwAccount/edit", {
+    layout: "main-teacher",
+    info_teacher,
+  });
+});
+
+router.post("/info/edit", authTeacher, async function (req, res) {
+  try {
+    const student = {
+      StdID: +req.body.Id,
+      StdName: req.body.Username,
+      StdAvatar: req.file ? req.file.filename : null,
+    };
+    await studentModel.patch(student);
+    if (res.locals.user.Avatar !== null)
+      deleteFile(`./public/images/students/${res.locals.user.Avatar}`);
+    res.redirect("/account/profile");
+  } catch (error) {
+      throw error;
+  }
+    
+});
 module.exports = router;

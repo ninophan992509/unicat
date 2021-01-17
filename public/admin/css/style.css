@@ -1,0 +1,86 @@
+.animsition .login-logo{
+    width: 80%;
+    height: 150px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.animsition .login-logo span{ 
+    color: #3E3E3E;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+.animsition .login-logo img{ 
+    height: 150px;
+}
+
+.animsition .login-content {
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 0px;
+    border-radius: 2px;
+    justify-content: center;
+    display: flex;
+}
+
+.animsition .login-form{
+    width: 80%;
+}
+
+.logo,
+.logo_text
+{
+	display: inline-block;
+}
+.logo
+{
+	width: 60px;
+	height: 60px;
+	-webkit-transition: all 200ms ease;
+	-moz-transition: all 200ms ease;
+	-ms-transition: all 200ms ease;
+	-o-transition: all 200ms ease;
+	transition: all 200ms ease;
+}
+.logo img
+{
+	max-width: 100%;
+}
+.logo_text
+{
+	font-family: 'Roboto Slab', serif;
+	font-size: 36px;
+	font-weight: 700;
+	line-height: 0.75;
+	color: #384158;
+	vertical-align: middle;
+	margin-left: 7px;
+	-webkit-transition: all 200ms ease;
+	-moz-transition: all 200ms ease;
+	-ms-transition: all 200ms ease;
+	-o-transition: all 200ms ease;
+	transition: all 200ms ease;
+}
+.logo_text span
+{
+	color: #14bdee;
+}
+
+.post_text {
+    color: #3E3E3E;
+}
+
+a:hover, a:focus ,a:active{
+    color: #14bdee!important;
+    background-color: #fff!important;
+} 
+
+table th {
+    font-size: 1.1rem !important;
+}
+
+table tbody td{
+    font-size: 1rem !important;
+}

@@ -7,9 +7,10 @@ const teacherModel = require("../models/teacher.model");
 const categoryModel = require("../models/category.model");
 const chapterModel = require("../models/chapter.model");
 const lessonModel = require("../models/lesson.model");
+const active = require("../middlewares/active.mdw");
 
 /* GET course page. */
-router.get("/detail/:id", async function (req, res) {
+router.get("/detail/:id",active,async function (req, res) {
   const id = +req.params.id;
   const course = await courseModel.singleWithDetails(id);
   course.chapters = await chapterModel.allChapterByCourID(id);
@@ -30,10 +31,10 @@ router.get("/detail/:id", async function (req, res) {
     CourID: course.CourID,
     Views: course.Views + 1,
   };
-  await courseModel.update_view(view);
+  await courseModel.patch(view);
 });
 
-router.get("/search", async function (req, res) {
+router.get("/search",active,async function (req, res) {
   const text = req.query.text;
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
@@ -61,7 +62,7 @@ router.get("/search", async function (req, res) {
   });
 });
 
-router.get("/byCat/:id", async function (req, res) {
+router.get("/byCat/:id",active, async function (req, res) {
   const id = +req.params.id;
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
@@ -98,7 +99,7 @@ router.get("/byCat/:id", async function (req, res) {
   });
 });
 
-router.get("/byFld/:id", async function (req, res) {
+router.get("/byFld/:id",active, async function (req, res) {
   const id = +req.params.id;
   const catId = +req.query.cat;
   const page = +req.query.page || 1;
@@ -140,7 +141,7 @@ router.get("/byFld/:id", async function (req, res) {
 });
 
 /* GET courses page. */
-router.get("/", async function (req, res) {
+router.get("/", active, async function (req, res) {
   const page = +req.query.page || 1;
   const limit = config.pagination.limit;
   const offset = (page - 1) * limit;

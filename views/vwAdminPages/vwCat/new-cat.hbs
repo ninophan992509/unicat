@@ -1,0 +1,78 @@
+{{#section 'js'}}
+    <script>
+        $(document).ready(function(){
+            function showAlert(msg) {
+                $('.alert').html(msg);
+                $('.alert').show();
+
+            }
+
+            $('#btnNewCat').click(function () {
+
+                if (
+                    $('#catName')
+                        .val()
+                        .match(
+                            /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i
+                        ) == null
+                ) {
+                    showAlert("Vui lòng điền tên danh mục!");
+                    return false;
+                }
+
+                if ($('#catImg').val() === "") {
+                    showAlert("Vui lòng chọn ảnh cho danh mục!");
+                    return false;
+                }
+
+                $('#frmNewCat').off('submit').submit();
+
+            });
+        });
+        
+    </script>
+{{/section}}
+<div class="d-flex justify-content-center">
+    <div class="card w-75">
+        <div class="card-header">
+            <strong>Thêm danh mục</strong>
+        </div>
+        <div class="card-body card-block">
+            <form action="/admin/manage-categories/new-cat" id="frmNewCat" method="post" enctype="multipart/form-data"
+                class="form-horizontal">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <strong class="title-alert">Không thể tạo!</strong>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">
+                        <label for="text-input" class=" form-control-label">Tên danh mục</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <input type="text" id="catName" name="cat_name" placeholder="Text" class="form-control">
+                        <small class="form-text text-muted">Nhập vào tên danh mục</small>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">
+                        <label for="file-input" class=" form-control-label">Ảnh danh mục</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <input type="file" id="catImg" accept="image/*" name="cat_image" class="form-control-file">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
+                <i class="fa fa-dot-circle-o"></i> Thêm
+            </button>
+            <button type="reset" class="btn btn-danger btn-sm">
+                <i class="fa fa-ban"></i> Hủy
+            </button>
+        </div>
+    </div>
+</div>

@@ -35,7 +35,7 @@ module.exports = function (app) {
     }
     next();
   });
-
+  
   app.use(async function (req, res, next) {
     const rows = await categoryModel.all();
     rows.forEach(async (row) => {

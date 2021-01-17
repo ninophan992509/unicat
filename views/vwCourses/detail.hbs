@@ -276,7 +276,7 @@
 
 																{{#eq ../this/ChapID ChapID}}
 
-																	<li>
+																	<li class="has_children">
 																		<div class="dropdown_item">
 																			{{#eq ../this/ChapSTT 1}}
 																				{{#if LessLink}}
@@ -307,8 +307,6 @@
 
 																									</video>
 																								</div>
-
-
 																								<div
 																									class="modal-footer justify-content-between">
 																									<div
@@ -337,6 +335,8 @@
 																				</span>
 																				{{LessName}}
 																			</div>
+																		</div>
+																		<ul>
 																			{{#eq ../this/ChapSTT 1}}
 																				{{#if LessLink}}
 																					<a href="#" data-toggle="modal"
@@ -348,10 +348,9 @@
 																				{{/if}}
 																				<div class="dropdown_item_text">
 																					{{{LessText}}}
-
 																				</div>
 																			{{/eq}}
-																		</div>
+																		</ul>
 																	</li>
 																{{/eq}}
 															{{/each}}

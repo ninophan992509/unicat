@@ -1,0 +1,29 @@
+{{#section 'css'}}
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css" />
+{{/section}}
+{{#section 'js'}}
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/_bonus.js"></script>
+{{/section}}
+<div class="container" style="margin: 200px 0; color:#384158">
+    <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+    <h3>XÁC NHẬN EMAIL ĐĂNG KÝ</h3>
+    <p>Mã xác nhận đã được gửi đến email của bạn</p>
+
+    <form action="/account/active" method="post" class="d-flex flex-column" style="margin-top: 20px;">
+        {{#if error}}
+        <div class="alert alert-danger" role="alert">
+            <strong>{{error}}</strong>
+        </div>
+        {{/if}}   
+         <div class="form-group">
+           <label for="code">Kiểm tra email và nhập mã code vào đây</label>
+           <input type="text" class="form-control" name="code" id="code" required>
+         </div>
+        <button type="submit" class="btn btn-primary">Xác nhận</button>
+    </form>
+
+    </div>
+</div>
