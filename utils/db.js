@@ -12,11 +12,11 @@ const pool = mysql.createPool({
 });*/
 
 const pool = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
+  host: "us-cdbr-east-03.cleardb.com",
   port: 3306,
-  user: "beb3a28e7ccc78",
-  password: "0b68df43",
-  database: "heroku_4e6b004e8c05e5f",
+  user: "bfbd573b53ed23",
+  password: "df580b6a470f41a",
+  database: "heroku_0491c11123d0a7b",
   connectionLimit: 50,
   multipleStatements: true,
 });
