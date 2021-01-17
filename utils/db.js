@@ -11,15 +11,16 @@ const pool = mysql.createPool({
   multipleStatements: true,
 });*/
 
-const pool = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  port: 3306,
-  user: "beb3a28e7ccc78",
-  password: "0b68df43",
-  database: "heroku_4e6b004e8c05e5f",
-  connectionLimit: 50,
-  multipleStatements: true,
-});
+const db_url =
+  process.env.MYSQL_ADDON ||
+  "mysql://" +
+    process.env.DB_USER +
+    ":" +
+    process.env.DB_PASS +
+    "@"+process.env.DB_HOST"/" +
+    process.env.DB_NAME;
+
+const pool = mysql.createPool(db_url);
 
 const pool_query = util.promisify(pool.query).bind(pool);
 

@@ -15,7 +15,7 @@ router.get(
   (req, res) => {
     req.session.isAuth = true;
     req.session.authUser = req.user.AccID;
-    req.session.role = 2;
+    req.session.role = req.user.Role;
     req.session.cart = [];
     let url = req.session.retUrl || "/";
     res.redirect(url);
@@ -37,7 +37,7 @@ router.get(
   (req, res) => {
     req.session.isAuth = true;
     req.session.authUser = req.user.AccID;
-    req.session.role = 2;
+    req.session.role = req.user.Role;
     req.session.cart = [];
     let url = req.session.retUrl || "/";
     res.redirect(url);

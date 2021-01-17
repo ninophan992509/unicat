@@ -12,6 +12,15 @@ module.exports = {
   all() {
     return db.load(`select * from ${TBL_COURSES}`);
   },
+  allWithDetails()
+  {
+     return db.load(`select c.*, tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
+                                from ${TBL_COURSES} c 
+                                left join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID 
+                                left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
+                                group by c.CourID
+                                order by c.CreatedAt desc`);
+  },
   allByStdID(id) {
     return db.load(`select c.CourID, c.CourName, c.CourImgSm, c.TeachID, tc.TeachName, tc.TeachAvatar, sc.RatID
                     from (${TBL_STUDENT_COURSES} sc 

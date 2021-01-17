@@ -1,6 +1,6 @@
 {{#section 'js'}}
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             function showAlert(msg) {
                 $('.alert').html(msg);
                 $('.alert').show();
@@ -27,9 +27,16 @@
 
                 $('#frmNewCat').off('submit').submit();
 
+                
+            });
+
+            $("#btnEditCat").click(function (e) {
+                e.preventDefault();
+                $("#frmNewCat").attr("action", "/admin/manage-categories/edit-cat-done");
+                $("#frmNewCat").submit();
             });
         });
-        
+
     </script>
 {{/section}}
 <div class="d-flex justify-content-center">
@@ -52,11 +59,17 @@
                         <label for="text-input" class=" form-control-label">Tên danh mục</label>
                     </div>
                     <div class="col-12 col-md-9">
-                        <input type="text" id="catName" name="cat_name" placeholder="Text" class="form-control">
+                        <input type="text" id="catName" name="cat_name" placeholder="Text" value="{{cat.CatName}}"
+                            class="form-control">
                         <small class="form-text text-muted">Nhập vào tên danh mục</small>
                     </div>
                 </div>
                 <div class="row form-group">
+                    {{#if cat}}
+                        <div class="col-md-4">
+                            <img src="/images/categories/{{cat.CatImg}}" alt={{cat.CatName}} width="100%">
+                        </div>
+                    {{/if}}
                     <div class="col col-md-3">
                         <label for="file-input" class=" form-control-label">Ảnh danh mục</label>
                     </div>
@@ -64,12 +77,22 @@
                         <input type="file" id="catImg" accept="image/*" name="cat_image" class="form-control-file">
                     </div>
                 </div>
+                <input type="hidden" name="id" value="{{cat.CatID}}">
             </form>
         </div>
         <div class="card-footer">
-            <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
-                <i class="fa fa-dot-circle-o"></i> Thêm
-            </button>
+
+            {{#if cat}}
+               
+                <button type="submit" id="btnEditCat" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Chỉnh sửa
+                </button>
+            {{else}}
+                <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Thêm
+                </button>
+            {{/if}}
+
             <button type="reset" class="btn btn-danger btn-sm">
                 <i class="fa fa-ban"></i> Hủy
             </button>

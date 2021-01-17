@@ -128,12 +128,16 @@ router.post("/active", async function (req, res) {
 });
 
 router.get("/profile", auth, async function (req, res) {
-  const rows = await courseModel.allByStdID(res.locals.user.Id);
-  const _rows = await courseModel.allFavByStd(res.locals.user.Id);
-  res.render("vwAccount/profile", {
-    myCourses: rows,
-    myFavCourses: _rows,
-  });
+  try {
+    const rows = await courseModel.allByStdID(res.locals.user.Id);
+    const _rows = await courseModel.allFavByStd(res.locals.user.Id);
+    res.render("vwAccount/profile", {
+      myCourses: rows,
+      myFavCourses: _rows,
+    });
+  } catch (error) {
+    throw error;
+  }
 });
 
 router.get("/edit", auth, function (req, res) {
@@ -166,7 +170,7 @@ router.get("/security", auth, function (req, res) {
 
 router.post("/security", auth, async function (req, res) {
   const pass = req.body.OldPw;
-  const id = res.locals.authUser;
+  const id = req.session.authUser;
   const user = await accountModel.single(id);
 
   const ret = bcrypt.compareSync(pass, user.Password);

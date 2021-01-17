@@ -110,11 +110,11 @@ passport.use(
             StdName: `${profile.name.familyName} ${profile.name.givenName}`,
             StdAvatar: filename,
           };
-
+          
+          
           await studentModel.add(student);
           user.AccID = AccID;
         }
-
         done(null, user);
       } catch (error) {
         return done(error);

@@ -6,8 +6,9 @@ const teacherModel = require("../models/teacher.model");
 const categoryModel = require("../models/category.model");
 const chapterModel = require("../models/chapter.model");
 const lessonModel = require("../models/lesson.model");
+const auth = require("../middlewares/auth.mdw");
 
-router.get("/:id", async function (req, res) {
+router.get("/:id", auth, async function (req, res) {
   const id = +req.params.id;
   const stdcourse = await studentCourseModel.single(id);
   if (stdcourse === null) {
@@ -23,7 +24,7 @@ router.get("/:id", async function (req, res) {
     if (course != null) {
       course.teacher = await teacherModel.singleWithDetails(course.TeachID);
     }
-    
+
     const tab = +req.query.tab || 2;
     res.render("vwMyCourses/index", {
       title: course.CourName,
@@ -35,7 +36,7 @@ router.get("/:id", async function (req, res) {
   }
 });
 
-router.post("/rating", async function (req, res) {
+router.post("/rating", auth, async function (req, res) {
   const point = parseFloat(+req.body.point);
   const entity = {
     RatID: +req.body.id,

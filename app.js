@@ -84,6 +84,9 @@ require("./middlewares/session.mdw")(app);
 require("./middlewares/locals-admin.mdw")(app);
 app.use("/admin", require("./routes/routeAdmin/admin.route"));
 app.use("/admin/manage-categories", require("./routes/routeAdmin/cat.route"));
+app.use("/admin/manage-teachers", require("./routes/routeAdmin/teacher.route"));
+app.use("/admin/manage-students", require("./routes/routeAdmin/students.route"));
+app.use("/admin/manage-courses", require("./routes/routeAdmin/course.route"));
 
 require("./middlewares/locals-teacher.mdw")(app);
 app.use("/teacherpage", require("./routes/routeTeacher/account.route"));

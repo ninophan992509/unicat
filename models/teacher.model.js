@@ -4,6 +4,7 @@ const TBL_FIELDS = "field";
 const TBL_STUDENT_COURSES = "studentcourse";
 const TBL_TEACHERS = "teacher";
 const TBL_CATEGORIES = "category";
+const TBL_ACCOUNTS = "account";
 
 module.exports = {
   async single(id) {
@@ -46,8 +47,17 @@ module.exports = {
     if (rows.length === 0) return null;
     return rows[0];
   },
-
+  all() {
+    return db.load(
+      `select t.*, ac.* from ${TBL_TEACHERS} t inner join ${TBL_ACCOUNTS} ac on ac.AccID = t.AccID`
+    );
+  },
   add(entity) {
     return db.add(entity, TBL_TEACHERS);
+  },
+  patch(entity) {
+    const condition = { TeachID: entity.TeachID };
+    delete entity.TeachID;
+    return db.patch(entity, condition, TBL_TEACHERS);
   },
 };

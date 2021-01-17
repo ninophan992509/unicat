@@ -5,6 +5,28 @@
             $('#btnNewCat').click(function () {
                 window.location.href = '/admin/manage-categories/new-cat';
             });
+
+            $(".btn-edit-cat").click(function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".tr-shadow").data("id");
+                $('#txt_id').val(id);
+                $("#frmEditCat").submit();
+            });
+            $(".btn-del-cat").click(function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".tr-shadow").data("id");
+                $('#txt_id1').val(id);
+                $("#frmDelCat").submit();
+            });
+
+            $('#slCat').on("change", function (e) {
+                if ($(this).val() === "0") {
+                    window.location.href = "/admin/manage-categories";
+                } else {
+                     window.location.href = "/admin/manage-categories/sub-cat";
+                }
+
+            });
         });
     </script>
 {{/section}}
@@ -16,18 +38,20 @@
                 <div class="table-data__tool">
                     <div class="table-data__tool-left">
                         <div class="rs-select2--light rs-select2--md">
-                            <select class="js-select2" name="property">
+                            <select class="js-select2" name="property" id="slCat">
                                 <option selected="selected">Loại danh mục</option>
-                                <option value="0"><a href="/admin/manage-categories">Danh mục</a></option>
-                                <option value="1"><a href="/admin/manage-sub-categories">Danh mục con</a></option>
+                                <option value="0">Danh mục</a></option>
+                                <option value="1">Danh mục con</a></option>
                             </select>
                             <div class="dropDownSelect2"></div>
                         </div>
-                        <div class="rs-select2--light rs-select2--sm">
+                        <div class="rs-select2--light rs-select2--md">
                             <select class="js-select2" name="time">
-                                <option selected="selected">Today</option>
-                                <option value="">3 Days</option>
-                                <option value="">1 Week</option>
+                                <option selected="selected">Giảng viên</option>
+                                {{#each teachers}}
+                                    <option value="{{TeachID}}">{{TeachName}}</option>
+                                {{/each}}
+
                             </select>
                             <div class="dropDownSelect2"></div>
                         </div>
@@ -65,8 +89,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <form action="/admin/manage-categories/edit-cat" method="post" id="frmEditCat">
+                                <input type="hidden" id="txt_id" name="id">
+                            </form>
+                            <form action="/admin/manage-categories/del-cat" method="post" id="frmDelCat">
+                                <input type="hidden" id="txt_id1" name="id">
+                            </form>
                             {{#each categories}}
-                                <tr class="tr-shadow">
+                                <tr class="tr-shadow" data-id={{CatID}}>
                                     <td>
                                         <label class="au-checkbox">
                                             <input type="checkbox">
@@ -84,12 +114,12 @@
                                     </td>
                                     <td>
                                         <div class="table-data-feature">
-                                            <button class="item" data-toggle="tooltip" data-placement="top"
+                                            <button class="item btn-edit-cat" data-toggle="tooltip" data-placement="top"
                                                 title="Edit">
                                                 <i class="zmdi zmdi-edit"></i>
                                             </button>
-                                            <button class="item" data-toggle="tooltip" data-placement="top"
-                                                title="Delete">
+                                            <button class="item  btn-del-cat " data-toggle="tooltip"
+                                                data-placement="top" title="Delete">
                                                 <i class="zmdi zmdi-delete"></i>
                                             </button>
                                             <button class="item" data-toggle="tooltip" data-placement="top"

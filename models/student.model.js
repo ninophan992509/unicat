@@ -1,6 +1,7 @@
 const db = require("../utils/db");
 
 const TBL_STUDENTS = "student";
+const TBL_ACCOUNTS = "account";
 
 module.exports = {
   async single(id) {
@@ -24,7 +25,7 @@ module.exports = {
   },
 
   all() {
-    return db.load(`select * from ${TBL_STUDENTS}`);
+    return db.load(`select st.*, ac.* from ${TBL_STUDENTS} st inner join ${TBL_ACCOUNTS} ac on ac.AccID = st.AccID`);
   },
 
   add(entity) {

@@ -11,11 +11,9 @@
                 if (
                     $('#fieldName')
                         .val()
-                        .match(
-                            /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i
-                        ) == null
+                    === ""
                 ) {
-                    showAlert("Vui lòng điền tên danh mục!");
+                    showAlert("Vui lòng điền tên danh mục hợp lệ!");
                     return false;
                 }
 
@@ -25,6 +23,12 @@
                 }
 
                 $('#frmNewCat').off('submit').submit();
+            });
+
+            $("#btnEditCat").click(function(e){
+                e.preventDefault();
+                $("#frmNewCat").attr("action","/admin/manage-categories/edit-subcat-done");
+                $("#frmNewCat").submit();
             });
 
         });
@@ -51,7 +55,7 @@
                     <div class="col-12 col-md-9">
                         <select name="cat_id" id="selectCat" class="form-control">
                             {{#each categories}}
-                                <option value="{{CatID}}">{{CatName}}</option>
+                                <option value="{{CatID}}" {{#eq ../fld.CatID CatID}}selected{{/eq}}>{{CatName}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -61,16 +65,25 @@
                         <label for="text-input" class=" form-control-label">Tên danh mục</label>
                     </div>
                     <div class="col-12 col-md-9">
-                        <input type="text" id="fieldName" name="field_name" placeholder="Text" class="form-control">
+                        <input type="text" id="fieldName" name="field_name" placeholder="Text" value="{{fld.FldName}}"
+                            class="form-control">
                         <small class="form-text text-muted">Nhập vào tên danh mục</small>
                     </div>
                 </div>
+                <input type="hidden" name="id" value="{{fld.FldID}}">
             </form>
         </div>
         <div class="card-footer">
-            <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
-                <i class="fa fa-dot-circle-o"></i> Thêm
-            </button>
+
+            {{#if fld}} 
+                <button type="submit" id="btnEditCat" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Chỉnh sửa
+                </button>
+            {{else}}
+                <button type="submit" id="btnNewCat" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Thêm
+                </button>
+            {{/if}}
             <button type="reset" class="btn btn-danger btn-sm">
                 <i class="fa fa-ban"></i> Hủy
             </button>

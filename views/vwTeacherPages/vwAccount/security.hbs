@@ -74,8 +74,8 @@
         }
 
         function showError(error) {
-            $('#frmChangePw .alert').html(`${error}`);
-            $('#frmChangePw .alert').show();
+            $('#frmChangePw .my-alert').html(`${error}`);
+            $('#frmChangePw .my-alert').show();
         }
 
         /** Ẩn thông báo lỗi khi focus */
@@ -88,16 +88,21 @@
     </script>
 
 {{/section}}
-<div class="container mtop">
-    <div class="row d-flex">
+<div class="container">
+    <div class="row">
         <div class="w-75">
-            <form action="" method="post" id="frmChangePw">
+            <form action="/teacherpage/info/security" method="post" id="frmChangePw">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Đổi mật khẩu</h4>
-                        <div class="alert alert-danger" role="alert" style="display: none;">
+                        <div class="alert alert-danger my-alert" role="alert" style="display: none;">
                             <strong>...</strong>
                         </div>
+                        {{#if success}}
+                            <div class="alert alert-success" role="alert">
+                                <strong>{{success}}</strong>
+                            </div>
+                        {{/if}}
                         {{#if error}}
                             <div class="alert alert-danger" role="alert">
                                 <strong>{{error}}</strong>
@@ -139,7 +144,7 @@
                     <div class="card-footer text-muted">
                         <button name="update_btn" id="updateBtn" class="btn btn-primary" type="submit" role="button">Cập
                             nhật</button>
-                        <a name="close" id="close" class="btn btn-outline-primary" href="/account/profile"
+                        <a name="close" id="close" class="btn btn-outline-primary" href="/teacherpage/info"
                             role="button">Thoát</a>
                     </div>
                 </div>

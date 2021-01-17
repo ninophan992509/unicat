@@ -46,19 +46,26 @@
                 }).datepicker('update', new Date());
             });
 
+
+            $('#txt_alert').hide();
+
             function showAlert(input, msg) {
-                $(input).parents(".form-group").children(".alert").show();
-                $(input).parents(".form-group").children(".alert").html(`${msg}`);
-                $(input).css("border","red");
-                $(input).focus();
+                $('#txt_alert').html(`${msg}`);
+                $('#txt_alert').show();
+                $(document).ready(function () {
+                    $(window).scrollTop(0);
+                });
                 return false;
             }
+
+
 
             $("#frmEdit").on('submit', function (e) {
                 e.preventDefault();
                 if ($('#name').val().match(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i) == null) {
                     return showAlert($('#name'), 'Tên không hợp lệ. Hãy nhập tên khác');
                 }
+
                 if (
                     $('#sub_email')
                         .val()
@@ -66,8 +73,11 @@
                         .match(
                             /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
                         ) == null
-                )
+                ) {
+                    $('#sub_email').css('border','1px solid red');
                     return showAlert($('#sub_email'), 'Email không hợp lệ. Hãy nhập email khác');
+                }
+
                 if (
                     $('#phone')
                         .val()
@@ -75,19 +85,23 @@
                         .match(
                             /^([0-9]{10,11})$/
                         ) == null
-                )
+                ) {
                     return showAlert($('#phone'), 'Số điện thoại không hợp lệ. Hãy nhập số điện thoại khác');
+                }
 
-                if (tinymce.get('txt_teach_info').getContent() === "")
+                if (tinymce.get('txt_teach_info').getContent() === "") {
                     return showAlert('#txt_teach_info', "Vui lòng nhập thông tin về kinh nghiệm giảng dạy của giảng viên");
+                }
                 $('#teachInfo').val(tinymce.get('txt_teach_info').getContent());
-              //  $("#frmEdit").off("submit").submit();
+                 $("#frmEdit").off("submit").submit();
             });
 
             $("#frmEdit input").each(function () {
                 $(this).focus(function () {
+                    $(this).css('border','1px solid #ced4da');
                     $('.alert').css('display', 'none');
-                    $(this).css("border", "1px solid #ced4da");
+
+
                 });
             });
         });
@@ -102,9 +116,10 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin cá nhân</h4>
+                            <div class="alert alert-danger" id="txt_alert" role="alert">
+                            </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                </div>
+
                                 <label for="name">Họ tên</label>
                                 <input type="text" name="username" id="name" class="form-control" autofocus
                                     value="{{TeachName}}">
@@ -115,24 +130,18 @@
                                     disabled>
                             </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                    
-                                </div>
+
                                 <label for="name">Số điện thoại</label>
                                 <input type="text" name="phone" id="phone" class="form-control" value="{{Phone}}">
                             </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                    
-                                </div>
+
                                 <label for="name">Email liên lạc</label>
                                 <input type="text" name="sub_email" id="sub_email" class="form-control"
                                     value="{{SubEmail}}">
                             </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                    
-                                </div>
+
                                 <label for="name">Ngày sinh</label>
                                 <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
                                     <input class="form-control" type="text" readonly name="birth" {{#if DateOfBirth}}
@@ -142,10 +151,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                    
-                                </div>
-
                                 <div class="form-group">
                                     <label for="gender">Giới tính</label>
                                     <select class="form-control" name="gender" id="slGender">
@@ -162,13 +167,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="alert alert-warning" role="alert" style="display: none;">
-                                    
-                                </div>
+
                                 <label class="control-label">Tiểu sử giảng viên</label>
                                 <input type="hidden" name="teach_info" id="teachInfo">
                                 <textarea class="txt_description" id="txt_teach_info">{{TeachInfo}}</textarea>
-                                <div class="alert alert-danger" role="alert" style="display: none;"></div>
+
                             </div>
 
                         </div>
