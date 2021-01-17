@@ -12,11 +12,11 @@ const pool = mysql.createPool({
 });*/
 
 const pool = mysql.createPool({
-  host: "esilxl0nthgloe1y.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
-  port: 3306,
-  user: "c4esiwwwmxu0l688",
-  password: "hd2vzhlku394jka7",
-  database: "if12tx3pg34dcyi1",
+  host: "eu-cdbr-west-03.cleardb.net",
+  // port: 3306,
+  user: "beb3a28e7ccc78",
+  password: "0b68df43",
+  database: "heroku_4e6b004e8c05e5f",
   connectionLimit: 50,
   multipleStatements: true,
 });
