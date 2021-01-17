@@ -13,7 +13,7 @@ const pool = mysql.createPool({
 
 const pool = mysql.createPool({
   host: "eu-cdbr-west-03.cleardb.net",
-  // port: 3306,
+  port: 3306,
   user: "beb3a28e7ccc78",
   password: "0b68df43",
   database: "heroku_4e6b004e8c05e5f",
