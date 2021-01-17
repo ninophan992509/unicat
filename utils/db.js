@@ -17,7 +17,7 @@ const db_url =
     process.env.DB_USER +
     ":" +
     process.env.DB_PASS +
-    "@"+process.env.DB_HOST"/" +
+    "@"+process.env.DB_HOST+"/" +
     process.env.DB_NAME;
 
 const pool = mysql.createPool(db_url);
