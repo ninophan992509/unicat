@@ -50,10 +50,26 @@ router.post("/login", async function (req, res) {
   res.redirect(url);
 });
 
-router.post("/logout", async function (req, res) {
+router.post("/logout", auth, async function (req, res) {
   req.session.isAuth = false;
   req.session.authUser = null;
   res.redirect(req.headers.referer);
 });
+
+router.post("/lock-account", auth, async function (req, res) {
+  try {
+    const AccID = +req.body.account;
+    const isLock = +req.body.status === 0 ? true : false;
+    const entity = {
+      AccID,
+      isLock,
+    };
+    await accountModel.lock(entity);
+    res.redirect(req.headers.referer);
+  } catch (error) {
+    throw error;
+  }
+});
+
 
 module.exports = router;

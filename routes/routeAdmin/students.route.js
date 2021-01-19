@@ -9,6 +9,7 @@ router.get("/", auth, async function (req, res) {
     layout: "main-admin",
     title: "Students",
     students,
+    mg_st:1,
   });
 });
 

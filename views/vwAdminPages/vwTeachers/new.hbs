@@ -1,0 +1,154 @@
+{{#section 'js'}}
+    <script>
+        $(document).ready(function () {
+            /** Ẩn thông báo lỗi khi focus */
+            $(".alert").hide();
+            $("input").focus(function () {
+                 $(".alert").hide();
+            });
+            /**Hàm validate các input */
+            function validate(input) {
+                if ($(input).attr("type") == "email" || $(input).attr("name") == "email") {
+                    if (
+                        $(input)
+                            .val()
+                            .trim()
+                            .match(
+                                /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
+                            ) == null
+                    )
+                        return {check: false, msg: "Email không hợp lệ"};
+                        
+                }
+
+                if ($(input).attr("name") == "username") {
+                    if (
+                        $(input)
+                            .val()
+                            .match(
+                                /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ,.'-]+$/i
+                            ) == null
+                    )
+                        return {check: false, msg: "Họ tên không hợp lệ"};
+                     
+                }
+
+                if ($(input).attr("type") == "password") {
+                    if (
+                        $(input)
+                            .val()
+                            .match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/) == null
+                    )
+                        return {check: false, msg: "Mật khẩu có độ dài tối thiểu 7 ký tự, có chứa chữ in hoa và chữ thường và chữ số."};
+                }
+
+                if ($(input).val().trim() == "") {
+                    return { check: false, msg: "Bạn quên nhập trường này!"};
+                }
+
+                
+
+            }
+
+            /**Hiện các thông báo lỗi */
+            function showValidate(input, msg) {
+                const thisAlert = $(input).parents(".form-group").children(".alert").html(msg);
+                $(thisAlert).show();
+            }
+
+            /**Ẩn các thông báo lỗi */
+            function hideValidate(input) {
+                const thisAlert = $(input).parents(".form-group").children(".alert");
+                $(thisAlert).hide();
+            }
+
+            $('#frmNewTeacher').on('submit', function (e) {
+                e.preventDefault();
+                let check = true;
+                const inputs = $(".input-group input");
+                for (let i = 0; i < inputs.length; i++) {
+                    const valid = validate(inputs[i]);
+                    if (valid && valid.check === false) {
+                        showValidate(inputs[i], valid.msg);
+                        check = false;
+                    }
+                }
+
+                if (check) {
+                    const email = $('#email').val();
+                    $.getJSON(`/admin/manage-teachers/is-available?email=${email}`, function (data) {
+                        if (data === true) {
+                            $("#frmNewTeacher").off("submit").submit();
+                        } else {
+                            $('#email').parents(".form-group").children('.alert').html('Email đăng ký đã tồn tại. Vui lòng sử dụng email khác');
+                            $('#email').parents(".form-group").children('.alert').show();
+                            return;
+                        }
+                    });
+
+                } else
+                    return check;
+            });
+        });
+    </script>
+{{/section}}
+
+<div class="d-flex justify-content-center mt-2">
+    <div class="card">
+        <div class="card-header">Tạo tài khoản giảng viên</div>
+        <div class="card-body card-block">
+            <form action="/admin/manage-teachers/new-teacher" method="post" id="frmNewTeacher">
+                <div class="form-group">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <input type="text" id="username" name="username" placeholder="Username" class="form-control"
+                            autofocus>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <input type="email" id="email" name="email" placeholder="Email" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-asterisk"></i>
+                        </div>
+                        <input type="password" id="password" name="password" placeholder="Password"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="form-actions form-group">
+                    <button type="submit" class="btn btn-success btn-sm">Tạo tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

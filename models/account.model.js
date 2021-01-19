@@ -60,4 +60,9 @@ module.exports = {
     };
     return db.patch(acc, condition, TBL_ACCOUNTS);
   },
+  lock(entity) {
+    const condition = { AccID: entity.AccID };
+    delete entity.AccID;
+    return db.patch(entity, condition, TBL_ACCOUNTS);
+  },
 };

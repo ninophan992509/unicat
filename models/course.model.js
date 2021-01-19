@@ -56,6 +56,7 @@ module.exports = {
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
+                    where c.isDisable = false
                     group by c.CourID
                     order by ${criteria[opt]} ${order[ord]} 
                     limit ${config.pagination.limit} offset ${offset}`);
@@ -73,14 +74,14 @@ module.exports = {
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
                     left join ${TBL_FIELDS} f on f.FldID = c.FldID
                     left join ${TBL_CATEGORIES} ct on ct.CatID = f.CatID
-                    where MATCH(ct.CatName )
+                    where (MATCH(ct.CatName )
                     AGAINST ('${text}')
                     or MATCH(f.FldName ) 
                     AGAINST ('${text}')
                     or MATCH(tc.TeachName ) 
                     AGAINST ('${text}')
                     or MATCH (c.CourName ) 
-                    AGAINST ('${text}') 
+                    AGAINST ('${text}') ) and c.isDisable = false
                     group by c.CourID
                     order by ${criteria[opt]} ${order[ord]} 
                     limit ${config.pagination.limit} offset ${offset}`);
@@ -95,7 +96,7 @@ module.exports = {
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
                     left join ${TBL_FIELDS} f on c.FldID = f.FldID
                     inner join ${TBL_CATEGORIES} ct on ct.CatID = f.CatID
-                    where ct.CatID = ${id}
+                    where ct.CatID = ${id} and c.isDisable = false
                     group by c.CourID
                     order by ${criteria[opt]} ${order[ord]}                    
                     limit ${config.pagination.limit} offset ${offset}`);
@@ -108,7 +109,7 @@ module.exports = {
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc  on c.CourID = sc.CourID
                     left join ${TBL_TEACHERS} tc on tc.TeachID = c.TeachID
-                    where c.FldID = ${id}
+                    where c.FldID = ${id} and c.isDisable = false
                     group by c.CourID
                     order by ${criteria[opt]} ${order[ord]}                   
                     limit ${config.pagination.limit} offset ${offset}`);
@@ -140,7 +141,7 @@ module.exports = {
                     from (select c.*, tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
                     from ${TBL_COURSES} c 
                     left join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID, ${TBL_TEACHERS} tc
-                    where tc.TeachID = c.TeachID
+                    where tc.TeachID = c.TeachID and c.isDisable = false
                     group by c.CourID)
                     as re right outer JOIN ${TBL_FIELDS} f on f.FldID = re.FldID
                     group by f.FldID
@@ -154,7 +155,7 @@ module.exports = {
     const query = `select  f.FldID, re.*, max(re.Views)
                     from (select c.*, tc.TeachName, tc.TeachAvatar, count(sc.StdID) as CourStudents, count(case when sc.Point != 0 then 1 end) as CourRates,avg(case when sc.Point != 0 then sc.Point end) as CourPoint
                     from ${TBL_COURSES} c left outer join ${TBL_STUDENT_COURSES} sc on c.CourID = sc.CourID, ${TBL_TEACHERS} tc
-                    where tc.TeachID = c.TeachID
+                    where tc.TeachID = c.TeachID and c.isDisable = false
                     group by c.CourID)
                     as re right outer join ${TBL_FIELDS} f on f.FldID = re.FldID
                     group by f.FldID
@@ -173,7 +174,7 @@ module.exports = {
                     from ${TBL_STUDENT_COURSES} sc
                     where  sc.DOP > DATE_SUB(NOW(), INTERVAL 1 WEEK)  
                     group by sc.CourID) as re  INNER join ${TBL_COURSES} c on re.CourID = c.CourID, ${TBL_FIELDS} f
-                    where c.FldID = f.FldID 
+                    where c.FldID = f.FldID and c.isDisable = false
                     group by c.FldID) as re1 INNER join ${TBL_CATEGORIES} ct on re1.CatID = ct.CatID
                     group by ct.CatID
                     order by CatStudents desc
@@ -188,12 +189,13 @@ module.exports = {
                     count(case when sc.DOP > DATE_SUB(NOW(), INTERVAL 1 WEEK) then 1 end) as shv,
                     avg(case when Point!= 0 then sc.Point end) as point
                     from ${TBL_STUDENT_COURSES} sc 
-                    where sc.DOP > DATE_SUB(NOW(), INTERVAL 1 WEEK)  
+                    where sc.DOP > DATE_SUB(NOW(), INTERVAL 1 WEEK) 
                     group by sc.CourID
                     order by shv desc, point desc
-                    limit 3) as re, ${TBL_STUDENT_COURSES} sc1, ${TBL_COURSES} c, ${TBL_TEACHERS} tc
-                    where sc1.CourID = re.CourID and c.CourID = sc1.CourID and tc.TeachID = c.TeachID
-                    group by sc1.CourID`;
+                    ) as re, ${TBL_STUDENT_COURSES} sc1, ${TBL_COURSES} c, ${TBL_TEACHERS} tc
+                    where sc1.CourID = re.CourID and c.CourID = sc1.CourID and tc.TeachID = c.TeachID and c.isDisable = false
+                    group by sc1.CourID
+                    limit 5`;
     return db.load(query);
   },
 

@@ -1147,3 +1147,26 @@
     margin-bottom: 1rem;
     padding: 0 1rem;
 }
+
+.course_discount{
+   background-color: rgb(209, 43, 43);
+   color: #fff;
+   font-size: 1.1rem;
+   border-radius: 5px;
+   padding: .15rem .25rem;
+   width: 4rem;
+   height: 2rem;
+   position: absolute;
+   top: .5rem;
+   left:.5rem;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.course_pro{
+  text-decoration: line-through;
+  color: rgb(139, 139, 139);
+  font-weight: lighter;
+  font-size: 1rem;
+}

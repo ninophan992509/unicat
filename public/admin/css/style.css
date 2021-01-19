@@ -89,5 +89,18 @@ table tbody td{
 
 .table-responsive-data2 {
     overflow: scroll;
+    height: 30rem;
+}
+
+.table-data-lock .item{
+    display: block;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    background: #f1f1f1;
+    margin-right: 5px;
 }
 

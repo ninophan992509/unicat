@@ -288,9 +288,7 @@ router.get("/edit/:id", async function (req, res) {
       });
     }
   } catch (error) {
-    res.status(500).json({
-      message: "Internal Server Error",
-    });
+    throw error;
   }
 });
 
@@ -349,7 +347,6 @@ router.post(
         entity.CourImgSm = size + req.files[0].filename;
       }
 
-      console.log(entity);
       await courseModel.patch(entity);
     }
     res.redirect("/teacherpage/courses");
@@ -601,7 +598,7 @@ router.post("/delete-chapter", authTeacher, async function (req, res) {
             }
           );
         }
-        await lessonModel.del(lesson);
+        await lessonModel.del(lesson.LessID);
       });
       await chapterModel.del(chapter);
       res.redirect("/teacherpage/courses/edit/" + chapter.CourID);

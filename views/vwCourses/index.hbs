@@ -295,6 +295,10 @@
                                     <div class="course_image">
                                         <img src="/images/courses/{{CourImgSm}}" alt="Course Image">
                                     </div>
+                                    {{#if Discount}}
+                                        <div class="course_discount"><span>-{{calDiscountPercent Discount
+                                                CourPrice}}%</span></div>
+                                    {{/if}}
                                     <a class="course_like"><i class="fa fa-heart" aria-hidden="true"></i></a>
                                     <div class="course_body">
                                         <h3 class="course_title"><a href="/courses/detail/{{CourID}}">{{CourName}}</a>
@@ -326,7 +330,11 @@
                                                 <span class="course_rating">{{roundRating CourPoint}}</span>
                                                 <span class="course_count_rating">({{CourRates}})</span>
                                             </div>
-                                            <div class="course_price ml-auto">{{format CourPrice}}đ</div>
+                                            <div class="course_price ml-auto">{{format CourPrice}}đ
+                                                {{#if Discount}}
+                                                    <div class="course_pro">{{format Discount}}đ</div>
+                                                {{/if}}
+                                            </div>
                                         </div>
                                         <div class="course_button d-flex justify-content-between">
                                             <button data-id={{CourID}} class="btnAddCart btn btn-primary btn-add"

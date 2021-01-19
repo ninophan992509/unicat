@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("../auth/social-strategy");
 const router = express.Router();
+const handle_session = require("../service/handle-student-session");
 
 router.get(
   "/facebook",
@@ -13,12 +14,7 @@ router.get(
     failureRedirect: "/account/login",
   }),
   (req, res) => {
-    req.session.isAuth = true;
-    req.session.authUser = req.user.AccID;
-    req.session.role = req.user.Role;
-    req.session.cart = [];
-    let url = req.session.retUrl || "/";
-    res.redirect(url);
+     handle_session(req,res);
   }
 );
 
@@ -35,12 +31,7 @@ router.get(
     failureRedirect: "/account/login",
   }),
   (req, res) => {
-    req.session.isAuth = true;
-    req.session.authUser = req.user.AccID;
-    req.session.role = req.user.Role;
-    req.session.cart = [];
-    let url = req.session.retUrl || "/";
-    res.redirect(url);
+     handle_session(req, res);
   }
 );
 

@@ -2,6 +2,16 @@ const mysql = require("mysql2");
 const util = require("util");
 /*
 const pool = mysql.createPool({
+  host: process.env.HOST, // "localhost",
+  port: 3306,
+  user: process.env.USER,//"root",
+  password: process.env.PASS// "",
+  database: process.env.NAME//"onlinecourses",
+  connectionLimit: 50,
+  multipleStatements: true,
+});*/
+
+const pool = mysql.createPool({
   host: "localhost",
   port: 3306,
   user: "root",
@@ -9,18 +19,7 @@ const pool = mysql.createPool({
   database: "onlinecourses",
   connectionLimit: 50,
   multipleStatements: true,
-});*/
-
-const db_url =
-  process.env.MYSQL_ADDON ||
-  "mysql://" +
-    process.env.DB_USER +
-    ":" +
-    process.env.DB_PASS +
-    "@"+process.env.DB_HOST+"/" +
-    process.env.DB_NAME;
-
-const pool = mysql.createPool(db_url);
+});
 
 const pool_query = util.promisify(pool.query).bind(pool);
 

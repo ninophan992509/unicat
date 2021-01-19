@@ -71,6 +71,9 @@ app.engine(
           "%": lvalue % rvalue,
         }[operator];
       },
+      calDiscountPercent(original_price, pro_price) {
+        return ((Math.round((1 - pro_price / original_price) * 100)));
+      },
     },
   })
 );

@@ -51,16 +51,17 @@
             <script>
                 $(document).ready(function()
                 {
+                    /*
                     $(".nav .nav-link").on("click", function () {
                         $(".nav").find(".active").removeClass("active");
                         $(this).addClass("active");
-                    });
+                    });*/
 
-                    $('.header_search_button').on('click', function (e) {
+                    $('#frmSearchData').on('submit', function (e) {
                         e.preventDefault();
-                        const txt_search = $('.search_input').val().trim();
+                        const txt_search = $('#frmSearchData .search_input').val().trim();
                         if ($(txt_search) !== "") {
-                            $('.header_search_button').off('submit').submit();
+                            $('#frmSearchData').off('submit').submit();
                         }
                     });
                 });

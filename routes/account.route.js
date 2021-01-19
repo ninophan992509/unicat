@@ -12,13 +12,15 @@ const deleteFile = require("../service/delete");
 const email = require("../service/email");
 const generator = require("generate-password");
 
-/* GET login page. */
 router.get("/login", function (req, res) {
   if (req.headers.referer) {
-    if (!req.headers.referer.toString().includes("register")) {
+    if (
+      !req.headers.referer.toString().includes("register") &&
+      !req.headers.referer.toString().includes("login")
+    ) {
       req.session.retUrl = req.headers.referer;
     } else {
-      req.session.retUrl = null;
+      req.session.retUrl = "/";
     }
   }
 
@@ -42,6 +44,13 @@ router.post("/login", async function (req, res) {
     });
   }
 
+  if(user.isLock){
+     return res.render("vwAccount/login", {
+       layout: false,
+       err_message: "Tài khoản của bạn đang bị khóa!",
+     });
+  }
+
   req.session.isAuth = true;
   req.session.authUser = user.AccID;
   req.session.role = user.Role;
@@ -57,7 +66,6 @@ router.post("/logout", async function (req, res) {
   res.redirect(req.headers.referer);
 });
 
-/* GET register page. */
 router.get("/register", function (req, res) {
   res.render("vwAccount/register", { layout: false });
 });
@@ -103,6 +111,11 @@ router.post("/register", async function (req, res) {
   };
 
   email(mailOptions);
+
+  req.session.isAuth = true;
+  req.session.authUser = AccID;
+  req.session.role = 2;
+  req.session.cart = [];
   res.redirect("/account/active");
 });
 
@@ -118,8 +131,7 @@ router.post("/active", async function (req, res) {
       StdID: student.StdID,
     };
     await studentModel.patch(entity);
-    let url = req.session.retUrl || "/";
-    res.redirect(url);
+    res.redirect("/");
   } else {
     res.render("vwAccount/confirm", {
       error: "Mã xác nhận không đúng. Vui lòng kiểm tra lại!",
@@ -202,4 +214,5 @@ router.post("/myfavourite/del", auth, async function (req, res) {
   await favCourseModel.del(entity);
   res.redirect(req.headers.referer + "#list-fav-courses");
 });
+
 module.exports = router;

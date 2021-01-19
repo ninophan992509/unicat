@@ -14,6 +14,7 @@ router.get("/", auth, async function (req, res) {
     layout: "main-admin",
     title: "Categories",
     categories,
+    mg_cat: 1,
   });
 });
 
@@ -21,6 +22,7 @@ router.get("/new-cat", auth, async function (req, res) {
   res.render("vwAdminPages/vwCat/new-cat", {
     layout: "main-admin",
     title: "New Categories",
+    mg_cat: 1,
   });
 });
 
@@ -30,6 +32,7 @@ router.get("/new-sub-cat", auth, async function (req, res) {
     layout: "main-admin",
     title: "New Categories",
     categories,
+    mg_cat: 1,
   });
 });
 
@@ -39,6 +42,7 @@ router.get("/sub-cat", auth, async function (req, res) {
     layout: "main-admin",
     title: "New Categories",
     fields,
+    mg_cat: 1,
   });
 });
 
@@ -72,13 +76,11 @@ router.post(
 );
 
 router.post("/new-sub-cat", auth, async function (req, res) {
-  console.log(req.body);
   try {
     const new_field = {
       CatID: +req.body.cat_id,
       FldName: req.body.field_name,
     };
-    console.log(req.body);
     await fieldModel.add(new_field);
     res.redirect("/admin/manage-categories/sub-cat");
   } catch (error) {
@@ -108,6 +110,7 @@ router.post("/edit-fld", auth, async function (req, res) {
       categories,
       layout: "main-admin",
       title: "Chỉnh sửa danh mục",
+      mg_cat: 1,
     });
   } catch (error) {
     throw error;

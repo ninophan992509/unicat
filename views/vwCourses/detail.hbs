@@ -271,7 +271,7 @@
 															<div class="dropdown_item_title"><span>Chương
 																	{{ChapSTT}}: </span>{{ChapName}}</div>
 														</div>
-														<ul>
+														<ul class="sub-dropdowns">
 															{{#each ../this/course.lessons}}
 
 																{{#eq ../this/ChapID ChapID}}
@@ -547,7 +547,11 @@
 								</div>
 								<!-- Course Price -->
 								<div class="d-flex justify-content-between align-items-center">
-									<div class="course_price">{{format course.CourPrice}}đ</div>
+									<div class="course_price mr-auto">{{format course.CourPrice}}đ
+										{{#if course.Discount}}
+											<div class="course_pro">{{format course.Discount}}đ</div>
+										{{/if}}
+									</div>
 									<a href="#" class="course_fav_btn course_like"><i class="fa fa-heart"></i></a>
 								</div>
 
@@ -563,52 +567,6 @@
 
 							</div>
 						</div>
-
-
-						<!-- Latest Course -->
-						<div class="sidebar_section">
-							<div class="sidebar_section_title">Các khóa học mới nhất</div>
-							<div class="sidebar_latest">
-
-								<!-- Latest Course -->
-								<div class="latest d-flex flex-row align-items-start justify-content-start">
-									<div class="latest_image">
-										<div><img src="/assets/images/latest_1.jpg" alt=""></div>
-									</div>
-									<div class="latest_content">
-										<div class="latest_title"><a href="course.html">How to Design a Logo a Beginners
-												Course</a></div>
-										<div class="latest_price">Free</div>
-									</div>
-								</div>
-
-								<!-- Latest Course -->
-								<div class="latest d-flex flex-row align-items-start justify-content-start">
-									<div class="latest_image">
-										<div><img src="/assets/images/latest_2.jpg" alt=""></div>
-									</div>
-									<div class="latest_content">
-										<div class="latest_title"><a href="course.html">Photography for Beginners
-												Masterclass</a></div>
-										<div class="latest_price">$170</div>
-									</div>
-								</div>
-
-								<!-- Latest Course -->
-								<div class="latest d-flex flex-row align-items-start justify-content-start">
-									<div class="latest_image">
-										<div><img src="/assets/images/latest_3.jpg" alt=""></div>
-									</div>
-									<div class="latest_content">
-										<div class="latest_title"><a href="course.html">The Secrets of Body Language</a>
-										</div>
-										<div class="latest_price">$220</div>
-									</div>
-								</div>
-
-							</div>
-						</div>
-
 					</div>
 				</div>
 			</div>

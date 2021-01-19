@@ -2692,7 +2692,7 @@ section {
 }
 
 .header__navbar ul li.active > a {
-    color: #4272d7;
+    color: #14bdee;
 }
 
 .header__navbar ul li.active > a .bot-line {
@@ -2812,7 +2812,7 @@ section {
     position: absolute;
     width: 100%;
     height: 3px;
-    background: #4272d7;
+    background: #14bdee;
     left: 0;
     bottom: 0;
     opacity: 0;
@@ -4440,6 +4440,8 @@ section {
     }
 }
 
+
+.table-data2 thead th { position: sticky; top: 0; }
 .table-data2 {
     border-collapse: collapse;
     overflow: visible;
@@ -4454,6 +4456,7 @@ section {
     vertical-align: top;
     padding: 15px 40px;
     padding-right: 10px;
+    text-align: center;
 }
 
 .table-data2.table thead th:first-child {
@@ -4505,6 +4508,7 @@ section {
     padding: 25px 40px;
     padding-right: 10px;
     border: none;
+    text-align: center;
 }
 
 .table-data2.table tbody td.desc {
@@ -14607,3 +14611,4 @@ section {
 .vue-lists ul, .vue-lists ol {
     padding-left: 30px;
 }
+

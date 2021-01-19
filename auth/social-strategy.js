@@ -40,6 +40,7 @@ passport.use(
               ? profile.emails[0].value
               : `${profile.id}@unicat.com`,
             Password: hash,
+            isLock:0,
           };
 
           const AccID = await accountModel.add(user);
@@ -94,6 +95,7 @@ passport.use(
               ? profile.emails[0].value
               : `${profile.id}@unicat.com`,
             Password: hash,
+            isLock: 0,
           };
           const AccID = await accountModel.add(user);
           let filename = null;

@@ -1,4 +1,30 @@
+{{#section 'js'}}
+    <script>
+        $(document).ready(function () {
+            $("#slTeachers").change(function (e) {
+                $('#frmGetCourses input').val($(this).val());
+                $('#frmGetCourses').submit();
+            });
+
+            $('.btn-disable-course').on('click', function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".table-data-disable").data("id");
+                const status = $(this).parents(".table-data-disable").data("st");
+                $('#txt_course').val(id);
+                $('#txt_status').val(status);
+                $('#frmDisable').submit();
+            });
+        });
+    </script>
+{{/section}}
 <!-- DATA TABLE-->
+<form action="/admin/manage-courses/get-courses" method="post" id="frmGetCourses">
+    <input type="hidden" name="id">
+</form>
+<form action="/admin/manage-courses/disable-course" id="frmDisable" method="post">
+    <input type="hidden" name="course" id="txt_course">
+    <input type="hidden" name="status" id="txt_status">
+</form>
 <section class="p-t-20">
     <div class="container">
         <div class="row">
@@ -15,10 +41,11 @@
                             <div class="dropDownSelect2"></div>
                         </div>
                         <div class="rs-select2--light rs-select2--md">
-                            <select class="js-select2" name="time">
-                                <option selected="selected">Giảng viên</option>
+                            <select class="js-select2" name="time" id="slTeachers">
+                                <option selected="selected" disabled>Giảng viên</option>
                                 {{#each teachers}}
-                                    <option value="{{TeachID}}">{{TeachName}}</option>
+                                    <option value="{{TeachID}}" {{#eq ../teacher.TeachID TeachID}}selected{{/eq}}>
+                                        {{TeachName}}</option>
                                 {{/each}}
 
                             </select>
@@ -50,6 +77,7 @@
                                 <th>Điểm đánh giá</th>
                                 <th>Số lượt mua</th>
                                 <th>Số lượt xem</th>
+                                <th>Tình trạng</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,22 +91,33 @@
                                     </td>
                                     <td>
                                         <img src="/images/courses/{{CourImgSm}}" alt="{{CourName}}"
-                                            style="width:150px;height:100px;">
+                                            style="max-width:150px; height:100px;">
                                     </td>
                                     <td>{{CourName}}</td>
                                     <td>
-                                        <span class="block-email">{{CourDesShort}}</span>
+                                        <span class="block-email" style="width:16rem">{{CourDesShort}}</span>
                                     </td>
-                                    <td>{{TeachName}}</td>
+                                    <td>{{TeachName}}{{#if ../teacher}}{{../teacher.TeachName}}{{/if}}</td>
                                     <td>{{format CourPrice}}</td>
-                                    <td>{{CourPoint}}</td>
+                                    <td>{{roundRating CourPoint}}</td>
                                     <td>
                                         <span class="status--process">{{CourStudents}}</span>
                                     </td>
                                     <td>
                                         <span class="status--process">{{Views}}</span>
                                     </td>
+                                    <td class="table-data-disable" data-id="{{CourID}}" data-st="{{isDisable}}">
 
+                                        <button class="item btn-disable-course" data-toggle="tooltip" data-placement="top"
+                                            title="{{#eq isDisable 0}}Đình chỉ{{/eq}}{{#eq isDisable 1}}Ngưng đình chỉ{{/eq}}">
+                                            {{#eq isDisable 0}}
+                                                <span class="status--process">Bình thường</span>
+                                            {{/eq}}
+                                            {{#eq isDisable 1}}
+                                                <span class="status--denied">Đình chỉ</span>
+                                            {{/eq}}
+                                        </button>
+                                    </td>
                                     <td>
                                         <div class="table-data-feature">
 

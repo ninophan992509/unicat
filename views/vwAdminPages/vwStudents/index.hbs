@@ -1,37 +1,29 @@
+{{#section 'js'}}
+    <script>
+        $(document).ready(function () {
+            $('.btn-lock').on('click', function (e) {
+                e.preventDefault();
+                const id = $(this).parents(".table-data-lock").data("id");
+                const status = $(this).parents(".table-data-lock").data("st");
+                $('#txt_acc').val(id);
+                $('#txt_st').val(status);
+                $('#frmLock').submit();
+            });
+        });
+    </script>
+{{/section}}
 <!-- END DATA TABLE-->
 <!-- DATA TABLE-->
+<form action="/admin/lock-account" id="frmLock" method="post">
+    <input type="hidden" name="account" id="txt_acc">
+    <input type="hidden" name="status" id="txt_st">
+</form>
 <section class="p-t-20">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h3 class="title-5 m-b-35">Danh sách khóa học</h3>
                 <div class="table-data__tool">
-                    <div class="table-data__tool-left">
-                        <div class="rs-select2--light rs-select2--md">
-                            <select class="js-select2" name="property" id="slCat">
-                                <option selected="selected">Loại danh mục</option>
-                                <option value="0">Danh mục</a></option>
-                                <option value="1">Danh mục con</a></option>
-                            </select>
-                            <div class="dropDownSelect2"></div>
-                        </div>
-                        <div class="rs-select2--light rs-select2--md">
-                            <select class="js-select2" name="time">
-                                <option selected="selected">Giảng viên</option>
-                                {{#each teachers}}
-                                    <option value="{{TeachID}}">{{TeachName}}</option>
-                                {{/each}}
-
-                            </select>
-                            <div class="dropDownSelect2"></div>
-                        </div>
-                        <button class="au-btn-filter">
-                            <i class="zmdi zmdi-filter-list"></i>filters</button>
-                    </div>
-                    <div class="table-data__tool-right">
-                        <button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                            <i class="zmdi zmdi-plus"></i>add item</button>
-                    </div>
                 </div>
                 <div class="table-responsive table-responsive-data2">
                     <table class="table table-data2">
@@ -45,11 +37,13 @@
                                 </th>
                                 <th>Avatar</th>
                                 <th>Họ tên</th>
-                                <th>Email</th>     
+                                <th>Email</th>
                                 <th>Đã kích hoạt</th>
+                                <th>Tài khoản</th>
                             </tr>
                         </thead>
                         <tbody>
+
                             {{#each students}}
                                 <tr class="tr-shadow">
                                     <td>
@@ -59,19 +53,33 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <img src="/images/students/{{StdAvatar}}" alt="{{StName}}"
-                                            style="width:70px;height:70px;">
+                                        <img src="/images/{{#if StdAvatar}}students/{{StdAvatar}}{{else}}no-avatar.png{{/if}}"
+                                            alt="{{StName}}" style="width:70px;height:70px;">
                                     </td>
-                                    <td>{{StName}}</td>
+                                    <td>{{StdName}}</td>
                                     <td>
                                         <span class="block-email">{{Email}}</span>
                                     </td>
                                     <td>
-                                        <span class="status--process">{{#if ActiveCode}}Chưa kích hoạt{{else}}Đã kích hoạt{{/if}}</span>
+                                        <span class="status--process">{{#if ActiveCode}}Chưa kích hoạt{{else}}Đã kích
+                                                hoạt{{/if}}</span>
+                                    </td>
+                                    <td class="table-data-lock" data-id="{{AccID}}" data-st="{{isLock}}">
+
+                                        <button class="item btn-lock" data-toggle="tooltip" data-placement="top"
+                                            title="Lock">
+                                            {{#eq isLock 0}}
+                                                <span class="status--process"><i class="zmdi zmdi-lock-open"></i></span>
+                                            {{/eq}}
+                                            {{#eq isLock 1}}
+                                                <span class="status--denied"><i
+                                                        class="zmdi zmdi-lock-outline"></i></span>
+                                            {{/eq}}
+                                        </button>
                                     </td>
 
-                                    <td>
-                                        <div class="table-data-feature">
+                                    <td >
+                                        <div class="table-data-feature" >
 
                                             <button class="item" data-toggle="tooltip" data-placement="top"
                                                 title="Edit">

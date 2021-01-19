@@ -8,6 +8,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const deleteFile = require("../../service/delete");
+const moment = require("moment");
 
 /* GET login page. */
 router.get("/login", function (req, res) {
@@ -15,7 +16,7 @@ router.get("/login", function (req, res) {
     if (!req.headers.referer.toString().includes("register")) {
       req.session.retUrl = req.headers.referer;
     } else {
-      req.session.retUrl = null;
+      req.session.retUrl = "/teacherpage/courses";
     }
   }
   res.render("vwTeacherPages/vwAccount/login", { layout: false });
@@ -35,6 +36,13 @@ router.post("/login", async function (req, res) {
     return res.render("vwTeacherPages/vwAccount/login", {
       layout: false,
       err_message: "Email hoặc mật khẩu sai!",
+    });
+  }
+
+  if (user.isLock) {
+    return res.render("vwTeacherPages/vwAccount/login", {
+      layout: false,
+      err_message: "Tài khoản của bạn đang bị khóa!",
     });
   }
 
@@ -91,6 +99,9 @@ router.post(
   multer({ storage }).any(),
   async function (req, res) {
     try {
+      let new_date = new Date(req.body.birth);
+      new_date = moment(new_date).format("YYYY-MM-DD");
+
       const entity = {
         TeachID: +res.locals.teacher.Id,
         TeachName: req.body.username,
@@ -98,7 +109,7 @@ router.post(
         SubEmail: req.body.sub_email,
         TeachInfo: req.body.teach_info,
         Gender: +req.body.gender,
-        DateOfBirth: req.body.birth,
+        DateOfBirth: new_date,
       };
       if (req.files.length > 0) {
         entity.TeachAvatar = req.files[0].filename;
@@ -146,4 +157,5 @@ router.post("/info/security", authTeacher, async function (req, res) {
     throw error;
   }
 });
+
 module.exports = router;
